@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>1.2.1 Emith (Nouns)</title>
+  <meta name="description" content="Learn Sindarin noun plurals, i-affection, class plurals, definite articles, and direct objects, with an interactive vocabulary exercise." />
+ 
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:100%; border-collapse:separate; border-spacing:0; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+/* Round the header itself so captions do not leave square top corners. */
+thead tr:first-child th:first-child { border-top-left-radius:10px; }
+thead tr:first-child th:last-child { border-top-right-radius:10px; }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+/* Keep the new explanations consistent with the lesson's existing design. */
+.lesson-note { margin:14px 0; }
+.source-note { font-size:0.9rem; color:var(--muted); }
+main h4 { font-size:1.05rem; line-height:1.45; margin:22px 0 10px; }
+table caption { text-align:left; padding:0 0 8px; color:var(--muted); font-size:0.9rem; }
+.article-guide { min-width:540px; }
+.article-guide td { vertical-align:top; }
+.article-guide td:first-child { white-space:nowrap; font-weight:700; }
+.noun-role-list li { margin:6px 0; }
+:root[data-theme="dark"] .article-guide { background:var(--card); }
+@media (max-width:700px) { .intro-list { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5em 1.5em; } }
+@media (max-width:440px) { .intro-list { grid-template-columns:1fr; } }
+@media print { .responsive-table { overflow:visible; } .article-guide { min-width:0; } }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+          <a href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+          <a href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+          <a href="/mutations.html">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop.html">Aesop Stories</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1a">1.2.2.1a Verb Meanings and Objects</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#participles">1.2.2.3b Participles: Voice, Time, and Agreement</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3c">1.2.2.3c Passive and Impersonal Constructions</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3d">1.2.3.3d Possessives and Adjectives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1a">1.2.4.1a Lists of Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1b">1.2.4.1b Adjectives Before Nouns</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2a">1.2.4.2a Existence and Location</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2b">1.2.4.2b Adjectives After Predicate Verbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3c">1.2.4.3c Names and Historical Usage</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5c">1.2.5c The Meanings of By and Through</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2b">1.2.5.2b Longer Genitive Chains</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3b">1.2.5.3b What Does the Phrase Describe?</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1b">1.2.6.1b Conditional Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2d">1.2.6.2d Demonstratives with Relative Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+  
+<div class="site" id="1.2.1">
+    <main class="main-center" role="main" aria-labelledby="page-title">
+      <h1 id="page-title">1.2.1 Nouns</h1>
+
+      <!-- Top nav / intro list (keeps the structure from your old content) -->
+      <section aria-labelledby="contents">
+        <p><strong id="contents">Contents</strong></p>
+        <ul>
+          <li><strong><a href="#1.2.1.1">1.2.1.1 Noun Plurals</a></strong></li>
+          <li><strong><a href="#1.2.1.2">1.2.1.2 i-affection</a></strong></li>
+          <li><strong><a href="#1.2.1.3">1.2.1.3 Noun Class Plural</a></strong></li>
+          <li><strong><a href="#1.2.1.4">1.2.1.4 Irregular Plurals</a></strong></li>
+          <li><strong><a href="#1.2.1.5">1.2.1.5 Definite Article “The”</a></strong></li>
+          <li><strong><a href="#1.2.1.6">1.2.1.6 Direct Objects</a></strong></li>
+          <li><strong><a href="#vocab">1.2.1.6a Vocabulary Practice</a></strong></li>
+        </ul>
+      </section>
+
+      <section>
+        <p>
+          Sindarin nouns work like nouns in English: they name people, animals, places, things, ideas, and so on.
+        </p>
+
+        <ul class="intro-list">
+          <li><b>aew</b> <i>n.</i> “bird”</li>
+          <li><b>aran</b> <i>n.</i> “king”</li>
+          <li><b>adan</b> <i>n.</i> “Man (as a species)”</li>
+          <li><b>bâr [mb-]</b> <i>n.</i> “house”</li>
+          <li><b>edhel</b> <i>n.</i> “elf”</li>
+          <li><b>gil [ng]</b> <i>n.</i> “star”</li>
+          <li><b>hothron</b> <i>n.</i> “captain”</li>
+          <li><b>orch</b> <i>n.</i> “orc”</li>
+          <li><b>megil</b> <i>n.</i> “sword”</li>
+          <li><b>hadhod</b> <i>n.</i> “dwarf”</li>
+          <li><b>caras</b> <i>n.</i> “city”</li>
+          <li><b>taur</b> <i>n.</i> “forest”</li>
+        </ul>
+
+        <div class="callout" role="note">
+          <strong>Note ¹:</strong> ᴺS. <strong><em>hothron</em></strong> <i>n.</i> “captain” is derived from <strong><em>hoth</em></strong> “host” + <strong><em>-ron</em></strong> “agental suffix”.<br>
+          <strong>Note ²:</strong> <strong><em>adan</em></strong> means “man” as a member of the species of Men (male or female), in other words a human being.<br>
+          <strong>Note ³:</strong> <strong><i>gil</i></strong> has varying etymologies, and its singular form is variously attested as <strong><i>gil</i></strong> or <strong><i>gail</i></strong>. The plural <strong><i>gîl</i></strong> likely corresponds to <strong><i>gail</i></strong>, and would be regular (cf. <strong><i>cair</i></strong> &gt; <strong><i>cîr</i></strong>). However, if you use <strong><i>gil</i></strong> as singular, it should remain unchanged in plural.
+        </div>
+
+        <img src="Dwarf1.png" alt="Drawing of a dwarf" style="float:right;margin-left:18px;max-width:160px;max-height:180px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.05);" />
+
+      </section>
+
+      <section>
+        <h3 id="1.2.1.1">1.2.1.1 Noun Plurals</h3>
+        <p>
+        Sindarin usually forms ordinary noun plurals by changing the vowels of the word. This process is called <i>i</i>-affection and comes from the influence of an ancient plural ending -ī, which later disappeared. For example, the singular word <a href="https://eldamo.org/content/words/word-753238821.html?neo"><b><em>adan</em></b></a> transforms into the plural <b><em>edain</em></b>, and <a href="https://eldamo.org/content/words/word-86383055.html?neo"><b><em>orch</em></b></a> changes to <b><em>yrch</em></b>. English has comparable vowel changes in “<b>man</b>” and “<b>men</b>”.
+        </p>
+        <p>
+          Some nouns have the same form in the singular and plural, while others have irregular plurals or use plural endings. We will look at these differences below. You can also explore forms with the <a href="https://sindarincrashcourse.neocities.org/pluralizer.html" target="_blank" rel="noopener">Sindarin Pluralizer</a>.
+        </p>
+
+        <ul class="intro-list">
+          <li><b>aew</b> <i>n.</i> “birds”</li>
+          <li><b>erain</b> <i>n.</i> “kings”</li>
+          <li><b>edain</b> <i>n.</i> “Men (as a species)”</li>
+          <li><b>bair [mb-]</b> <i>n.</i> “houses”</li>
+          <li><b>edhil</b> <i>n.</i> “elves”</li>
+          <li><b>gil [ng]</b> <i>n.</i> “stars”</li>
+          <li><b>hethryn</b> <i>n.</i> “captains”</li>
+          <li><b>yrch</b> <i>n.</i> “orcs”</li>
+          <li><b>megil</b> <i>n.</i> “swords”</li>
+          <li><b>hedhyd/hedhoed</b> <i>n.</i> “dwarves”</li>
+          <li><b>cerais</b> <i>n.</i> “cities”</li>
+          <li><b>toer</b> <i>n.</i> “forests”</li>
+        </ul>
+
+        <div class="callout">
+          Here is how these forms developed from the ancient plural ending “ī”:<br>
+          ✶atanī → atani → edeni → edein → edain<br>
+          ✶urkī → urki → urkʰi → urxi → orxi → urxi → yrxi → yrx
+        </div>
+      </section>
+
+      <section>
+        <h3 id="1.2.1.2">1.2.1.2 i-affection</h3>
+        <p>How a vowel changes under <em>i</em>-affection depends on the vowel itself, where it appears in the word, and the sounds that follow it. The main patterns are internal i-affection, final i-affection, and final i-intrusion.</p>
+        <p class="lesson-note"><strong>Why does final a have two outcomes?</strong> A final consonant cluster generally blocks i-intrusion, giving a → e. A single-consonant ending generally permits intrusion, giving a → ai. The word’s history can produce exceptions to this pattern.</p>
+        <ul>
+          <li>Internal <i>i</i>-affection (non-final syllables):
+            <ul>
+              <li>Non-final <i>a</i> → <i>e</i>: <b><i>adan</i></b> “man” → <b><i>edain</i></b> “men”.</li>
+              <li>Non-final <i>o</i> → <i>e</i>: <b><i>onod</i></b> “Ent” → <b><i>enyd</i></b> “Ents”.</li>
+              <li>Non-final <i>u</i> → <i>y</i>: [N.] <b><i>tulus</i></b> “poplar” → <b><i>tylys</i></b> “poplars”.</li>
+              <li>Other vowels (<i>e, i, y</i>), and long vowels in non-final syllables do not mutate.</li>
+              <li>Archaically <i>o</i> → <i>œ</i>: <b><i>golodh</i></b> “Gnome” → <b><i>gœlydh</i></b> “Gnomes”.</li>
+            </ul>
+          </li>
+          <li>Final <i>i</i>-affection (final syllables):
+            <ul>
+              <li>Final <i>a</i> → <i>e</i>: <b><i>narn</i></b> “tale” → <b><i>nern</i></b> “tales”.</li>
+              <li>Final <i>e</i> → <i>i</i>: <b><i>edhel</i></b> “elf” → <b><i>edhil</i></b> “elves”.</li>
+              <li>Final <i>ê</i> → <i>î</i>: <b><i>hên</i></b> “child” → <b><i>hîn</i></b> “children”.</li>
+              <li>Final <i>o</i> → <i>y</i>: <b><i>orch</i></b> “orc” → <b><i>yrch</i></b> “orcs”.</li>
+              <li>Final <i>u</i> → <i>y</i>: [N.] <b><i>tulus</i></b> “poplar” → <b><i>tylys</i></b> “poplars”.</li>
+              <li>Other short vowels (<i>i, y</i>) do not mutate.</li>
+            </ul>
+          </li>
+          <li>Final <i>i</i>-intrusion (generally when the last syllable ends in a single consonant):
+            <ul>
+              <li>Intruded <i>a</i> → <i>ai</i>: <b><i>adan</i></b> “man” → <b><i>edain</i></b> “men”.</li>
+              <li>Intruded <i>â</i> → <i>ai</i>: <b><i>bâr</i></b> “home” → <b><i>bair</i></b> “homes”.</li>
+              <li>Intruded <i>ô</i> → <i>ui</i> in monosyllables: <b><i>thôn</i></b> “pine” → <b><i>thuin</i></b> “pines”.</li>
+              <li>Intruded <i>û</i> → <i>ui</i> in monosyllables: <b><i>dûr</i></b> “dark” → <b><i>duir</i></b> “dark (pl)”.</li>
+              <li>Intruded <i>au</i> → <i>oe</i>: <b><i>naug</i></b> “dwarf” → <b><i>noeg</i></b> “dwarves”.</li>
+              <li>Other long vowels in final syllables (<i>î, ŷ</i>) do not mutate.</li>
+            </ul>
+          </li>
+          <li>Diphthongs often remain unchanged, although <i>au</i> commonly changes to <i>oe</i> in a final syllable. Other historically conditioned changes are covered under <a href="#1.2.1.4">irregular plurals</a>.</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Note ¹:</strong> Some nouns (like <strong><em>brith</em></strong>) have an unchanged plural because their vowel does not change under i-affection.
+        </div>
+        <p><strong>Compound nouns:</strong> Sometimes only the final element changes in the plural because the first element keeps its independent form. Other compounds show changes more widely. Which pattern a compound follows depends on how it was formed and how it developed.</p>
+        <p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-2894407865.html" target="_blank" rel="noopener noreferrer">Eldamo on plural nouns</a>.</p>
+      </section>
+
+      <section>
+        <h3 id="1.2.1.3">1.2.1.3 Class Plurals</h3>
+        <p>Sindarin also has another kind of plural, formed with endings such as <b>-<em>ath</em></b>, <b>-<em>hoth</em></b>, or <b>-<em>rim</em></b>. Compare:</p>
+        <ul>
+          <li><b><em>êl</em></b> “star”, <b><em>elin</em></b> “stars”, <b><em>elenath</em></b> “all stars”.</li>
+          <li><b><em>orch</em></b> “orc”, <b><em>yrch</em></b> “orcs”, <b><em>orchoth</em></b> “all orcs”.</li>
+          <li><b><em>Nogoth</em></b> “Dwarf”, <b><em>Negyth</em></b> “Dwarves”, <b><em>Nogothrim</em></b> “all Dwarves”.</li>
+        </ul>
+        <p>Tolkien usually called this the “<b>collective</b>” or “<b>group</b>” plural. In modern Neo-Sindarin discussion, it is usually called the “<b>class plural</b>”.</p>
+        <p><strong>What does “all” mean here?</strong> A class plural can refer to an entire class, or simply to the whole group being talked about in a particular situation. It can even describe a limited group, including a group of two. The ending <b>-ath</b> is not a dual ending.</p>
+        <p><strong>The endings have different uses.</strong> <b>-ath</b> is the general class-plural ending. Formations with <b>-rim</b> and <b>-hoth</b> commonly name groups of people or beings, and <b>-hoth</b> often carries the connotation of a horde. These endings are not freely interchangeable.</p>
+        <p><strong>Formation and agreement:</strong> Be careful when forming a class plural: historical sounds that disappeared from the singular can sometimes reappear. This means you cannot always form a class plural simply by adding an ending to the word you see.</p>
+        <p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-2990539277.html" target="_blank" rel="noopener noreferrer">Eldamo on class plurals</a>.</p>
+      </section>
+
+      <section>
+        <h3 id="1.2.1.4">1.2.1.4 Irregular Plurals</h3>
+        <p>Not every Sindarin noun follows the regular plural patterns above. Some plurals depend on the word's earlier history and the sound changes it went through. The overview below is adapted from <a href="https://eldamo.org/content/words/word-242834451.html" target="_blank" rel="noopener"><b>Eldamo’s discussion of unusual plurals</b></a>.</p>
+        <ul>
+          <li><b>Plurals with long <i>ó/o</i> from <i>au</i>:</b> Long or short <i><b>ó/o</b></i> derived from <i><b>au</b></i> resists mutations in non-final syllables, and might mutate to <i><b>oe</b></i> in final syllables of recognized compounds.</li>
+          <li><b>Plurals of words with <i>ai</i> in final syllables:</b> The diphthong <i><b>ai</b></i> in final syllables might mutate to <i><b>î</b></i> (monosyllable) or <i><b>i</b></i> (polysyllable) depending on the ancient form of the word.</li>
+          <li><b>Plural mutations after <i>i</i>:</b> When a vowel mutates to <i><b>i</b></i> or <i><b>y</b></i> in its plural, it absorbs any preceding <i><b>i</b></i>, as in: <i><b>Miniel</b></i> → <i><b>Mínil</b></i>, <i><b>thalion</b></i> → <i><b>thelyn</b></i>.</li>
+          <li><b>Plurals of polysyllables ending in vowels:</b> When a polysyllable ends in a short vowel, it generally follows the same mutations as in polysyllables ending in a single consonant: <i><b>-a</b></i> → <i><b>-ai</b></i>, <i><b>-e</b></i> → <i><b>-i</b></i>, <i><b>-o/u</b></i> → <i><b>-y</b></i>.</li>
+          <li><b>Plurals of monosyllables ending in vowels:</b> When a monosyllable ends in a long vowel, it generally follows the same mutations as in monosyllables ending in a single consonant: <i><b>-â</b></i> → <i><b>-ai</b></i>, <i><b>-ê</b></i> → <i><b>-î</b></i>, <i><b>-ô/û</b></i> → <i><b>-ui</b></i>.</li>
+          <li><b>Plurals of monosyllables ending in diphthongs:</b> Patterns include <i><b>-êw</b></i> → <i><b>-îw</b></i> and <i><b>-aw</b></i> → <i><b>-oe(w)</b></i>. Other endings have to be considered based on their historical development.</li>
+          <li><b>Plural Suffixes:</b> Some Sindarin plurals are formed with the plural suffix <i><b>-in</b></i>, either a remnant of an ancient <i><b>n</b></i> preserved in the plural, or a generalization of this suffix applied to other situations.</li>
+          <li><b>Singular Suffixes:</b> Sometimes a collective or plural form becomes the base, and an individual singular is derived with an ending such as <b>-eg</b>, <b>-ig</b>, or <b>-og</b>. These are established word formations, not endings that can be added freely to every plural.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 id="1.2.1.5">1.2.1.5 Definite Article “The”</h3>
+        <div class="callout" role="note">
+          <strong>A note on spelling:</strong> On this site, I join the definite article to its noun with a middle dot (·). When this combination begins a sentence, I capitalize the noun while leaving the article lowercase, for example <b>en·Adar</b>. Other writers may write <b>En·adar</b> or <b>En adar</b>. This is my personal stylistic preference. The dot shows the close connection between the article and noun. These presentation choices do not change the grammatical relationship or the required mutation.
+        </div>
+        <p>The article is a <strong>proclitic</strong>, a short word closely attached in speech to the following word. Tolkien sometimes marked this connection with a dot or hyphen, but also wrote the article separately.</p>
+        <p>Tolkien used more than one article system over the years. I show both below, but the vocabulary exercise in this course uses the later CEA forms.</p>
+        <h4>Articles before 1969</h4>
+        <p>The singular article is <b>i</b> and the plural is <b>i/in</b>. Sindarin does not have an indefinite article equivalent to English “<b>a</b>” or “<b>an</b>”. When a noun is indefinite, it normally stands alone: “the man” is expressed as <b><em>“i adan”</em></b>, while “a man” is simply <b><em>“adan”</em></b>. The singular article causes soft mutation; the plural article causes nasal mutation. The plural article retains its n before vowels, while before many consonants the n disappears and the following consonant shows nasal mutation.</p>
+
+        <ul class="intro-list">
+          <li><b><i>i·adan</i></b> “the man”</li>
+          <li><b><i>edhel</i></b> “an elf”</li>
+          <li><b><i>i·daur</i></b> “the forest”</li>
+          <li><b><i>hothron</i></b> “a captain”</li>
+          <li><b><i>in·aew</i></b> “the birds”</li>
+          <li><b><i>yrch</i></b> “orcs”</li>
+        </ul>
+
+        <h4 id="1.2.1.5a">1.2.1.5.a Common Eldarin Article (CEA) 1969</h4>
+        <p>In the 1969 <cite>Common Eldarin Article</cite> material published in <cite>Parma Eldalamberon XXIII</cite> (PE23), Tolkien revised the singular article to <b>e/en</b>, with a retained <b>i</b> in the special case described below. The plural remained <b>i/in</b>.</p>
+        <ul class="intro-list">
+          <li><b><i>en·adan</i></b> “the man”</li>
+          <li><b><i>edhel</i></b> “an elf”</li>
+          <li><b><i>e·daur</i></b> “the forest”</li>
+          <li><b><i>hothron</i></b> “a captain”</li>
+          <li><b><i>in·aew</i></b> “the birds”</li>
+          <li><b><i>yrch</i></b> “orcs”</li>
+        </ul>
+
+        <div class="responsive-table" role="region" aria-label="CEA article forms" tabindex="0">
+          <table class="article-guide">
+            <caption>CEA article forms and their environments</caption>
+            <thead><tr><th scope="col">Article</th><th scope="col">Environment</th><th scope="col">Effect on the noun</th></tr></thead>
+            <tbody>
+              <tr><td>e</td><td>Singular, before most original consonants</td><td>Soft mutation</td></tr>
+              <tr><td>en</td><td>Singular, before an original vowel</td><td>No initial consonant to mutate</td></tr>
+              <tr><td>i</td><td>Singular, where an original g disappears under soft mutation</td><td>The initial g is lost</td></tr>
+              <tr><td>i / in</td><td>Plural, with the surface form determined by the following sound</td><td>Nasal mutation where applicable</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A vowel at the beginning of the unmutated written form may be original or may result from the loss of an earlier consonant. In my own writing, and throughout this course, I retain historical nasals when they reappear after an article or preposition. Thus words historically beginning in mb-, nd-, or ng- are written with those consonants restored in the relevant environments, following the appropriate rows of the mutation chart. This is a spelling convention I use consistently in the course, following attested spellings such as <i>i·mbair</i>, <i>i·nduir</i>, and <i>i·ñguin</i>; other Neo-Sindarin writers may choose different conventions.</p>
+        <ul>
+          <li><b>Mutation Patterns:</b>
+            <ul>
+              <li><strong>Vocalic Mutation (Soft Mutation):</strong> The singular article causes soft mutation. “Vocalic” here names a consonant-mutation class, rather than the vowel changes used to form plurals. Examples:
+                <ul>
+                  <li><b><i>e·baur</i></b> - “the fist”</li>
+                  <li><b><i>e·dâl</i></b> - “the foot”</li>
+                  <li><b><i>e·galar</i></b> - “the lamp”</li>
+                </ul>
+              </li>
+              <li><strong>Nasal Mutation with the Plural Article:</strong> The plural article causes nasal mutation. In the following examples it appears as i because its n has disappeared before the mutated consonant:
+                <ul>
+                  <li><b><i>i·pherth</i></b> - “the fields”</li>
+                  <li><b><i>i·chelair</i></b> - “the lamps”</li>
+                  <li><b><i>i·thoer</i></b> - “the forests”</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="intro-list">
+          <li><b><i>e·vâd</i></b> - “the road”</li>
+          <li><b><i>e·chûl</i></b> - “the secret”</li>
+          <li><b><i>in·aew</i></b> - “the birds”</li>
+        </ul>
+        <p><strong>Plural formation and article mutation are separate.</strong> The noun needs its plural form as well as the initial-consonant change caused by the plural article. An article does not replace the noun’s plural vowel changes.</p>
+        <p><strong>A bare noun is not always indefinite.</strong> Names and general statements may appear without an article, and a genitive construction can establish definiteness for a whole noun phrase. English “the” is therefore not a word-for-word guide to Sindarin article use. See the lessons on <a href="/1.2.5.html#1.2.5.2">genitives</a> and <a href="/1.2.3.html#1.2.3.3">possessives</a> for related constructions.</p>
+        <p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-3256437065.html" target="_blank" rel="noopener noreferrer">Eldamo on definite articles and the CEA material</a>.</p>
+      </section>
+
+      <section>
+        <h3 id="1.2.1.6">1.2.1.6 Direct Objects</h3>
+        <p>A direct object is the person or thing receiving the action of the verb. In Sindarin, it commonly follows the verb and shows soft mutation, also called grammatical lenition. For example:</p>
+
+        <ul>
+          <li><b><em>Agarfant <u>beth</u>.</em></b> “He spoke words. (<em><u>peth</u></em>)” ✧ PE17/126</li>
+          <li><b><em>Fennas nogothrim, lasto <u>beth</u> lammen.</em></b> “Doorway of the Dwarf-folk listen to the word (<em><u>peth</u></em>) of my tongue.” ✧ LotR/307; PE17/45</li>
+          <li><b><em>penim <u>vast</u>.</em></b> “we have no bread. (<em><u>bast</u></em>)” ✧ PE17/144</li>
+        </ul>
+
+        <p>The mutation does not occur simply because a word follows a verb. A vocative names the person or thing being addressed and does not take object mutation. For example:</p>
+
+        <ul>
+          <li><b><em>Lacho <u>calad</u>! Drego <u>morn</u>!</em></b> “Flame light (<em><b>calad</b></em>)! Flee night (<em><b>morn</b></em>)!” ✧ UT/65</li>
+          <li><b><em>Pedo <u>mellon</u> a minno</em></b> “speak, friend (<em><b>mellon</b></em>), and enter.” ✧ LotR/305; LotR/308; PE17/40; PE23/143</li>
+        </ul>
+
+        <p>In these phrases <b><em>calad</em></b>, <b><em>morn</em></b> and <b><em>mellon</em></b> are not lenited because they are the people or things being addressed, not direct objects of the verbs. A direct object would be lenited, as in <b><em>Pedo beth mellon.</em></b> “Say the word (<b><em>peth</em></b>) friend.” ✧ PE23/143; VT44/26</p>
+        <p><strong>A subject can also follow its verb.</strong> Tolkien explicitly distinguishes this from the direct-object construction: a post-verbal subject does not take object mutation merely because of its position (PE23/143). An imperative expressing a wish may likewise be followed by the subject of that wish.</p>
+        <ul class="noun-role-list">
+          <li><strong>Subject:</strong> who or what performs the action.</li>
+          <li><strong>Direct object:</strong> who or what the action acts upon.</li>
+          <li><strong>Vocative:</strong> who or what the speaker addresses.</li>
+        </ul>
+
+        <ul>
+          <li><b><em>Edhel *adaba <u>mbâr</u>.</em></b> “An elf builds a dwelling.”</li>
+          <li><b><em>Edain ristar <u>‘elaidh</u>.</em></b> “Men cut trees.”</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Note ¹:</strong> ᴺS. <strong>adaba-</strong> <i>v.</i> “to build, establish, erect”; cf. N. <strong>adab</strong> “building, house”.<br>
+          <span style="display:inline-block; margin-left:1.5em;">
+            ✶atakwā- &gt; atapā- &gt; atapa- &gt; atapa- &gt; ataba- &gt; adaba- (pr.t. <strong>adaba</strong>, pa.t. <strong>adabant</strong>, <strong>adabanne-</strong>, fut. <strong>adabatha</strong>)
+          </span>
+        </div>
+        <p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-2795181045.html" target="_blank" rel="noopener noreferrer">Eldamo on direct objects</a> and <a href="https://eldamo.org/content/words/word-3326716807.html" target="_blank" rel="noopener noreferrer">imperatives and wishes</a>.</p>
+      </section>
+
+      <section>
+        <h3 id="vocab">1.2.1.6a Vocabulary Practice</h3>
+        <p>Practice the vocabulary and CEA article forms from this lesson. Capitalization, spaces, and the middle dot are treated as presentation choices by the exercise.</p>
+        <noscript><p>Enable JavaScript to use the interactive vocabulary exercise.</p></noscript>
+        <div id="exercise-vocab"></div>
+      </section>
+
+      <div class="cta-row" style="margin-top:16px;">
+        <a href="/1.2.2.html" class="primary">1.2.2 Caraith (Verbs) →</a>
+        <div style="flex:1"></div>
+      </div>
+
+      <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+
+    </main>
+  </div>
+
+  <!-- SCRIPTS: offcanvas, dropdowns, h3 pills, back-to-top already live in your site template -->
+  <script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+
+  <!-- Interactive Vocab Widget (adapted from your old script; mounts into #exercise-vocab) -->
+  <script>
+(function initExerciseWidget(){
+  function start() {
+    // ===== CONFIG =====
+    const COLORS = {
+      bg: "#f5f3ec",
+      card: "#ffffff",
+      ink: "#2C2C2C",
+      primary: "#4C668C",
+      primaryInk: "#FFEEAA",
+      accent: "#AA6539",
+      accentDark: "#803F15",
+      line: "#bcc6dd"
+    };
+
+    const CHAR_PALETTE = ["·","ñ","í","î","ô","â"];
+    const MODE_KEY = "scx-ex-vocab-mode";
+    let mode = localStorage.getItem(MODE_KEY) || "MIXED";
+
+    let _id = 0;
+    const ITEMS = [
+      { id:_id++, prompt:"en·aew", dir:"EN", expect:["the bird"] },
+      { id:_id++, prompt:"in·aew", dir:"EN", expect:["the birds"] },
+      { id:_id++, prompt:"The bird.", dir:"SINDARIN", expect:["en·aew"] },
+      { id:_id++, prompt:"The birds.", dir:"SINDARIN", expect:["in·aew"] },
+
+      { id:_id++, prompt:"en·aran", dir:"EN", expect:["the king"] },
+      { id:_id++, prompt:"in·erain", dir:"EN", expect:["the kings"] },
+      { id:_id++, prompt:"The king.", dir:"SINDARIN", expect:["en·aran"] },
+      { id:_id++, prompt:"The kings.", dir:"SINDARIN", expect:["in·erain"] },
+
+      { id:_id++, prompt:"en·adan", dir:"EN", expect:["the man"] },
+      { id:_id++, prompt:"in·edain", dir:"EN", expect:["the men"] },
+      { id:_id++, prompt:"The man (as a species).", dir:"SINDARIN", expect:["en·adan"] },
+      { id:_id++, prompt:"The men.", dir:"SINDARIN", expect:["in·edain"] },
+
+      { id:_id++, prompt:"e·mâr", dir:"EN", expect:["the house"] },
+      { id:_id++, prompt:"e·mbâr", dir:"EN", expect:["the house"] },
+      { id:_id++, prompt:"i·mair", dir:"EN", expect:["the houses"] },
+      { id:_id++, prompt:"i·mbair", dir:"EN", expect:["the houses"] },
+      { id:_id++, prompt:"The house.", dir:"SINDARIN", expect:["e·mâr","e·mbâr"] },
+      { id:_id++, prompt:"The houses.", dir:"SINDARIN", expect:["i·mair","i·mbair"] },
+
+      { id:_id++, prompt:"en·edhel", dir:"EN", expect:["the elf"] },
+      { id:_id++, prompt:"in·edhil", dir:"EN", expect:["the elves"] },
+      { id:_id++, prompt:"The elf.", dir:"SINDARIN", expect:["en·edhel"] },
+      { id:_id++, prompt:"The elves.", dir:"SINDARIN", expect:["in·edhil"] },
+
+      { id:_id++, prompt:"e·ñgil", dir:"EN", expect:["the star"] },
+      { id:_id++, prompt:"e·ñil",  dir:"EN", expect:["the star"] },
+      { id:_id++, prompt:"i·ñgil", dir:"EN", expect:["the stars"] },
+      { id:_id++, prompt:"i·ñil",  dir:"EN", expect:["the stars"] },
+      { id:_id++, prompt:"The star.", dir:"SINDARIN", expect:["e·ñgil","e·ñil"] },
+      { id:_id++, prompt:"The stars.", dir:"SINDARIN", expect:["i·ñgîl","i·ñîl"] },
+
+      { id:_id++, prompt:"e·chothron", dir:"EN", expect:["the captain"] },
+      { id:_id++, prompt:"i·chethryn", dir:"EN", expect:["the captains"] },
+      { id:_id++, prompt:"The captain.", dir:"SINDARIN", expect:["e·chothron"] },
+      { id:_id++, prompt:"The captains.", dir:"SINDARIN", expect:["i·chethryn"] },
+
+      { id:_id++, prompt:"en·orch", dir:"EN", expect:["the orc"] },
+      { id:_id++, prompt:"in·yrch", dir:"EN", expect:["the orcs"] },
+      { id:_id++, prompt:"The orc.", dir:"SINDARIN", expect:["en·orch"] },
+      { id:_id++, prompt:"The orcs.", dir:"SINDARIN", expect:["in·yrch"] },
+
+      { id:_id++, prompt:"e·vegil", dir:"EN", expect:["the sword"] },
+      { id:_id++, prompt:"i·megil", dir:"EN", expect:["the swords"] },
+      { id:_id++, prompt:"The sword.", dir:"SINDARIN", expect:["e·vegil"] },
+      { id:_id++, prompt:"The swords.", dir:"SINDARIN", expect:["i·megil"] },
+
+      { id:_id++, prompt:"e·chadhod", dir:"EN", expect:["the dwarf"] },
+      { id:_id++, prompt:"i·Chedhyd", dir:"EN", expect:["the dwarves"] },
+      { id:_id++, prompt:"i·Chedhoed", dir:"EN", expect:["the dwarves"] },
+      { id:_id++, prompt:"The dwarf.", dir:"SINDARIN", expect:["e·chadhod"] },
+      { id:_id++, prompt:"The dwarves.", dir:"SINDARIN", expect:["i·Chedhyd","i·Chedhoed"] },
+
+      { id:_id++, prompt:"e·garas", dir:"EN", expect:["the city"] },
+      { id:_id++, prompt:"i·cherais", dir:"EN", expect:["the cities"] },
+      { id:_id++, prompt:"The city.", dir:"SINDARIN", expect:["e·garas"] },
+      { id:_id++, prompt:"The cities.", dir:"SINDARIN", expect:["i·cherais"] },
+
+      { id:_id++, prompt:"e·daur", dir:"EN", expect:["the forest"] },
+      { id:_id++, prompt:"i·thoer", dir:"EN", expect:["the forests"] },
+      { id:_id++, prompt:"The forest.", dir:"SINDARIN", expect:["e·daur"] },
+      { id:_id++, prompt:"The forests.", dir:"SINDARIN", expect:["i·thoer"] }
+    ];
+
+    const answeredByMode = { EN:new Set(), SINDARIN:new Set(), MIXED:new Set() };
+
+    const norm = (s) => s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[·⋅∙•・]/g, "")
+      .replace(/[-\u2013\u2014]/g, "")
+      .replace(/[\[\](){}.,;:!?'"“”‘’`~_/\\]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const tokenize = (s) => norm(s).split(" ");
+
+    function nearestMatchFeedback(input, expects) {
+      const toksIn = tokenize(input);
+      let best = { score: -1, tokens: [], expect: "" };
+      for (const exp of expects) {
+        const toksExp = tokenize(exp);
+        let k = 0;
+        while (k < Math.min(toksIn.length, toksExp.length) && toksIn[k] === toksExp[k]) k++;
+        if (k > best.score) best = { score: k, tokens: toksExp, expect: exp };
+      }
+      return best;
+    }
+
+    function subtleDiffHint(input, expect) {
+      const a = tokenize(input), b = tokenize(expect);
+      let i = 0; while (i < Math.min(a.length, b.length) && a[i] === b[i]) i++;
+      if (i === 0) return "Start with: “" + b[0] + "”";
+      if (i < b.length && i === a.length) return "Good so far. Next word: “" + b[i] + "”";
+      if (i < b.length) return "Check this word: “" + b[i] + "”";
+      if (a.length > b.length) return "You added extra words at the end.";
+      return "Looks close. Mind number and articles.";
+    }
+
+    const filtered = () => mode === "MIXED" ? ITEMS : ITEMS.filter(it => it.dir === mode);
+
+    const mount = document.getElementById("exercise-vocab");
+    if (!mount) return;
+
+    const style = document.createElement("style");
+    style.textContent = `
+  /* Widget uses site variables so it matches the main theme automatically (flat colors, no gradients) */
+  .scx-exv { font-family: inherit; color: var(--text); }
+  .scx-exv * { box-sizing: border-box; }
+  .scx-card { background: var(--card); border: 2px solid var(--accent); border-radius: 12px; box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
+  .scx-header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.6rem .8rem; background: var(--accent); color: var(--pill-fore); border-radius:10px 10px 0 0; flex-wrap:wrap; }
+  .scx-title { font-weight:700; letter-spacing:.02em; }
+  .scx-progress { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .scx-bar { height:100%; width:0%; background: var(--accent-2); transition: width .25s ease; }
+
+  .scx-modes { display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; }
+  .scx-mode { appearance:none; border:1px solid var(--line); background:transparent; color:var(--pill-fore); padding:.25rem .5rem; border-radius:8px; cursor:pointer; font: inherit; opacity:.95; }
+  .scx-mode[aria-pressed="true"] { background: var(--pill-bg); color: var(--pill-fore); border-color: var(--pill-bg); opacity:1; }
+
+  .scx-body { padding: .9rem .9rem .6rem; display:grid; gap:.8rem; }
+  .scx-prompt { font-style: italic; color: var(--accent); font-weight:700; }
+
+  .scx-inputrow { display:grid; grid-template-columns: 1fr auto; gap:.5rem; align-items:center; }
+  .scx-input { width:100%; padding:.6rem .7rem; border:1px solid var(--line); border-radius:10px; font-size:1rem; background: var(--card); color:var(--text); }
+  .scx-input.correct { border-color: #3b9142; box-shadow: 0 0 0 3px rgba(59,145,66,0.08); }
+  .scx-input.incorrect { border-color: #b6483f; box-shadow: 0 0 0 3px rgba(182,72,63,0.08); }
+
+  .scx-charbar { display:flex; flex-wrap:wrap; gap:.35rem; align-items:center; }
+  .scx-chlabel { font-size:.9rem; color:var(--accent); font-weight:700; margin-right:.2rem; }
+  .scx-char { appearance:none; border:1px solid var(--line); background: var(--card); color: var(--text); border-radius:8px; padding:.25rem .45rem; cursor:pointer; box-shadow:0 1px 4px rgba(2,6,23,0.04); }
+  .scx-char:hover { border-color: var(--accent-2); transform: translateY(-1px); }
+
+  .scx-btn { appearance:none; border:none; cursor:pointer; font: inherit; padding:.55rem .9rem; border-radius:10px; box-shadow: 0 2px 8px rgba(2,6,23,0.04); }
+  .scx-btn.primary { background: var(--accent-2); color: var(--pill-fore); }
+  .scx-btn.primary:hover { filter: brightness(.98); }
+  .scx-btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--line); }
+
+  .scx-foot { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding: .2rem .9rem .9rem; }
+  .scx-ctrls { display:flex; gap:.4rem; flex-wrap:wrap; }
+
+  .scx-msg { min-height: 1.25rem; font-size:.95rem; color:var(--muted); }
+  .scx-msg.ok { color:#256d2c; }
+  .scx-msg.err { color:#7a2a22; }
+
+  .scx-compact { display:flex; align-items:center; gap:.5rem; }
+  .scx-index { font-weight:700; color:var(--accent); }
+
+  .scx-kudos { display:inline-flex; align-items:center; gap:.35rem; font-weight:700; color:#256d2c; }
+  .scx-dot { width:.6rem; height:.6rem; border-radius:999px; background:#256d2c; box-shadow:0 0 0 4px rgba(37,109,44,.12); }
+
+  @media (max-width: 640px) { .scx-inputrow { grid-template-columns: 1fr; } }
+`;
+    document.head.appendChild(style);
+
+    const root = document.createElement("section");
+    root.className = "scx-exv scx-card";
+    root.setAttribute("aria-label","Vocabulary & Plurals (CEA) Interactive");
+    root.innerHTML = `
+      <div class="scx-header">
+        <div class="scx-title">Vocabulary & Plurals · CEA</div>
+        <div class="scx-modes" role="group" aria-label="Practice mode">
+          <button class="scx-mode" data-mode="EN" aria-pressed="false" title="Sindarin → English">EN</button>
+          <button class="scx-mode" data-mode="SINDARIN" aria-pressed="false" title="English → Sindarin">SIND</button>
+          <button class="scx-mode" data-mode="MIXED" aria-pressed="false" title="Both directions">MIX</button>
+        </div>
+        <div style="flex:1; min-width:160px; margin: 0 .6rem;">
+          <div class="scx-progress" aria-hidden="true"><div class="scx-bar"></div></div>
+        </div>
+        <div class="scx-compact"><span class="scx-index">1</span><span>/ </span></div>
+      </div>
+      <div class="scx-body">
+        <div class="scx-prompt"></div>
+        <div class="scx-inputrow">
+          <input class="scx-input" type="text" enterkeyhint="done" placeholder="Type your answer here…"/>
+          <button class="scx-btn primary scx-check">Check</button>
+        </div>
+        <div class="scx-charbar" aria-label="Special characters">
+          <span class="scx-chlabel">Special chars:</span>
+          <div class="scx-chwrap"></div>
+        </div>
+        <div class="scx-msg" aria-live="polite"></div>
+      </div>
+      <div class="scx-foot">
+        <div class="scx-ctrls">
+          <button class="scx-btn ghost scx-prev" title="Previous (←)">◀ Prev</button>
+          <button class="scx-btn ghost scx-next" title="Next (→)">Next ▶</button>
+          <button class="scx-btn ghost scx-hint" title="Show a small hint">Hint</button>
+          <button class="scx-btn ghost scx-show" title="Reveal the answer">Show</button>
+        </div>
+        <div class="scx-kudos" style="visibility:hidden;" role="status"><span class="scx-dot"></span><span>Correct!</span></div>
+      </div>
+    `;
+
+    const mountParent = mount.parentNode;
+    if (mountParent && typeof mount.replaceWith === "function") {
+      mount.replaceWith(root);
+    } else if (mountParent) {
+      mountParent.replaceChild(root, mount);
+    } else {
+      mount.innerHTML = "";
+      mount.appendChild(root);
+    }
+
+    let i = 0;
+
+    const el = {
+      prompt: root.querySelector(".scx-prompt"),
+      input: root.querySelector(".scx-input"),
+      check: root.querySelector(".scx-check"),
+      msg: root.querySelector(".scx-msg"),
+      prev: root.querySelector(".scx-prev"),
+      next: root.querySelector(".scx-next"),
+      hint: root.querySelector(".scx-hint"),
+      show: root.querySelector(".scx-show"),
+      index: root.querySelector(".scx-index"),
+      bar: root.querySelector(".scx-bar"),
+      kudos: root.querySelector(".scx-kudos"),
+      modes: Array.from(root.querySelectorAll(".scx-mode")),
+      total: root.querySelector(".scx-compact span:last-child"),
+      charwrap: root.querySelector(".scx-chwrap")
+    };
+
+    function setMode(newMode) {
+      mode = newMode;
+      localStorage.setItem(MODE_KEY, mode);
+      i = 0;
+      el.modes.forEach(btn => btn.setAttribute("aria-pressed", btn.dataset.mode === mode ? "true" : "false"));
+      el.total.textContent = "/ " + filtered().length;
+      render();
+    }
+
+    function progressPercent() {
+      const ids = new Set(filtered().map(x => x.id));
+      const done = Array.from(answeredByMode[mode]).filter(id => ids.has(id)).length;
+      return Math.round((done / ids.size) * 100) || 0;
+    }
+
+    function safeFocusIfVisible() {
+      const rect = el.input.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const visible = rect.top >= 0 && rect.bottom <= vh && rect.bottom > 0;
+      if (visible) {
+        try { el.input.focus({ preventScroll: true }); } catch(_) { /* older browsers */ }
+      }
+    }
+
+    function render() {
+      const list = filtered();
+      const item = list[i];
+      el.prompt.textContent = (item.dir === "EN" ? "→ English: " : "→ Sindarin: ") + item.prompt;
+      el.index.textContent = (i + 1).toString();
+      el.input.value = "";
+      el.input.classList.remove("correct","incorrect");
+      el.msg.textContent = "";
+      el.kudos.style.visibility = "hidden";
+      el.bar.style.width = progressPercent() + "%";
+      el.total.textContent = "/ " + list.length;
+      safeFocusIfVisible();
+    }
+
+    function insertChar(ch) {
+      const inp = el.input;
+      const start = inp.selectionStart ?? inp.value.length;
+      const end = inp.selectionEnd ?? inp.value.length;
+      const before = inp.value.slice(0, start);
+      const after = inp.value.slice(end);
+      inp.value = before + ch + after;
+      const newPos = start + ch.length;
+      inp.setSelectionRange(newPos, newPos);
+      inp.focus();
+    }
+
+    function buildCharBar() {
+      el.charwrap.innerHTML = "";
+      CHAR_PALETTE.forEach(ch => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "scx-char";
+        b.textContent = ch;
+        b.setAttribute("aria-label", 'Insert "'+ch+'"');
+        b.addEventListener("click", () => insertChar(ch));
+        el.charwrap.appendChild(b);
+      });
+    }
+
+    function checkAnswer() {
+      const item = filtered()[i];
+      const input = el.input.value;
+      const expects = item.expect;
+      const ok = expects.some(exp => {
+        const a = norm(exp);
+        const b = norm(input);
+        return a === b || a.replace(/\s+/g,"") === b.replace(/\s+/g,"");
+      });
+
+      if (ok) {
+        answeredByMode[mode].add(item.id);
+        el.input.classList.add("correct");
+        el.input.classList.remove("incorrect");
+        el.msg.textContent = item.dir === "EN" ? "Nice! Your translation is correct." : "Mae lîn! (Correct)";
+        el.msg.className = "scx-msg ok";
+        el.kudos.style.visibility = "visible";
+        el.bar.style.width = progressPercent() + "%";
+        setTimeout(() => go(+1), 650);
+      } else {
+        el.input.classList.add("incorrect");
+        el.input.classList.remove("correct");
+        const best = nearestMatchFeedback(input, expects);
+        const hint = subtleDiffHint(input, best.expect);
+        el.msg.textContent = hint;
+        el.msg.className = "scx-msg err";
+      }
+    }
+
+    function go(delta) {
+      const list = filtered();
+      i = (i + delta + list.length) % list.length;
+      render();
+    }
+
+    function bindEvents() {
+      el.check.addEventListener("click", checkAnswer);
+      el.input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkAnswer();
+        if (e.key === "ArrowRight" && (e.metaKey || e.ctrlKey)) go(+1);
+        if (e.key === "ArrowLeft" && (e.metaKey || e.ctrlKey)) go(-1);
+      });
+      el.prev.addEventListener("click", () => go(-1));
+      el.next.addEventListener("click", () => go(+1));
+      el.hint.addEventListener("click", () => {
+        const item = filtered()[i];
+        const best = nearestMatchFeedback(el.input.value, item.expect);
+        el.msg.textContent = subtleDiffHint(el.input.value, best.expect);
+        el.msg.className = "scx-msg";
+      });
+      el.show.addEventListener("click", () => {
+        const item = filtered()[i];
+        el.input.value = item.expect[0];
+        el.msg.textContent = "Shown correct answer.";
+        el.msg.className = "scx-msg";
+        el.input.classList.remove("incorrect");
+      });
+      root.querySelectorAll(".scx-mode").forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+    }
+
+    buildCharBar();
+    bindEvents();
+    setMode(mode);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+  </script>
+
+</body>
+</html>

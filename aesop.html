@@ -1,0 +1,3084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aesops</title>
+ 
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+  font-size: 11px;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 0.72em;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+.div-table {
+  border: 1px solid rgba(0,0,0,0.04);            /* lighter frame like your grid */
+  border-radius: 10px;                            /* match grid-table */
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);      /* match grid-table */
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  color: var(--text);
+  font-size: 14px;                                /* consistent with tbody td */
+}
+
+/* header + rows share the same grid */
+.div-table .row {
+  display: grid;
+  grid-template-columns: 55px 1.35fr 1.35fr 1.35fr; /* keep your original column layout */
+}
+
+/* cells */
+.div-table .cell {
+  padding: 10px;                                  /* slightly adjusted to match grid-table */
+  line-height: 1.2;
+  min-width: 0;
+}
+
+/* header styling — using the same gradient & foreground as thead th */
+.div-table .row.head {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* row / cell dividers use the subtle rgba border */
+.div-table .row:not(.head) {
+  background: transparent;
+}
+.div-table .row:not(:last-child) .cell {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.div-table .cell:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+/* optional: keep the # column visually compact */
+.div-table .cell.num {
+  white-space: nowrap;
+}
+
+/* hover — whole row subtle glow (from tbody tr:hover td) */
+.div-table .row:hover > .cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* active/hovered cell stronger focus (optional) */
+.div-table .cell:hover {
+  background: rgba(14,165,164,0.10);
+}
+
+/* responsive: stack into "cards" on narrow screens */
+@media (max-width: 720px) {
+  .div-table .row {
+    grid-template-columns: 1fr;
+  }
+
+  .div-table .row.head {
+    display: none; /* hide header row on mobile */
+  }
+
+  .div-table .cell {
+    border-right: none !important;
+  }
+
+  .div-table .row:not(:last-child) .cell:last-child {
+    border-bottom: none;
+  }
+
+  .div-table .row {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .div-table .row:last-child {
+    border-bottom: none;
+  }
+
+  /* labels for mobile */
+  .div-table .cell[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--accent);
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+<header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+
+<main class="main-center" role="main">
+
+  <div>Here you will fine Aesops Fables translated into Sindarin. Check out my good friend Chaered's site <a href="https://ungwe.net/silme/text/aesop">Ungwe.net</a> with Quenya translations.</div> 
+  
+    <h3 id="1">A List of the Fables</h3>
+  <ul>
+    <li><strong><a href="/aesop#1.1">Aesop 002: i·Chebyr ah e·Vund (The Frogs and the Ox)</a></strong></li>
+    <li><strong><a href="/aesop#1.2">Aesop 003: Glingad nell bo cheath e·Vuig (Belling the Cat)</a></strong></li>
+    <li><strong><a href="/aesop#1.3">Aesop 004: Nigol ui Garas ah Nigol ui Rídhas (The Town Mouse & the Country Mouse)</a></strong></li>
+    <li><strong><a href="/aesop#1.4">Aesop 005: e·Rusc ah i·Mirybin (The Fox and the Grapes)</a></strong></li>
+    <li><strong><a href="/aesop#1.5">Aesop 006: e·Dhraug ah en·Aralilthon<sup class="fn">1</sup> (The Wolf and the Crane)</a></strong></li>
+    <li><strong><a href="/aesop#1.6">Aesop 007: e·Raw ah e·Nigol (The Lion and the Mouse)</a></strong></li>
+    <li><strong><a href="/aesop#1.7">Aesop 008: e·Bíeg ah e·Vund (The Gnat and the Bull)</a></strong></li>
+    <li><strong><a href="/aesop#1.8">Aesop 009: Mablanthos (The Plane Tree)</a></strong></li>
+    <li><strong><a href="/aesop#1.9">Aesop 010: e·Dhúcholl<sup class="fn">1</sup> ah e·‘Laegabor<sup class="fn">2</sup> (The Owl & the Grasshopper)</a></strong></li>
+    <li><strong><a href="/aesop#1.10">Aesop 011: e·Nordh ah i·Lisg (The Oak and the Reeds)</a></strong></li>
+    <li><strong><a href="/aesop#1.11">Aesop 012: e·Gorch ah en·Olf (The Crow & the Pitcher)</a></strong></li>
+    <li><strong><a href="/aesop#1.12">Aesop 013: i·Naeag Dâd (The Two Goats)</a></strong></li>
+    <li><strong>Aesop 014: e·Garchunc<sup class="fn">1</sup> ah e·Rusc (The Wild Boar & the Fox)</strong></li>
+    <li><strong>Aesop 015: e·Nimlang<sup class="fn">1</sup> (The Heron)</strong></li>
+    <li><strong>Aesop 016: e·Rusc ah e·Dobganor<sup class="fn">1</sup> (The Fox & the Stork)</strong></li>
+    <li><strong>Aesop 017: (The Stag & the Reflection)</strong></li>
+    <li><strong>Aesop 018: (The Cock & the Fox)</strong></li>
+    <li><strong>Aesop 019: (The Fox & the Goat)</strong></li>
+    <li><strong>Aesop 020: (The Fox & the Leopard)</strong></li>
+    <li><strong>Aesop 021: (The Frog & the Mouse)</strong></li>
+    <li><strong><a href="/aesop#1.21">Aesop 022: e·Dhraug vi Chelf Mâf (The Wolf in Sheep's Clothing)</a></strong></li>
+    <li><strong>Aesop 023: (The Eagle & the Beetle)</strong></li>
+    <li><strong><a href="/aesop#1.23">Aesop 024: en·Emel ah e·Dhraug (The Mother & the Wolf)</a></strong></li>
+    <li><strong>Aesop 025: (The Hare & the Tortoise)</strong></li>
+    <li><strong>Aesop 026: (The Dog & the Reflection)</strong></li>
+    <li><strong>Aesop 027: (The Fox & the Crow)</strong></li>
+    <li><strong>Aesop 028: (The Ant & the Dove)</strong></li>
+    <li><strong>Aesop 029: (The Man & the Satyr)</strong></li>
+    <li><strong>Aesop 030: (The Hare & the Ears)</strong></li>
+    <li><strong><a href="/aesop#1.30">Aesop 031: e·Limron<sup class="fn">1</sup> ah e·Lim bîn (The Fisherman & the Little Fish)</a></strong></li>
+    <li><strong>Aesop 032: (The Wolf & the Kid)</strong></li>
+    <li><strong>Aesop 033: (The Tortoise & the Ducks)</strong></li>
+    <li><strong>Aesop 034: (The Young Crab & the Mother)</strong></li>
+    <li><strong>Aesop 035: (The Dog, the Cock, & the Fox)</strong></li>
+    <li><strong>Aesop 036: (The Eagle & the Jackdaw)</strong></li>
+    <li><strong>Aesop 037: (The Boy & the Filberts)</strong></li>
+    <li><strong>Aesop 038: (Hercules & the Wagoner)</strong></li>
+    <li><strong>Aesop 039: (The Kid & the Wolf)</strong></li>
+    <li><strong>Aesop 040: (The Bundle of Sticks)</strong></li>
+    <li><strong>Aesop 041: (The Ass & the Driver)</strong></li>
+    <li><strong>Aesop 042: (The Oxen & the Wheels)</strong></li>
+    <li><strong>Aesop 043: (The Shepherd Boy & the Wolf)</strong></li>
+    <li><strong>Aesop 044: (The Farmer & the Stork)</strong></li>
+    <li><strong>Aesop 045: (The Sheep & the Pig)</strong></li>
+    <li><strong>Aesop 046: (The Travelers & the Purse)</strong></li>
+    <li><strong>Aesop 047: (The Lion & the Ass)</strong></li>
+    <li><strong>Aesop 048: (The Frogs Who Wished for a King)</strong></li>
+    <li><strong>Aesop 049: (The Wolf & the Shadow)</strong></li>
+    <li><strong>Aesop 050: (The Rat & the Elephant)</strong></li>
+    <li><strong>Aesop 051: (The Boys & the Frogs)</strong></li>
+    <li><strong>Aesop 052: (The Ants & the Grasshopper)</strong></li>
+    <li><strong>Aesop 053: (The Ass Carrying the Image)</strong></li>
+    <li><strong>Aesop 054: (A Raven & a Swan)</strong></li>
+    <li><strong>Aesop 055: (The Ass & the Load of Salt)</strong></li>
+    <li><strong>Aesop 056: (The Lion & the Gnat)</strong></li>
+    <li><strong>Aesop 057: (The Leap at Rhodes)</strong></li>
+    <li><strong>Aesop 058: (The Cock & the Jewel)</strong></li>
+    <li><strong>Aesop 059: (The Monkey & the Camel)</strong></li>
+    <li><strong>Aesop 060: (The Ass, the Fox, & the Lion)</strong></li>
+    <li><strong>Aesop 061: (The Birds, the Beasts, & the Bat)</strong></li>
+    <li><strong>Aesop 062: (The Lion, the Bear, & the Fox)</strong></li>
+    <li><strong>Aesop 063: (The Wolf & the Lamb)</strong></li>
+    <li><strong>Aesop 064: (The Wolf & the Sheep)</strong></li>
+    <li><strong>Aesop 065: (The Hares & the Frogs)</strong></li>
+    <li><strong>Aesop 066: (The Travelers & the Sea)</strong></li>
+    <li><strong>Aesop 067: (The Wolf & the Lion)</strong></li>
+    <li><strong>Aesop 068: (The Peacock)</strong></li>
+    <li><strong>Aesop 069: (The Mice & the Weasels)</strong></li>
+    <li><strong>Aesop 070: (The Wolf & the Lean Dog)</strong></li>
+    <li><strong>Aesop 071: (The Fox & the Lion)</strong></li>
+    <li><strong>Aesop 072: (The Dog & His Master's Dinner)</strong></li>
+    <li><strong>Aesop 073: (The Vain Jackdaw & His Borrowed Feathers)</strong></li>
+    <li><strong>Aesop 074: (The Monkey & the Dolphin)</strong></li>
+    <li><strong>Aesop 075: (The Wolf & the Ass)</strong></li>
+    <li><strong>Aesop 076: (The Monkey & the Cat)</strong></li>
+    <li><strong>Aesop 077: (The Dogs & the Fox)</strong></li>
+    <li><strong>Aesop 078: (The Dogs & the Hides)</strong></li>
+    <li><strong>Aesop 079: (The Rabbit, the Weasel, & the Cat)</strong></li>
+    <li><strong>Aesop 080: (The Bear & the Bees)</strong></li>
+    <li><strong>Aesop 081: (The Dog in the Manger)</strong></li>
+    <li><strong>Aesop 082: (The Wolf & the Goat)</strong></li>
+    <li><strong>Aesop 083: (The Ass & the Grasshoppers)</strong></li>
+    <li><strong>Aesop 084: (The Mule)</strong></li>
+    <li><strong>Aesop 085: (The Cat, the Cock, & the Young Mouse)</strong></li>
+    <li><strong>Aesop 086: (The Wolf & the Shepherd)</strong></li>
+    <li><strong>Aesop 087: (The Peacock & the Crane)</strong></li>
+    <li><strong>Aesop 088: (The Farmer & the Cranes)</strong></li>
+    <li><strong>Aesop 089: (The Farmer & His Sons)</strong></li>
+    <li><strong>Aesop 090: (The Two Pots)</strong></li>
+    <li><strong>Aesop 091: (The Goose & the Golden Egg)</strong></li>
+    <li><strong>Aesop 092: (The Fighting Bulls & the Frog)</strong></li>
+    <li><strong>Aesop 093: (The Mouse & the Weasel)</strong></li>
+    <li><strong>Aesop 094: (The Farmer & the Snake)</strong></li>
+    <li><strong>Aesop 095: (The Sick Stag)</strong></li>
+    <li><strong>Aesop 096: (The Goatherd & the Wild Goats)</strong></li>
+    <li><strong>Aesop 097: (The Spendthrift & the Swallow)</strong></li>
+    <li><strong>Aesop 098: (The Cat & the Birds)</strong></li>
+    <li><strong>Aesop 099: (The Dog & the Oyster)</strong></li>
+    <li><strong>Aesop 100: (The Astrologer)</strong></li>
+    <li><strong>Aesop 101: (Three Bullocks & a Lion)</strong></li>
+    <li><strong>Aesop 102: (Mercury & the Woodman)</strong></li>
+    <li><strong>Aesop 103: (The Fox & the Crab)</strong></li>
+    <li><strong>Aesop 104: (The Serpent & the Eagle)</strong></li>
+    <li><strong>Aesop 105: (The Bull & the Goat)</strong></li>
+    <li><strong>Aesop 106: (The Old Lion & the Fox)</strong></li>
+    <li><strong>Aesop 107: (The Man & the Lion)</strong></li>
+    <li><strong>Aesop 108: (The Ass & the Lap Dog)</strong></li>
+    <li><strong>Aesop 109: (The Milkmaid & Her Pail)</strong></li>
+    <li><strong>Aesop 110: (The Wolf & the Shepherd)</strong></li>
+    <li><strong>Aesop 111: (The Goatherd & the Goat)</strong></li>
+    <li><strong>Aesop 112: (The Miser)</strong></li>
+    <li><strong>Aesop 113: (The Wolf & the House Dog)</strong></li>
+    <li><strong>Aesop 114: (The Fox & the Hedgehog)</strong></li>
+    <li><strong>Aesop 115: (The Bat & the Weasels)</strong></li>
+    <li><strong>Aesop 116: (The Quack Toad)</strong></li>
+    <li><strong>Aesop 117: (The Fox Without a Tail)</strong></li>
+    <li><strong>Aesop 118: (The Mischievous Dog)</strong></li>
+    <li><strong>Aesop 119: (The Rose & the Butterfly)</strong></li>
+    <li><strong>Aesop 120: (The Cat & the Fox)</strong></li>
+    <li><strong>Aesop 121: (The Boy & the Nettles)</strong></li>
+    <li><strong>Aesop 122: (The Old Lion)</strong></li>
+    <li><strong>Aesop 123: (The Fox & the Pheasants)</strong></li>
+    <li><strong>Aesop 124: (Two Travelers & a Bear)</strong></li>
+    <li><strong>Aesop 125: (The Porcupine & the Snakes)</strong></li>
+    <li><strong>Aesop 126: (The Fox & the Monkey)</strong></li>
+    <li><strong>Aesop 127: (The Flies & the Honey)</strong></li>
+    <li><strong>Aesop 128: (The Eagle & the Kite)</strong></li>
+    <li><strong>Aesop 129: (The Stag, the Sheep, & the Wolf)</strong></li>
+    <li><strong>Aesop 130: (The Animals & the Plague)</strong></li>
+    <li><strong>Aesop 131: (The Shepherd & the Lion)</strong></li>
+    <li><strong>Aesop 132: (The Bees & Wasps, & the Hornet)</strong></li>
+    <li><strong>Aesop 133: (The Lark & Her Young Ones)</strong></li>
+    <li><strong>Aesop 134: (The Cat & the Old Rat)</strong></li>
+    <li><strong>Aesop 135: (The Ass & His Shadow)</strong></li>
+    <li><strong>Aesop 136: (The Miller, His Son, & the Ass)</strong></li>
+    <li><strong>Aesop 137: (The Wolf, the Kid, and the Goat)</strong></li>
+    <li><strong>Aesop 138: (The Swallow & the Crow)</strong></li>
+    <li><strong>Aesop 139: (Jupiter & the Monkey)</strong></li>
+    <li><strong>Aesop 140: (The Lion, the Ass, & the Fox)</strong></li>
+    <li><strong>Aesop 141: (The Lion's Share)</strong></li>
+    <li><strong>Aesop 142: (The Mole & His Mother)</strong></li>
+    <li><strong>Aesop 143: (The North Wind & the Sun)</strong></li>
+    <li><strong>Aesop 144: (The Wolves & the Sheep)</strong></li>
+    <li><strong>Aesop 145: (The Cock & the Fox)</strong></li>
+    <li><strong>Aesop 146: (The Ass in the Lion's Skin)</strong></li>
+    <li><strong>Aesop 147: (The Fighting Cocks & the Eagle)</strong></li>
+
+</ul>
+<br>
+    <img img src="aesop/aesop002.png" style="width: 300px; height: auto;">
+
+  <h3 id="1.1">i·Chebyr ah e·Vund</h3>
+  <ul>
+  <li><strong>Back Translation: The Frogs & the Bull</strong></li>
+  <li><strong><a href="https://read.gov/aesop/002.html">Original: The Frogs & the Ox</a></strong></li>
+   </ul>
+
+ <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> Reviewed on Vinyë Lambengolmor by Ellanto on 1/24/26.
+  </div>
+
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Mund odul n’ ael na lisg an hoged.</div>
+    <div class="cell" data-label="Back Translation">[A] Bull came to [a] pool of reeds to drink.</div>
+    <div class="cell" data-label="Original">An Ox came down to a reedy pool to drink.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Lo falaechast vin nen vo dhram, nistant gabor ‘wain n’ e·vadha.</div>
+    <div class="cell" data-label="Back Translation">While he splashed into the water by (agent of) [a] heavy blow, he pressed [a] young frog into the mud.</div>
+    <div class="cell" data-label="Original">As he splashed heavily into the water, he crushed a young Frog into the mud.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">Rong e·gabor iaur anírant e·gabor bîn a mabent i·Chenair ah e·nethil dín man hídant anden.</div>
+    <div class="cell" data-label="Back Translation">Soon the old frog longed for the little frog and asked his brothers and sisters what happened to him.</div>
+    <div class="cell" data-label="Original">The old Frog soon missed the little one and asked his brothers and sisters what had become of him.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">“Úan mbelaith,” ebent ben na thin, “Abant bo chanar bîn vo vin i·thail velig dín!”</div>
+    <div class="cell" data-label="Back Translation">“[A] mighty monster,” said one of them, “he stepped on little brother with one of his great feet!”</div>
+    <div class="cell" data-label="Original">"A great big monster," said one of them, "stepped on little brother with one of his huge feet!"</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">“Te vorg!” ebent e·gabor iaur, whestol<sup class="fn">1</sup> en·ammos dín.</div>
+    <div class="cell" data-label="Back Translation">He [was] big! said the old frog, puffing her chest.</div>
+    <div class="cell" data-label="Original">"Big, was he!" said the old Frog, puffing herself up.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">“Borg ve hen?”</div>
+    <div class="cell" data-label="Back Translation">“Big like this?”</div>
+    <div class="cell" data-label="Original">"Was he as big as this?"</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">“A! Ammorg!” agóner.</div>
+    <div class="cell" data-label="Back Translation">“O!, Bigger!” they shouted.</div>
+    <div class="cell" data-label="Original">"Oh, much bigger!" they cried.</div>
+  </div>
+
+<div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">e·Gabor cwhestant<sup class="fn">1</sup> en·ammos dín am.</div>
+    <div class="cell" data-label="Back Translation">The frog puffed her chest more.</div>
+    <div class="cell" data-label="Original">The Frog puffed up still more.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">“Ú-obul en·úan nad ammorg athar hen,” ebent.</div>
+    <div class="cell" data-label="Back Translation">“He could not be bigger beyond this,” she said.</div>
+    <div class="cell" data-label="Original">"He could not have been bigger than this," she said.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">Ach i·chebyr bîn il ebenner i ammorg en·úan ah e·gabor cwhestant<sup class="fn">1</sup> en·ammos dín am ah am naden aranc.</div>
+    <div class="cell" data-label="Back Translation">But the little frogs all said that the monster was bigger and the old frog puffed his chest more and more until she burst.</div>
+    <div class="cell" data-label="Original">But the little Frogs all declared that the monster was much, much bigger and the old Frog kept puffing herself out more and more until, all at once, she burst.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: Avo ritho en·unadren.</strong></li>
+  <li><strong>Saying: Do not try the not-possible.</strong></li>
+  <li><strong>Motto: Do not attempt the impossible.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>whesta-</b>, <i>v.</i> “to puff” ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-1100772795.html?neo">hwesta-</a>, v. “to puff”
+  </div>
+  
+  <br>
+  
+    <img img src="aesop/aesop003.png" style="width: 300px; height: auto;">
+
+ <h3 id="1.2">Glingad nell bo ieath e·Vuig</h3>
+
+<ul>
+  <li><strong>Back Translation: Hanging [a] bell around [the] neck [of] the Cat</strong></li>
+  <li><strong><a href="https://read.gov/aesop/002.html">Original: Belling the Cat</a></strong></li>
+</ul>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> Updated 09/21/2026.
+</div>
+
+<div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Erlu i·nigyl govasser an amarthad banu al leithiad din ui goth dín, e·Vuig.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      Once the mice gathered to decree [a] plan to free them from their enemy, the Cat.
+    </div>
+    <div class="cell" data-label="Original">
+      The Mice once called a meeting to decide on a plan to free themselves of their enemy, the Cat.
+    </div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Eno evírer hired leng<sup class="fn">1</sup> istad io anglennast, to<sup class="fn">2</sup> havathar aen lû nored ‘wa.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      Still they wished to find a manner to have knowledge when she approached, so they would have time to run away.
+    </div>
+    <div class="cell" data-label="Original">
+      At least they wished to find some way of knowing when she was coming, so they might have time to run away.
+    </div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Î, boe andin hired leng<sup class="fn">1</sup>, an dorthasser vi thoss nan i·ñgemp dín to<sup class="fn">2</sup> nabant ú-verthasser gwaed od i·chaew dín vin dû egor aur.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      Indeed, [it] needs for them to find [a] way, for they dwelt in fear of her claws, so they almost did not dare to leave from their lairs in the night or day.
+    </div>
+    <div class="cell" data-label="Original">
+      Indeed, something had to be done, for they lived in such constant fear of her claws that they hardly dared stir from their dens by night or day.
+    </div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Athrabenner lae peny, ach ammódher i û vaer i·pheny hain.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      They discussed a great number of plans, but they judged that those plans were not good.
+    </div>
+    <div class="cell" data-label="Original">
+      Many plans were discussed, but none of them was thought good enough.
+    </div>
+  </div>
+
+  <!-- 1.5 -->
+  <div class="row" id="s1-5">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Na vedui Nigol dhae-‘wain eriast ah ebent:
+    </div>
+    <div class="cell" data-label="Back Translation">
+      At last [a] very young Mouse rose and said:
+    </div>
+    <div class="cell" data-label="Original">
+      At last a very young Mouse got up and said:
+    </div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">
+      “Sevin banu i nêf athgar, a bedhin i crannathab den.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      “I have [a] plan that seems easy to do, and I judge that we accomplish it.
+    </div>
+    <div class="cell" data-label="Original">
+      "I have a plan that seems very simple, but I know it will be successful.
+    </div>
+  </div>
+
+  <!-- 1.7 -->
+  <div class="row" id="s1-7">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Boe amben glingad nell bo iaeth e·Vuig.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      [It] needs for us to hang [a] bell around [the] neck [of] the Cat.
+    </div>
+    <div class="cell" data-label="Original">
+      All we have to do is to hang a bell about the Cat's neck.
+    </div>
+  </div>
+
+  <!-- 1.8 -->
+  <div class="row" id="s1-8">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Io lhassab e·nellad, to<sup class="fn">2</sup> istab i e·goth vín dôl.”
+    </div>
+    <div class="cell" data-label="Back Translation">
+      When we hear the ringing bell, then we will have knowledge that our enemy comes.”
+    </div>
+    <div class="cell" data-label="Original">
+      When we hear the bell ringing we will know immediately that our enemy is coming."
+    </div>
+  </div>
+
+  <!-- 1.9 -->
+  <div class="row" id="s1-9">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Gaedennin il i·Nigyl i allu óver nûth oh e·banu han.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      Astounded [were] all the Mice that they never had [a] thought of this plan.
+    </div>
+    <div class="cell" data-label="Original">
+      All the Mice were much surprised that they had not thought of such a plan before.
+    </div>
+  </div>
+
+  <!-- 1.10 -->
+  <div class="row" id="s1-10">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Ach lo ‘ellasser oh en·alvar dín, Nigol iaur eriast ah ebent:
+    </div>
+    <div class="cell" data-label="Back Translation">
+      But while they rejoiced about their good fortune, [an] old Mouse rose and said:
+    </div>
+    <div class="cell" data-label="Original">
+      But in the midst of the rejoicing over their good fortune, an old Mouse arose and said:
+    </div>
+  </div>
+
+  <!-- 1.11 -->
+  <div class="row" id="s1-11">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin">
+      “Pedathon i dhae vaer e·banu nan e·nigol ‘wain.
+    </div>
+    <div class="cell" data-label="Back Translation">
+      “I will say that very good [is] the plan of the young mouse.
+    </div>
+    <div class="cell" data-label="Original">
+      "I will say that the plan of the young Mouse is very good.
+    </div>
+  </div>
+
+  <!-- 1.12 -->
+  <div class="row" id="s1-12">
+    <div class="cell num nowrap"><strong>1.12</strong></div>
+    <div class="cell" data-label="Sindarin">
+      Ach dhavo nin mabeded: Man glingatha e·nell bo iaeth e·Vuig?”
+    </div>
+    <div class="cell" data-label="Back Translation">
+      But allow me to ask [a] question: Who will hang the bell on [the] neck [of] the Cat?”
+    </div>
+    <div class="cell" data-label="Original">
+      But let me ask one question: Who will bell the Cat?"
+    </div>
+  </div>
+
+</div>
+
+<ul>
+  <li>
+    <strong>Pess: Te er nad peded i nad thô carnen, ach hith egel cared den.</strong>
+  </li>
+  <li>
+    <strong>Saying: It [is] one thing to say that [a] will be done, but another matter to do it.</strong>
+  </li>
+  <li>
+    <strong>Motto: It is one thing to say that something should be done, but quite a different matter to do it.</strong>
+  </li>
+</ul>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup>
+  <b>leng</b>, <i>n.</i> “way, method, manner” ⪤ Q.
+  <a href="https://eldamo.org/content/words/word-3010255839.html?neo">lé</a>¹,
+  <i>n.</i> “way, method, manner” [author: Rínor]
+  <br>
+
+  <sup class="fn">2</sup>
+  <b>to</b>, <i>adv.</i> “so, then” ⪤ Q.
+  <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>,
+  <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]
+</div> 
+  <br>
+  
+    <img src="aesop/aesop004.png" style="width: 300px; height: auto;">
+    
+ <h3 id="1.3">Nigol ui Garas ah Nigol ui Rídhas</h3>
+<ul>
+  <li><strong>Back Translation: [A] Mouse from the City and [A] Mouse from the Country</strong></li>
+  <li><strong><a href="https://read.gov/aesop/004.html">Original: The Town Mouse &amp; the Country Mouse</a></strong></li>
+</ul>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> Updated 09/23/2026.
+</div>
+
+<div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Nigol ui Garas ‘lennast erlu cened ress i ndorthast vidh rídhas.</div>
+    <div class="cell" data-label="Back Translation">[A] Mouse from the City traveled to see [a] relative who lived in the country.</div>
+    <div class="cell" data-label="Original">A Town Mouse once visited a relative who lived in the country.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">An nedhwad e·Nigol ui Rídhas sestant thrimp na mbloss, sylch, nych, gu limig na nen ring an hoged cho<sup class="fn">1</sup> den.</div>
+    <div class="cell" data-label="Back Translation">For lunch the Mouse from the Country set stalks of wheat, roots, and acorns, together with [a] small drop of cold water for drink before her.</div>
+    <div class="cell" data-label="Original">For lunch the Country Mouse served wheat stalks, roots, and acorns, with a dash of cold water for drink.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">e·Nigol ui Garas avant vi nenc dithin, nadhol níth<sup class="fn">1</sup> na sen a níth<sup class="fn">1</sup> na san, a mi leng dín tanant i avant vath thonnui<sup class="fn">2</sup> air nad runnas<sup class="fn">3</sup>.</div>
+    <div class="cell" data-label="Back Translation">The Mouse from the City ate in tiny bites, chewing [a] piece of this and [a] piece of that, and in her manner, she indicated that she ate the basic food only to be polite.</div>
+    <div class="cell" data-label="Original">The Town Mouse ate very sparingly, nibbling a little of this and a little of that, and by her manner making it very plain that she ate the simple food only to be polite.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">Ab e·vâd i·mellyn ebenner anann, egos sennui e·Nigol ui Garas ebent oh e·guil dín viñ garas lo e·Nigol ui Rídhas lastast.</div>
+    <div class="cell" data-label="Back Translation">After the meal the friends spoke for long, or rather the Mouse from the City spoke about her life in the city while the Mouse from the Country listened.</div>
+    <div class="cell" data-label="Original">After the meal the friends had a long talk, or rather the Town Mouse talked about her life in the city while the Country Mouse listened.</div>
+  </div>
+
+  <!-- 1.5 -->
+  <div class="row" id="s1-5">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">To<sup class="fn">4</sup> gaedasser lored vi aedh laug viñ geilir<sup class="fn">5</sup> ah olúrer vi dhîn a lhaugas<sup class="fn">6</sup> naden amor.</div>
+    <div class="cell" data-label="Back Translation">Then they lay down to sleep in [a] cozy nest in the hedgerow and slept in silence and warmth until morning.</div>
+    <div class="cell" data-label="Original">They then went to bed in a cozy nest in the hedgerow and slept in quiet and comfort until morning.</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">Lo lorol e·Nigol ui Rídhas olthant i de Nigol ui Garas i aw il e·vaeras a elvin na ndorthad viñ garas i e·vellon dín ebent anden.</div>
+    <div class="cell" data-label="Back Translation">While sleeping the Mouse from the Country dreamed that she [was a] Mouse from the City who had all the goodness and wonders of living in a city that her friend said to her.</div>
+    <div class="cell" data-label="Original">In her sleep the Country Mouse dreamed she was a Town Mouse with all the luxuries and delights of city life that her friend had described for her.</div>
+  </div>
+
+  <!-- 1.7 -->
+  <div class="row" id="s1-7">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">To<sup class="fn">4</sup> en·aur abor io e·Nigol ui Garas pichiant<sup class="fn">6</sup> e·Nigol ui Rídhas glennad n’ e·mbâr dín viñ garas, te ‘lassui peded naw.</div>
+    <div class="cell" data-label="Back Translation">So the following day when the Mouse from the City asked for the Mouse from the Country to travel to her home in the city, she [was] happy to say yes.</div>
+    <div class="cell" data-label="Original">So the next day when the Town Mouse asked the Country Mouse to go home with her to the city, she gladly said yes.</div>
+  </div>
+
+  <!-- 1.8 -->
+  <div class="row" id="s1-8">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">Io odúler n’ e·mbarthan ias<sup class="fn">7</sup> e·Nigol ui Garas dorthast, egíner boe hardh vin ham am maded lemmath<sup class="fn">7</sup> na mbereth elvain.</div>
+    <div class="cell" data-label="Back Translation">When they came to the mansion where the Mouse from the City dwelled, they saw on the table in the chamber for eating [were] leavings of a marvelous feast.</div>
+    <div class="cell" data-label="Original">When they reached the mansion in which the Town Mouse lived, they found on the table in the dining room the leavings of a very fine banquet.</div>
+  </div>
+
+  <!-- 1.9 -->
+  <div class="row" id="s1-9">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">Ho din maith laich, pibingim<sup class="fn">9</sup>, besgyrn<sup class="fn">10</sup> lîch, cuir gaudol, î, maith rothagol i Nigol obul núthad.</div>
+    <div class="cell" data-label="Back Translation">Before them [were] sweet foods and jams, sweet loaves, and tasteful cheeses, indeed, the most luring foods could conceive.</div>
+    <div class="cell" data-label="Original">There were sweetmeats and jellies, pastries, delicious cheeses, indeed, the most tempting foods that a Mouse can imagine.</div>
+  </div>
+
+  <!-- 1.10 -->
+  <div class="row" id="s1-10">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">Ach io e·Nigol ui Rídhas fair maded níth<sup class="fn">1</sup> bîn na mbasgorn<sup class="fn">10</sup> laich, lhassant vuiad vrui na muig a rhibed n’ e·fend.</div>
+    <div class="cell" data-label="Back Translation">But when the Mouse from the Country [was] ready to eat [a] small piece of sweet loaf, she heard [a] loud meowing of [a] cat and scratching at the door.</div>
+    <div class="cell" data-label="Original">But just as the Country Mouse was about to nibble a dainty bit of pastry, she heard a Cat mew loudly and scratch at the door.</div>
+  </div>
+
+  <!-- 1.11 -->
+  <div class="row" id="s1-11">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin">Mi ‘oe i·Nigyl onúrer na had na thoblad, ias<sup class="fn">7</sup> eríther úvenol an annas na lû, thossui thuiad.</div>
+    <div class="cell" data-label="Back Translation">In great fear the Mice ran to a place of hiding, where they remained unmoving for [a] length of time, fearful to breath.</div>
+    <div class="cell" data-label="Original">In great fear the Mice scurried to a hiding place, where they lay quite still for a long time, hardly daring to breathe.</div>
+  </div>
+
+  <!-- 1.12 -->
+  <div class="row" id="s1-12">
+    <div class="cell num nowrap"><strong>1.12</strong></div>
+    <div class="cell" data-label="Sindarin">Io na vedui verthasser dammened n’ e·vereth, e·fend lediast vi rongas ah i·m<a href="https://eldamo.org/content/words/word-2274731377.html?neo">bŷr</a> vinnasser am buidad e·hardh, lo e·Chû aphant.</div>
+    <div class="cell" data-label="Back Translation">When at last they dared to go back to the feast, the door opened in haste and the servants entered to clean the table, while the Dog followed.</div>
+    <div class="cell" data-label="Original">When at last they ventured back to the feast, the door opened suddenly and in came the servants to clear the table, followed by the House Dog.</div>
+  </div>
+
+  <!-- 1.13 -->
+  <div class="row" id="s1-13">
+    <div class="cell num nowrap"><strong>1.13</strong></div>
+    <div class="cell" data-label="Sindarin">e·Nigol ui Rídhas air bediast<sup class="fn">11</sup> geded e·bôg ah e·rostobas<sup class="fn">12</sup> dín viñ gaew nan e·Nigol ui Garas.</div>
+    <div class="cell" data-label="Back Translation">The Mouse of the Country only paused to get her bag and umbrella in the lair of the Mouse from the City.</div>
+    <div class="cell" data-label="Original">The Country Mouse stopped in the Town Mouse's den only long enough to pick up her carpet bag and umbrella.</div>
+  </div>
+
+  <!-- 1.14 -->
+  <div class="row" id="s1-14">
+    <div class="cell num nowrap"><strong>1.14</strong></div>
+    <div class="cell" data-label="Sindarin">“No i hevig vaeras a math elvain i ú-hevin,” ebent lo rongast gwa, “ach vevin e·vath thonnui ah e·guithas thonnui nín midh Rídhas vi hîdh a <a href="https://eldamo.org/content/words/word-3570202913.html?neo">beria</a>d i thelir ‘u den.”</div>
+    <div class="cell" data-label="Back Translation">“Be that you have goodness and marvelous food that I do not have,” she said while she hastened away, “but I like my basic food and basic life in the country in peace and protection that comes together with it.”</div>
+    <div class="cell" data-label="Original">You may have luxuries and dainties that I have not," she said as she hurried away, "but I prefer my plain food and simple life in the country with the peace and security that go with it."</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: Pem maelig ‘u veriad ammaer athar vaelig vig ‘oe a naid i ú-hinnin.</strong></li>
+  <li><strong>Saying: Without wealth together with protection [is] better beyond wealth among fear and things that [are] not known.</strong></li>
+  <li><strong>Motto: Poverty with security is better than plenty in the midst of fear and uncertainty.</strong></li>
+</ul>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup> <b>níth</b> <i>n.</i> “piece, bit (of indeterminate size)” ⪤ ᴺQ. !nihta<br>
+
+  <sup class="fn">2</sup> <b>thonnui</b>, <i>adj.</i> “basic” from <b>thond</b>, <i>n.</i> “root, [N.] base; ⚠️root-word”<br>
+
+  <sup class="fn">3</sup> <b>runnas</b>, <i>v.</i> “polite, politeness” from ᴺQ. !<a href="https://eldamo.org/content/words/word-709763545.html?neo">rundië</a> <i>n.</i> “smoothness; politeness”<br>
+
+  <sup class="fn">4</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. tá, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+  
+  <sup class="fn">5</sup> <b>ceilir</b>, <i>n.</i> “hedgerow” from S. cai <i>n.</i> “hedge” + S. #lîr <i>n.</i> “line, [N.] row” [author: Elaran]<br>
+
+  <sup class="fn">6</sup> <b>pichia-</b> “request, ask for” kwisja- &gt; pisja- &gt; pixja- &gt; pexja- &gt; pexia- &gt; S pe(i)chia- with optional <i>i</i>-intrusion; pechia- [author: Röandil]<br>
+
+  <sup class="fn">7</sup> <b>ias</b>, <i>conj.</i> “where (relative)” ⪤ Q. <a href="https://eldamo.org/content/words/word-4230475927.html?neo">yassë</a>, <i>conj.</i> “where [relative], in which place” [author: Unknown]<br>
+
+  <sup class="fn">8</sup> <b>lemmath</b>, <i>n.</i> “left over food, leavings” from ᴹ✶<a href="https://eldamo.org/content/words/word-2476385537.html?neo">lebnā</a> “left behind” + ᴺS. [ᴱN.] <a href="https://eldamo.org/content/words/word-3475842805.html?neo">math</a> <i>n.</i> “Food”<br>
+
+  <sup class="fn">9</sup> <b>pibingim</b>, <i>n.</i> “jam, (lit.) berry-sticky-substance” ⪤ ᴺQ. !piohimma, <i>n.</i> “jam, (lit.) berry-sticky-substance”<br>
+
+  <sup class="fn">10</sup> <b>basgorn</b> <i>n.</i> “Sweet loaf, sweet bread” [author: rínor]<br>
+
+  <sup class="fn">11</sup> <b>pedia-</b> <i>v.</i> “to stop, halt, pause” — derived from √PUTyă; alternative to ᴺS. !posta-, <i>v.</i> “to stop, cease, leave off”<br>
+
+  <sup class="fn">12</sup> <b>rostobas</b> <i>n.</i> “umbrella (lit.) rain roofing” S. ross¹, 7h88 <i>n.</i> “rain; spray, ⚠️spindrift, foam” + N. tobas “roofing, roof”<br>
+</div>
+  
+  <br>
+  
+    <img src="aesop/aesop005.png" style="width: 300px; height: auto;">
+    
+  <h3 id="1.4">e·Rusc ah i·Mirybin</h3>
+
+<ul>
+  <li><strong>Back Translation: The Fox and the Grapes</strong></li>
+  <li>
+    <strong>
+      <a href="https://read.gov/aesop/005.html">
+        Original: The Fox and the Grapes
+      </a>
+    </strong>
+  </li>
+</ul>
+
+<div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      Er aur rusc dírant banu vain na mirybin gîw glingol od
+      longalas<sup class="fn">1</sup> bela gylf galadh.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      One day [a] fox saw [a] beautiful arrangement of fresh grapes
+      hanging from a vine along [the] branches of [a] tree.
+    </div>
+
+    <div class="cell" data-label="Original">
+      A Fox one day spied a beautiful bunch of ripe grapes hanging from
+      a vine trained along the branches of a tree.
+    </div>
+  </div>
+
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      i·Mirybin eníver i ragathar aen<sup class="fn">2</sup> vo haw,
+      a gobem e·rusc greithast<sup class="fn">3</sup> lo edir ah
+      anírant din.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      The grapes seemed that they would burst with juice, and [the]
+      mouth [of] the fox drooled while he looked and desired them.
+    </div>
+
+    <div class="cell" data-label="Original">
+      The grapes seemed ready to burst with juice, and the Fox's mouth
+      watered as he gazed longingly at them.
+    </div>
+  </div>
+
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      i·Mirybin ‘lingasser o ‘olf vrand, a boe eni rusc cabed na den.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      The grapes hung from [a] high branch, and [it] needs for the fox
+      to jump towards it.
+    </div>
+
+    <div class="cell" data-label="Original">
+      The bunch hung from a high branch, and the Fox had to jump for it.
+    </div>
+  </div>
+
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      e·Lû vinui agamp n’ e·‘olf edhiw den.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      The first time he jumped towards the branch he missed it.
+    </div>
+
+    <div class="cell" data-label="Original">
+      The first time he jumped he missed it by a long way.
+    </div>
+  </div>
+
+
+  <!-- 1.5 -->
+  <div class="row" id="s1-5">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      To badrast gwa haeras<sup class="fn">4</sup> thent,
+      a lo norol agamp na den, air dewed lû dadui.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      So he walked away [a] short distance away, and while running he
+      leapt towards it, only to miss [a] second time.
+    </div>
+
+    <div class="cell" data-label="Original">
+      So he walked off a short distance and took a running leap at it,
+      only to fall short once more.
+    </div>
+  </div>
+
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      Ad<sup class="fn">5</sup> ah ad<sup class="fn">5</sup> rithast,
+      ach edhiw.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      Again and again he tried, but he failed.
+    </div>
+
+    <div class="cell" data-label="Original">
+      Again and again he tried, but in vain.
+    </div>
+  </div>
+
+
+  <!-- 1.7 -->
+  <div class="row" id="s1-7">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      Hí achodh ah edir i·mirybin vin dêl.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      Now he sat and looked towards the grapes in disgust.
+    </div>
+
+    <div class="cell" data-label="Original">
+      Now he sat down and looked at the grapes in disgust.
+    </div>
+  </div>
+
+
+  <!-- 1.8 -->
+  <div class="row" id="s1-8">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      “Ni fôf,” ebent.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      “I [am a] fool,” he said.
+    </div>
+
+    <div class="cell" data-label="Original">
+      "What a fool I am," he said.
+    </div>
+  </div>
+
+
+  <!-- 1.9 -->
+  <div class="row" id="s1-9">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      “Sí mudassen am banu na mirybin uir a thi ú-vill
+      nan e·vavras nín.”
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      “Here I labor for an arrangement of sour grapes and they [are]
+      unworthy of my desire.”
+    </div>
+
+    <div class="cell" data-label="Original">
+      "Here I am wearing myself out to get a bunch of sour grapes that
+      are not worth gaping for."
+    </div>
+  </div>
+
+
+  <!-- 1.10 -->
+  <div class="row" id="s1-10">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+
+    <div class="cell" data-label="Sindarin">
+      A phadrast dhae-iaewen gwa.
+    </div>
+
+    <div class="cell" data-label="Back Translation">
+      And he very scornful[ly] walked away.
+    </div>
+
+    <div class="cell" data-label="Original">
+      And off he walked very, very scornfully.
+    </div>
+  </div>
+
+</div>
+
+
+<ul>
+  <li>
+    <strong>Pess:
+    Lae gwaith nennar<sup class="fn">6</sup> agreithad ah eithad
+    naid athar e·raeth dín.
+    </strong>
+  </li>
+
+  <li>
+    <strong>Back Translation:
+    [A] great number [of] people pretend to despise and scorn things
+    beyond their reach.
+    </strong>
+  </li>
+
+  <li>
+    <strong>
+      Motto: There are many who pretend to despise and belittle that
+      which is beyond their reach.
+    </strong>
+  </li>
+</ul>
+
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup>
+  <b>longalas</b>, <i>n.</i> “vine (lit. ‘curl-plant’)” —
+  derived from ᴺS. [G.]
+  <a href="https://eldamo.org/content/words/word-1351678345.html?neo">
+    lonc
+  </a>
+  <i>n.</i> “curl” +
+  N.
+  <a href="https://eldamo.org/content/words/word-15895007.html?neo">
+    galas
+  </a>
+  <i>n.</i> “plant, growth”
+  [author: Rínor]
+  <br>
+
+  <sup class="fn">2</sup>
+  <b>...atha aen</b>, <i>v.</i>
+  “would (lit. will should, could)”
+  [author: Elaran]
+  <br>
+
+  <sup class="fn">3</sup>
+  <b>creitha-</b>, <i>v.</i>
+  “to cause spit, saliva; drool” from ᴺS.
+  <a href="https://eldamo.org/content/words/word-1484367029.html?neo">
+    crech
+  </a>
+  <i>n.</i> “spittle”
+  <br>
+
+  <sup class="fn">4</sup>
+  <b>haeras</b>, <i>n.</i>
+  “distance, (lit.) farness” ⪤ ᴺQ. !
+  <a href="https://eldamo.org/content/words/word-2180170057.html?neo">
+    hairië
+  </a>
+  <i>n.</i> “distance, (lit.) farness”
+  <br>
+
+  <sup class="fn">5</sup>
+  <b>ad</b>, <i>adv.</i>
+  “again” from
+  <a href="https://eldamo.org/content/words/word-2176818521.html?neo">
+    √AT
+  </a>
+  root, “two, double, bi-, di-; back, re-, [ᴹ√] again, twice”
+  [author: unknown]
+  <br>
+
+  <sup class="fn">6</sup>
+  <b>nenna-</b>, <i>v.</i>
+  “to pretend, (lit.) make seem” ⪤ ᴺQ. !<b>nenta-</b>,
+  <i>v.</i> “to pretend, (lit.) make seem”
+
+</div>
+
+<br>
+  
+    <img src="aesop/aesop006.png" style="width: 300px; height: auto;">
+    
+   <h3 id="1.5">e·Dhraug ah en·Aralithor<sup class="fn">1</sup></h3>
+<ul>
+  <li><strong>Back Translation: The Wolf and the Crane</strong></li>
+  <li><strong><a href="https://read.gov/aesop/006.html">Original: The Wolf and the Crane</a></strong></li>
+</ul>
+
+<div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Lo dhraug ammant asg vi leng<sup class="fn">1</sup> velch, erinc a chiniast vil lang dín.</div>
+    <div class="cell" data-label="Back Translation">While [a] wolf devoured [a] bone in [a] greedy manner, it twisted and stuck in his throat.</div>
+    <div class="cell" data-label="Original">A Wolf had been feasting too greedily, and a bone had stuck crosswise in his throat.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Ú-obul caethad en·asg mened am egor dad, ah î ú-obul maded nad.</div>
+    <div class="cell" data-label="Back Translation">He could not make the bone go up or down, and indeed he could not eat [a] thing.</div>
+    <div class="cell" data-label="Original">He could get it neither up nor down, and of course he could not eat a thing.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">Î, se leng<sup class="fn">2</sup> ‘aer na nast an draug velch.</div>
+    <div class="cell" data-label="Back Translation">Indeed, this [was an] awful manner of being for [a] greedy wolf.</div>
+    <div class="cell" data-label="Original">Naturally that was an awful state of affairs for a greedy Wolf.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">To<sup class="fn">3</sup> rongast gwa n’ en·aralilthor<sup class="fn">1</sup>.</div>
+    <div class="cell" data-label="Back Translation">So he hastened away to the crane.</div>
+    <div class="cell" data-label="Original">So away he hurried to the Crane.</div>
+  </div>
+
+  <!-- 1.5 -->
+  <div class="row" id="s1-5">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">e·Dhraug danc i en·aralithor<sup class="fn">1</sup> obul raethad en·asg a thaged den ed e·lang dín ‘ui iaeth and ah en·irth dín.</div>
+    <div class="cell" data-label="Back Translation">The wolf [was] firm that she could reach for the bone and pull it out of his throat with her long neck and beak.</div>
+    <div class="cell" data-label="Original">He was sure that she, with her long neck and bill, would easily be able to reach the bone and pull it out.</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">“Paediathon<sup class="fn">4</sup> len vi leng dhaer,” ebent e·dhraug, “Pi thegil en·asg han ed annin.”</div>
+    <div class="cell" data-label="Back Translation">“I will repay you in a great manner,” said the wolf, “If you pull that bone out for me.”</div>
+    <div class="cell" data-label="Original">"I will reward you very handsomely," said the Wolf, "if you pull that bone out for me."</div>
+  </div>
+
+  <!-- 1.7 -->
+  <div class="row" id="s1-7">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">en·Aralithor<sup class="fn">1</sup>, be êg i núthathog den, te ben-hidh<sup class="fn">5</sup> o nestaged e·dholl dín vi lang e·dhraug.</div>
+    <div class="cell" data-label="Back Translation">The Crane, as [there] is a chance you imagine it, she [was] without-peace about inserting her head in [the] throat [of] the wolf.</div>
+    <div class="cell" data-label="Original">The Crane, as you can imagine, was very uneasy about putting her head in a Wolf's throat.</div>
+  </div>
+
+  <!-- 1.8 -->
+  <div class="row" id="s1-8">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">Ach de velch am baedias<sup class="fn">6</sup>, to<sup class="fn">3</sup> agor be e·dhraug ebent.</div>
+    <div class="cell" data-label="Back Translation">But she [was] greedy for a reward, so she did as the wolf said.</div>
+    <div class="cell" data-label="Original">But she was grasping in nature, so she did what the Wolf asked her to do.</div>
+  </div>
+
+  <!-- 1.9 -->
+  <div class="row" id="s1-9">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">Io e·dhraug efil i gwanwen en·asg, iestast padrad gwa.</div>
+    <div class="cell" data-label="Back Translation">When the wolf felt that the bone [was] gone, he started to walk away.</div>
+    <div class="cell" data-label="Original">When the Wolf felt that the bone was gone, he started to walk away.</div>
+  </div>
+
+  <!-- 1.10 -->
+  <div class="row" id="s1-10">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">“Ach man oh e·baedias<sup class="fn">6</sup> nín!” en·aralithor agon dirithui<sup class="fn">7</sup>.</div>
+    <div class="cell" data-label="Back Translation">“But what about my reward!” the crane called anxious[ly].</div>
+    <div class="cell" data-label="Original">"But what about my reward!" called the Crane anxiously.</div>
+  </div>
+
+  <!-- 1.11 -->
+  <div class="row" id="s1-11a">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin">“Man!” e·Dhraug norrast, pernol o then.</div>
+    <div class="cell" data-label="Back Translation">“What!” the wolf growled, turning away from her.</div>
+    <div class="cell" data-label="Original">"What!" snarled the Wolf, whirling around.</div>
+  </div>
+
+  <!-- 1.11 -->
+  <div class="row" id="s1-11b">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin">“Ú-agóveg den? Adhóven gin haedad e·dholl gín ed e·‘obem nín ben nagol den, sa úfarn?”</div>
+    <div class="cell" data-label="Back Translation">“You did not receive it? I allowed you to remove your head out of my mouth without biting it, that [is] not enough?”</div>
+    <div class="cell" data-label="Original">"Haven't you got it? Isn't it enough that I let you take your head out of my mouth without snapping it off?"</div>
+  </div>
+
+</div>
+
+<ul>
+  <li><strong>Pess: Horo û baedias<sup class="fn">6</sup> am buiad e·rhû.</strong></li>
+  <li><strong>Saying: Expect no reward for serving the wicked.</strong></li>
+  <li><strong>Motto: Expect no reward for serving the wicked.</strong></li>
+</ul>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup>
+  <b>aralilthor</b> cognate of Q. <i>araliltaro</i> (<i>n.</i>) - “crane” (lit.) “noble dancer” (&lt; <i>ar(a)-</i> + <i>lilta-</i> + <i>-r(o)</i>)<br>
+
+  <sup class="fn">2</sup>
+  <b>leng</b>, <i>n.</i> “way, method, manner” ⪤ Q.
+  <a href="https://eldamo.org/content/words/word-3010255839.html?neo">lé</a>¹,
+  <i>n.</i> “way, method, manner” [author: Rínor]<br>
+
+  <sup class="fn">3</sup>
+  <b>to</b>, <i>adv.</i> “so, then” ⪤ Q.
+  <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>,
+  <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+
+  <sup class="fn">4</sup>
+  <b>paedia-</b>, <i>v.</i> “to repay, requite” ⪤ ᴺQ. [ᴱQ.] <i>paitya-</i>, <i>v.</i> “to repay, requite”<br>
+
+  <sup class="fn">5</sup>
+  <b>pen-hidh</b>, <i>adj.</i> “Uneasy, unpeacefull” cf ᴺQ. !<i>sérenca</i> <i>adj.</i> “uneasy, unpeaceful”<br>
+
+  <sup class="fn">6</sup>
+  <b>paedias</b>, <i>n.</i> “Reward, payment” ⪤ ᴺQ. !<i>paityalë</i> <i>n.</i> “reward, payment”<br>
+
+  <sup class="fn">7</sup>
+  <b>tirithui</b>, <i>adj.</i> “anxious; lit. watchful/full of watchfulness”
+</div>
+
+<br>
+  
+    <img src="aesop/aesop007.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.6">e·Raw ah e·Nigol</h3>
+  <ul>
+  <li><strong>Back Translation: The Lion and the Mouse</strong></li>
+  <li><strong><a href="https://read.gov/aesop/007.html">Original: The Lion and the Mouse</a></strong></li>
+   </ul>
+   
+   <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> Reviewed on Vinyë Lambengolmor by Ellanto on 11/25/25.
+  </div>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Raw olur vi e·daur, ah e·dhol dhaer dín aidh bo i·phuid dín.</div>
+    <div class="cell" data-label="Back Translation">[A] lion slept in the forest, and his great head rested on his animal feet.</div>
+    <div class="cell" data-label="Original">A Lion lay asleep in the forest, his great head resting on his paws.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Nigol bîn echir den vo dunc, a mi e·ñgor a rhongas<sup class="fn">1</sup> an dregad, onur thar nem e·raw.</div>
+    <div class="cell" data-label="Back Translation">[A] little mouse found him by (agent of) chance, and in fear and haste to flee, she ran across [the] nose [of] the lion.</div>
+    <div class="cell" data-label="Original">A timid little Mouse came upon him unexpectedly, and in her fright and haste to get away, ran across the Lion's nose.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">e·Raw echuidast od e·lûr dín a sestant rúthui e·bôd dín bo e·nigol bîn an daged den.</div>
+    <div class="cell" data-label="Back Translation">The lion roused from his sleep and angrily set his huge animal foot on the small mouse to kill her.</div>
+    <div class="cell" data-label="Original">Roused from his nap, the Lion laid his huge paw angrily on the tiny creature to kill her.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">“Avo ndago nin!” ebent e·nigol bîn.</div>
+    <div class="cell" data-label="Back Translation">“Do not kill me!” said the little mouse.</div>
+    <div class="cell" data-label="Original">“Spare me!” begged the poor Mouse. </div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">“Pi leithiol nin hi, grestathon len uvaur<sup class="fn">2</sup>.”</div>
+    <div class="cell" data-label="Back Translation">“If you release me now, I will help you someday.”</div>
+    <div class="cell" data-label="Original">"Please let me go and some day I will surely repay you."</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">e·Nauth i e·nigol hen obul grestad den lalthant e·raw.</div>
+    <div class="cell" data-label="Back Translation">The thought that this mouse could help him amused the lion.</div>
+    <div class="cell" data-label="Original">The Lion was much amused to think that a Mouse could ever help him.</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">Ach de fael a lheithant e·nigol na vedui.</div>
+    <div class="cell" data-label="Back Translation">But he [was] generous and released the mouse at last.</div>
+    <div class="cell" data-label="Original">But he was generous and finally let the Mouse go.</div>
+  </div>
+
+<div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">Ab oer nodui chídasser, lo fara vi e·daur, raew faron ‘ant e·raw vi e·rem dín.</div>
+    <div class="cell" data-label="Back Translation">After some days came to pass, while he was hunting in the forest, [a] net of [a] hunter caught the lion in its mesh.</div>
+    <div class="cell" data-label="Original">Some days later, while stalking his prey in the forest, the Lion was caught in the toils of a hunter's net.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">e·Rawed<sup class="fn">3</sup> rúthui ín lammast dri e·daur an ú-obul othrad.</div>
+    <div class="cell" data-label="Back Translation">His angry roar echoed through the forest for he could not escape.</div>
+    <div class="cell" data-label="Original">Unable to free himself, he filled the forest with his angry roaring.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">e·Nigol erin e·rawed<sup class="fn">3</sup> han ah echir lim e·raw rithol orthad e·raew.</div>
+    <div class="cell" data-label="Back Translation">The mouse remembered that roar and quick[ly] found the lion trying to escape the net.</div>
+    <div class="cell" data-label="Original">The Mouse knew the voice and quickly found the Lion struggling in the net.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin">Onur na vin idh·reph velig i ewídher den, anodh den naden aranc, a rhong lain e·raw.</div>
+    <div class="cell" data-label="Back Translation">She ran to one [of] the great ropes that bound him, she gnawed it until it broke, and soon the lion [was] freed.</div>
+    <div class="cell" data-label="Original">Running to one of the great ropes that bound him, she gnawed it until it parted, and soon the Lion was free.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.12</strong></div>
+    <div class="cell" data-label="Sindarin">“Iaedannel nin io ebennen i ‘restathon aen len,” ebent e·nigol.</div>
+    <div class="cell" data-label="Back Translation">“You laughed at me when I said that I would help you,” said the mouse.</div>
+    <div class="cell" data-label="Original">"You laughed when I said I would repay you," said the Mouse.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.13</strong></div>
+    <div class="cell" data-label="Sindarin">“Si cheniol i nigol obul grestad raw.”</div>
+    <div class="cell" data-label="Back Translation">“Here you understand that [a] mouse can help [a] lion.”</div>
+    <div class="cell" data-label="Original">"Now you see that even a Mouse can help a Lion."</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: List allu ??</strong></li>
+  <li><strong>Saying: Kindness [is] never ??</strong></li>
+  <li><strong>Motto: A kindness is never wasted.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup> <b>rongas</b>, <i>n.</i> “haste” derived from ᴺS. !<a href="https://eldamo.org/content/words/word-2431408739.html?neo">ronga-</a> ᴺS. <i>v.</i> “to hasten” + S. #<a href="https://eldamo.org/content/words/word-2300496767.html?neo">-as</a>, <i>suf.</i> “abstract noun” [author: Rínor]<br>
+
+  <sup class="fn">2</sup> <b>uvaur</b>, <i>adv.</i> “someday” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1073190863.html?neo">umaurë</a>, <i>adv.</i> “someday” [author: Parmandil]<br>
+
+  <sup class="fn">3</sup> <b>rawed</b>, <i>n.</i> “roar” derived from S. [N.] <a href="https://eldamo.org/content/words/word-659275807.html?neo">raw²</a>, 
+  <i>v.</i> “to roar” [author: Rínor]
+</div>
+
+<br>
+  
+    <img src="aesop/aesop008.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.7">e·Bíeg ah e·Vund</h3>
+  <ul>
+  <li><strong>Back Translation: The Mosquito and the Bull</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Gnat & the Bull</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">A Gnat flew over the meadow with much buzzing for so small a creature and settled on the tip of one of the horns of a Bull.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">After he had rested a short time, he made ready to fly away.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">But before he left he begged the Bull's pardon for having used his horn for a resting place.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"You must be very glad to have me go now," he said.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"It's all the same to me," replied the Bull.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"I did not even know you were there."</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: We are often of greater importance in our own eyes than in the eyes of our neighbor. The smaller the mind the greater the conceit.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup><br>
+
+  <sup class="fn">2</sup><br>
+
+  <sup class="fn">3</sup><br> 
+
+  <sup class="fn">4</sup>
+</div>
+
+<br>
+
+    <img src="aesop/aesop009.png" style="width: 300px; height: auto;">
+     <h3 id="1.8">Mablanthos</h3>
+  <ul>
+  <li><strong>Back Translation: Sycamore</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Plane Tree</a></strong></li>
+   </ul>
+     
+  <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> Reviewed on Vinyë Lambengolmor by Ellanto on 11/27/25.
+  </div>   
+     
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Glennyr<sup class="fn">1</sup> dâd badrasser vi Anar nan e·nedhor a chestanner esgal na thaur land an hedhed.</div>
+    <div class="cell" data-label="Back Translation">Two travellers walked in [the] Sun of the mid-day and sought shade of [a] wide tree for resting.</div>
+    <div class="cell" data-label="Original">Two Travelers, walking in the noonday sun, sought the shade of a widespreading tree to rest.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Lo gaedasser tirol i·lais elvain, heniasser i de Vablanthos.</div>
+    <div class="cell" data-label="Back Translation">While they laid looking (towards) the wonderful leaves, they understood that it [was a] Plane Tree.</div>
+    <div class="cell" data-label="Original">As they lay looking up among the pleasant leaves, they saw that it was a Plane Tree.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">Mablanthos de ú-gammui! ebent er ‘lennor<sup class="fn">1</sup>.</div>
+    <div class="cell" data-label="Back Translation">“[The] Plane Tree, it is not-suitable!” said one traveler.</div>
+    <div class="cell" data-label="Original">"How useless is the Plane!" said one of them.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">“Ú-iâf, ah air vuda tobad e·dalaf vo lais.”</div>
+    <div class="cell" data-label="Back Translation">“It does not bear fruit, and only it labours to cover the ground by (agent of) leaves.”</div>
+    <div class="cell" data-label="Original">"It bears no fruit whatever, and only serves to litter the ground with leaves."</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">“Gwî ben-anned<sup class="fn">2</sup>! ebent glim ui Vablanthos.”</div>
+    <div class="cell" data-label="Back Translation">“Ungrateful creatures! said a voice from the Plane Tree.”</div>
+    <div class="cell" data-label="Original">"Ungrateful creatures!" said a voice from the Plane Tree.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">“Si hedhidh vin esgal ring nín, a phedidh i ni ú-gammui!</div>
+    <div class="cell" data-label="Back Translation">“Here you rest here in my cool shade, and you say that I am not-suitable!</div>
+    <div class="cell" data-label="Original">"You lie here in my cooling shade, and yet you say I am useless!</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">Dîr ben-anned<sup class="fn">2</sup>, A Manwe, cevir in·eliad dín vil leng<sup class="fn">3</sup> hen!”</div>
+    <div class="cell" data-label="Back Translation">Ungrateful men, O Manwë, receive their blessings in this manner!”</div>
+    <div class="cell" data-label="Original">Thus ungratefully, O Jupiter, do men receive their blessings!"</div>
+  </div>
+</div>
+
+    <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>glannor</b>, <i>n.</i> “traveler”<br>
+    <sup class="fn">2</sup> <b>ben-anned</b>, <i>adj.</i> “ungrateful (lit.) lacking thanks”<br>
+    <sup class="fn">3</sup> <b>leng</b>, <i>n.</i> “manner” ⪤ Q. <a href="https://eldamo.org/content/words/word-3010255839.html?neo">lé¹</a> “way, method, manner”
+  </div>
+
+<br>
+  
+    <img src="aesop/aesop010.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.9">e·Dhúcholl<sup class="fn">1</sup> ah e·‘Laegabor<sup class="fn">2</sup></h3>
+  <ul>
+  <li><strong>Back Translation: The Owl & the Grasshopper</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Owl & the Grasshopper</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The Owl always takes her sleep during the day.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Then after sundown, when the rosy light fades from the sky and the shadows rise slowly through the wood, out she comes ruffling and blinking from the old hollow tree.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Now her weird "hoo-hoo-hoo-oo-oo" echoes through the quiet wood, and she begins her hunt for the bugs and beetles, frogs and mice she likes so well to eat.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Now there was a certain old Owl who had become very cross and hard to please as she grew older, especially if anything disturbed her daily slumbers.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">One warm summer afternoon as she dozed away in her den in the old oak tree, a Grasshopper nearby began a joyous but very raspy song.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Out popped the old Owl's head from the opening in the tree that served her both for door and for window.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"Get away from here, sir," she said to the Grasshopper.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"Have you no manners? You should at least respect my age and leave me to sleep in quiet!"</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">But the Grasshopper answered saucily that he had as much right to his place in the sun as the Owl had to her place in the old oak.</div>
+  </div>
+  
+   <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Then he struck up a louder and still more rasping tune.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.11</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The wise old Owl knew quite well that it would do no good to argue with the Grasshopper, nor with anybody else for that matter.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.12</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Besides, her eyes were not sharp enough by day to permit her to punish the Grasshopper as he deserved.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.13</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">So she laid aside all hard words and spoke very kindly to him.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.14</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">"Well sir," she said, "if I must stay awake, I am going to settle right down to enjoy your singing.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.15</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Now that I think of it, I have a wonderful wine here, sent me from Olympus, of which I am told Apollo drinks before he sings to the high gods.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.16</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Please come up and taste this delicious drink with me. I know it will make you sing like Apollo himself."</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.17</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Please come up and taste this delicious drink with me. I know it will make you sing like Apollo himself."</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.18</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The foolish Grasshopper was taken in by the Owl's flattering words.</div>
+  </div>
+  
+   <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.19</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Up he jumped to the Owl's den, but as soon as he was near enough so the old Owl could see him clearly, she pounced upon him and ate him up.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: Flattery is not a proof of true admiration. Do not let flattery throw you off your guard against an enemy.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup><br>
+
+  <sup class="fn">2</sup><br>
+
+  <sup class="fn">3</sup><br> 
+
+  <sup class="fn">4</sup>
+</div>
+
+<br>
+
+ <img src="aesop/aesop011.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.10">e·Nordh ah i·Lisg</h3>
+  <ul>
+  <li><strong>Back Translation: The Oak and the Reeds</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Oak and the Reeds</a></strong></li>
+   </ul>
+
+<div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> Reviewed on Vinyë Lambengolmor by Ellanto on 1/8/26.
+  </div>
+
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Nordh veleg ador ha cheleth ias<sup class="fn">1</sup> Lisg fim óler.</div>
+    <div class="cell" data-label="Back Translation">[A] great oak stood along [a] brook where slender Reeds grew.</div>
+    <div class="cell" data-label="Original">A Giant Oak stood near a brook in which grew some slender Reeds.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Io e·‘wae húdast, e·nordh veleg ador darlang a thalch, ah i·ñgelf doch dín alanner n’ ell.</div>
+    <div class="cell" data-label="Back Translation">When the wind blew, the great oak stood proud and upright, and its hundred branches stretched to [the] sky.</div>
+    <div class="cell" data-label="Original">When the wind blew, the great Oak stood proudly upright with its hundred arms uplifted to the sky.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">Ach i·lisg awórer eni ‘wae a lhinnanner lind dhem a nírol.</div>
+    <div class="cell" data-label="Back Translation">But the reeds yielded to the wind and sang [a] sad and sorrowful song.</div>
+    <div class="cell" data-label="Original">But the Reeds bowed low in the wind and sang a sad and mournful song.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">“Sevig gaeth an nornad,” ebent e·nordh.</div>
+    <div class="cell" data-label="Back Translation">“You have reason to complain,” said the oak.</div>
+    <div class="cell" data-label="Original">"You have reason to complain," said the Oak.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">“i·Whest robin i bresta balath e·nen ceiria gin loethad, lo im, nordh mbelaith, terin daer a thaug choe ‘waew vrui.”</div>
+    <div class="cell" data-label="Back Translation">“The littlest breeze that disturbs [the] surface of the water causes you to bend, while I, nordh mbelaith, terin daer a thaug choe ‘waew vrui.”</div>
+    <div class="cell" data-label="Original">"The slightest breeze that ruffles the surface of the water makes you bow your heads, while I, the mighty Oak, stand upright and firm before the howling tempest."</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">“Av’ olo brestannen vo e·nast vín,” ebenner i·lisg.</div>
+    <div class="cell" data-label="Back Translation">“Don’t become troubled by (agent of) our being,” said the reeds.</div>
+    <div class="cell" data-label="Original">"Do not worry about us," replied the Reeds.</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">“i·Ñgwae ú-geiriar charnas aphen.</div>
+    <div class="cell" data-label="Back Translation">“The winds do not cause harm to us.</div>
+    <div class="cell" data-label="Original">"The winds do not harm us.</div>
+  </div>
+
+  <!-- 1.6a -->
+  <div class="row" id="s1-6a">
+    <div class="cell num nowrap"><strong>1.7a</strong></div>
+    <div class="cell" data-label="Sindarin">Awóreb cho din, an ú-regib.</div>
+    <div class="cell" data-label="Back Translation">We yield before them, for we do not break.</div>
+    <div class="cell" data-label="Original">We bow before them and so we do not break.</div>
+  </div>
+
+  <!-- 1.8 -->
+  <div class="row" id="s1-8">
+    <div class="cell num nowrap"><strong>1.7b</strong></div>
+    <div class="cell" data-label="Sindarin">Tauglog i·suil vo il e·vlaud a bellas gín.</div>
+    <div class="cell" data-label="Back Translation">You resisted the winds by (agent of) all your pride and strength.</div>
+    <div class="cell" data-label="Original">You, in all your pride and strength, have so far resisted their blows.</div>
+  </div>
+
+  <!-- 1.9 -->
+  <div class="row" id="s1-9">
+    <div class="cell num nowrap"><strong>1.7c</strong></div>
+    <div class="cell" data-label="Sindarin">Ach dôl e·vethed.”</div>
+    <div class="cell" data-label="Back Translation">But the end [is] coming.”</div>
+    <div class="cell" data-label="Original">But the end is coming."</div>
+  </div>
+
+  <!-- 1.10 -->
+  <div class="row" id="s1-10">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">Lo i·lisg ebenner, gwaew veleg ethul eph forod.</div>
+    <div class="cell" data-label="Back Translation">While the reeds spoke, [a] great storm came out of [the] north.</div>
+    <div class="cell" data-label="Original">As the Reeds spoke a great hurricane rushed out of the north.</div>
+  </div>
+
+  <!-- 1.11 -->
+  <div class="row" id="s1-11">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin">e·Nordh ador tarlang a dadhrant e·waew, lo i·lisg ‘warol loethasser chaug.</div>
+    <div class="cell" data-label="Back Translation">The oak stood proudly and opposed the storm, while the yielding reeds bent low.</div>
+    <div class="cell" data-label="Original">The Oak stood proudly and fought against the storm, while the yielding Reeds bowed low.</div>
+  </div>
+
+  <!-- 1.12 -->
+  <div class="row" id="s1-12">
+    <div class="cell num nowrap"><strong>1.10</strong></div>
+    <div class="cell" data-label="Sindarin">e·‘Wae olast valch, ah e·‘aladh veleg dannast vregol, nerchennin i·sylch ui dalaf, a chaedast vig i·lisg nírol.</div>
+    <div class="cell" data-label="Back Translation">The wind became fierce, and the great tree fell suddenly, the roots were torn from the ground, and it lay among the sorrowful reeds.</div>
+    <div class="cell" data-label="Original">The wind redoubled in fury, and all at once the great tree fell, torn up by the roots, and lay among the pitying Reeds.</div>
+  </div>
+</div>
+
+ <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <p><sup class="fn">1</sup> <b>ias</b>, pron. “where (relative)” ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-725909779.html?neo">yassë</a>, adv. “there [remote, relative]”</p>
+    <p><sup class="fn">2</sup> Basing <b>dôl e·vethed</b> off of <a href="https://eldamo.org/content/words/word-725530089.html?neo">tôl acharn</a> “vengeance comes / vengeance is coming”.</p>
+  </div>
+
+<br>
+  
+    <img src="aesop/aesop012.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.11">e·Gorch ah en·Olf</h3>
+  <ul>
+  <li><strong>Back Translation: The Crow & the Pitcher</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Crow & the Pitcher</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">In a spell of dry weather, when the Birds could find very little to drink, a thirsty Crow found a pitcher with a little water in it.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">But the pitcher was high and had a narrow neck, and no matter how he tried, the Crow could not reach the water.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The poor thing felt as if he must die of thirst.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Then an idea came to him.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Picking up some small pebbles, he dropped them into the pitcher one by one.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">With each pebble the water rose a little higher until at last it was near enough so he could drink.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: In a pinch a good use of our wits may help us out.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup><br>
+
+  <sup class="fn">2</sup><br>
+
+  <sup class="fn">3</sup><br> 
+
+  <sup class="fn">4</sup>
+</div>
+
+<br>
+  
+    <img src="aesop/aesop013.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.12">i·Naeag Dâd</h3>
+  <ul>
+  <li><strong>Back Translation: The Two Goats</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Two Goats</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Two Goats, frisking gayly on the rocky steeps of a mountain valley, chanced to meet, one on each side of a deep chasm through which poured a mighty mountain torrent.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The trunk of a fallen tree formed the only means of crossing the chasm, and on this not even two squirrels could have passed each other in safety.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The narrow path would have made the bravest tremble.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Not so our Goats.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Their pride would not permit either to stand aside for the other.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">One set her foot on the log.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">The other did likewise.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">In the middle they met horn to horn.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.9</strong></div>
+    <div class="cell" data-label="Sindarin"></div>
+    <div class="cell" data-label="Back Translation"></div>
+    <div class="cell" data-label="Original">Neither would give way, and so they both fell, to be swept away by the roaring torrent below.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: It is better to yield than to come to misfortune through stubbornness.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup><br>
+
+  <sup class="fn">2</sup><br>
+
+  <sup class="fn">3</sup><br> 
+
+  <sup class="fn">4</sup>
+</div>
+
+
+<br>
+  
+    <img src="aesop/aesop022.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.21">e·Dhraug vi Chelf Mâf</h3>
+  <ul>
+  <li><strong>Back Translation: The Wolf in [a] Hide of [a] Sheep</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Wolf in Sheep's Clothing</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Er draug ú-obul maded farn an ui-diriad<sup class="fn">1</sup> i·mavryn.</div>
+    <div class="cell" data-label="Back Translation">One wolf could not eat enough for the shepherds [were] ever watchful.</div>
+    <div class="cell" data-label="Original">A certain Wolf could not get enough to eat because of the watchfulness of the Shepherds.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Ach er dhû e·dhraug echir chelf mâf i vavron achant n’ e·dalaf a lhíthant.</div>
+    <div class="cell" data-label="Back Translation">But one night the wolf found [a] hide of [a] sheep that [a] shepherd flung to the ground and forgot.</div>
+    <div class="cell" data-label="Original">But one night he found a sheep skin that had been cast aside and forgotten.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">en·Aur abor, e·dhraug achamp im vi e·chelf mâf ah evin n’ e·nadhras ‘u i·maif.</div>
+    <div class="cell" data-label="Back Translation">The following day, the wolf clothed in the hide of [a] sheep and went to the pasture with the sheep.</div>
+    <div class="cell" data-label="Original">The next day, dressed in the skin, the Wolf strolled into the pasture with the Sheep.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">Mâf bîn rong aphant e·dhraug a nî dyliannen na ndaged.</div>
+    <div class="cell" data-label="Back Translation">[A] little lamb soon followed the wolf and the lamb [was] led towards slaughtering.</div>
+    <div class="cell" data-label="Original">Soon a little Lamb was following him about and was quickly led away to slaughter.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">en·Aduial han, e·dhraug vinnast n' e·chaedh ‘u e·nethor.</div>
+    <div class="cell" data-label="Back Translation">That evening, the wolf entered the fenced enclosure together with the flock.</div>
+    <div class="cell" data-label="Original">That evening the Wolf entered the fold with the flock.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">Ennas e·vâf vinui i e·vavron avamp ah annanc nî e·dhraug.</div>
+    <div class="cell" data-label="Back Translation">There the first sheep that the shepherd seized and slayed was the wolf.</div>
+    <div class="cell" data-label="Original">There the first he laid hands on and killed was the Wolf.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: The evil doer often comes to harm through his own deceit.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup> <b>tiriad</b>, “watchful, vigilant” cf Q. <a href="https://eldamo.org/content/words/word-2825932115.html?neo">tirítë</a>, “watchful, vigilant”
+</div>
+
+<br>
+  
+    <img src="aesop/aesop024.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.23">en·Emel ah e·Dhraug</h3>
+  <ul>
+  <li><strong>Back Translation: The Mother and the Wolf</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Mother and the Wolf</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Er amor draug haeb ethlinc ha mbâr na daeg gobel, io lhassant chên nallol vim bâr.</div>
+    <div class="cell" data-label="Back Translation">One early day [a] hungry wolf crept beside [a] house at [the] boundary [of a] village, when he heard [a] crying child in the house.</div>
+    <div class="cell" data-label="Original">Early one morning a hungry Wolf was prowling around a cottage at the edge of a village, when he heard a child crying in the house.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">Mil luig han, lhassant ‘lim en·emel pedol:</div>
+    <div class="cell" data-label="Back Translation">In that moment, he heard [the] voice [of] the mother saying:</div>
+    <div class="cell" data-label="Original">Then he heard the Mother's voice say:</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">“Sedho, hên, sedho! Posto e·nallad gín, egor annathon gin n’ e·dhraug!”</div>
+    <div class="cell" data-label="Back Translation">“Rest, child, rest! Stop your crying, or I will give you to the wolf!”</div>
+    <div class="cell" data-label="Original">"Hush, child, hush! Stop your crying, or I will give you to the Wolf!"</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">e·Dhraug nî ‘aedannen vo ach ‘ellannen ed e·dunc an haved vâd elvain, caedast nu chenneth lediannen, a chorast i vil luig han cavatha aen chên.</div>
+    <div class="cell" data-label="Back Translation">The wolf was surprised by (agent of) but delighted out of the chance to have a wonderful meal, he lay under [an] opened window, and he expected that in the moment he would receive [a] child.</div>
+    <div class="cell" data-label="Original">Surprised but delighted at the prospect of so delicious a meal, the Wolf settled down under an open window, expecting every moment to have the child handed out to him.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">Ach valthannen e·‘winig, ah e·dhraug erith il aur ah agof allad.</div>
+    <div class="cell" data-label="Back Translation">But agitated [was] the little one, and the wolf remained in the same place all day and received nothing.</div>
+    <div class="cell" data-label="Original">But though the little one continued to fret, the Wolf waited all day in vain.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.6</strong></div>
+    <div class="cell" data-label="Sindarin">To<sup class="fn">1</sup>, sui uial anglennast, lhassant ‘lim en·emel ad<sup class="fn">2</sup> lo achodh s’ e·chenneth al linnad n’ e·‘winig dín a lhorthad den.</div>
+    <div class="cell" data-label="Back Translation">Then, as twilight approached, he heard [the] voice [of] the mother again while she sat  beside the window to sing to her baby and to put it to sleep.</div>
+    <div class="cell" data-label="Original">Then, toward nightfall, he heard the Mother's voice again as she sat down near the window to sing and rock her baby to sleep.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7</strong></div>
+    <div class="cell" data-label="Sindarin">“No chídheb, hên!</div>
+    <div class="cell" data-label="Back Translation">“Be peaceful, child!</div>
+    <div class="cell" data-label="Original">"There, child, there!</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7a</strong></div>
+    <div class="cell" data-label="Sindarin">e·Dhraug ú-ñgedatha gin.</div>
+    <div class="cell" data-label="Back Translation">The wolf will not get you.</div>
+    <div class="cell" data-label="Original">The Wolf shall not get you.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7b</strong></div>
+    <div class="cell" data-label="Sindarin">Û, û!</div>
+    <div class="cell" data-label="Back Translation">No, no!</div>
+    <div class="cell" data-label="Original">No, no!</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7c</strong></div>
+    <div class="cell" data-label="Sindarin">Adar dîr ah adar ndagatha den bi dôl nef gin!”</div>
+    <div class="cell" data-label="Back Translation">Father is watching and father will slay him if he comes near you!”</div>
+    <div class="cell" data-label="Original">Daddy is watching and Daddy will kill him if he should come near!"</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.8</strong></div>
+    <div class="cell" data-label="Sindarin">Mil luig han en·adar odul vi chent e·mbâr, ah e·dhraug othrast agor i·chui vo nored vaed.</div>
+    <div class="cell" data-label="Back Translation">In that moment, the father came into sight [of] the home, and the wolf narrowly escaped the dogs by (agent of) running skillfully.</div>
+    <div class="cell" data-label="Original">Just then the Father came within sight of the home, and the Wolf was barely able to save himself from the Dogs by a clever bit of running.</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: Avo havo illad i lhassog.</strong></li>
+  <li><strong>Saying: Do not believe everything that you hear.</strong></li>
+  <li><strong>Motto: Do not believe everything that you hear.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+
+  <sup class="fn">2</sup> <b>ad</b> <i>adv.</i> "again" ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-3978559621.html?neo">ata</a> <i>adv.</i> “again, *(lit.) a second time”
+</div>
+
+<br>
+  
+    <img src="aesop/aesop031.png" style="width: 300px; height: auto;">
+    
+    <h3 id="1.30">e·Limron<sup class="fn">1</sup> ah e·Lim bîn</h3>
+  <ul>
+  <li><strong>Back Translation: The Fisherman and the Little Fish</strong></li>
+  <li><strong><a href="https://read.gov/aesop/008.html">Original: The Fisherman and the Little Fish</a></strong></li>
+   </ul>
+   
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">§</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1.1</strong></div>
+    <div class="cell" data-label="Sindarin">Limron<sup class="fn">1</sup> ú-vaeligui<sup class="fn">2</sup> i  vronant voe lim raedant aw ú-eliad er aur ah raedant air limmeg dae bîn. </div>
+    <div class="cell" data-label="Back Translation">A not-wealthy fisherman who survived by the fish he caught had no blessing one day and caught only [a] very small fry.</div>
+    <div class="cell" data-label="Original">A poor Fisherman, who lived on the fish he caught, had bad luck one day and caught nothing but a very small fry.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1.2</strong></div>
+    <div class="cell" data-label="Sindarin">e·Limron¹ enidh panned den viñ gwircholch3 dín io e·lim bîn ebent:</div>
+    <div class="cell" data-label="Back Translation">The Fisherman intended to put it in his basket when the little fish said:</div>
+    <div class="cell" data-label="Original">The Fisherman was about to put it in his basket when the little Fish said:</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1.3</strong></div>
+    <div class="cell" data-label="Sindarin">Listo dhavo nin cuiad Limdir Hîr!</div>
+    <div class="cell" data-label="Back Translation">“Please allow me to live, Master Fisherman!</div>
+    <div class="cell" data-label="Original">"Please spare me, Mr. Fisherman!</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1.3a</strong></div>
+    <div class="cell" data-label="Sindarin">Ni bîn a ni ú-vall farn allen coled nin mbâr.</div>
+    <div class="cell" data-label="Back Translation">I am small, and I am not worthy enough for you to carry me home.</div>
+    <div class="cell" data-label="Original">I am so small it is not worth while to carry me home.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1.3b</strong></div>
+    <div class="cell" data-label="Sindarin">Io ni ammorg, olathon vael ammaer allen.”</div>
+    <div class="cell" data-label="Back Translation">When I [am] bigger, I will become [a] better meal for you.”</div>
+    <div class="cell" data-label="Original">When I will be bigger, I shall make you a much better meal."</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.4</strong></div>
+    <div class="cell" data-label="Sindarin">Ach e·limron bannant vregol e·lim viñ gwircholch<sup class="fn">3</sup> dín.</div>
+    <div class="cell" data-label="Back Translation">But the fisherman suddenly put the fish in his basket.</div>
+    <div class="cell" data-label="Original">But the Fisherman quickly put the fish into his basket.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.5</strong></div>
+    <div class="cell" data-label="Sindarin">“Ni fovren redhiad gin,” ebent.</div>
+    <div class="cell" data-label="Back Translation">“I am foolish to return you,” he said.</div>
+    <div class="cell" data-label="Original">"How foolish I should be," he said, "to throw you back.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7a</strong></div>
+    <div class="cell" data-label="Sindarin">e·Dhraug ú-ñgedatha gin.</div>
+    <div class="cell" data-label="Back Translation">The wolf will not get you.</div>
+    <div class="cell" data-label="Original">The Wolf shall not get you.</div>
+  </div>
+  
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1.7b</strong></div>
+    <div class="cell" data-label="Sindarin">Î bi gi bîn, gi ammaer athar saved allad.</div>
+    <div class="cell" data-label="Back Translation">Even if you are small, you are better beyond having nothing.</div>
+    <div class="cell" data-label="Original">However small you may be, you are better than nothing at all."</div>
+  </div>
+</div>
+
+<ul>
+  <li><strong>Pess: </strong></li>
+  <li><strong>Saying: </strong></li>
+  <li><strong>Motto: A small gain is worth more than a large promise.</strong></li>
+   </ul>
+ 
+    <div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+
+  <sup class="fn">1</sup> <b>limron</b>, <i>n.</i> “so, then” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1747698809.html?neo">lingwimo</a>, <i>n.</i> “fisherman” [author: Rínor]<br>
+
+  <sup class="fn">2</sup> Note from Ellanto from a previous translation: I think <b>maeligui</b> <i>adj.</i> "wealthy, characterised by wealth" ⪤ ᴺS. !<a href="https://eldamo.org/content/words/word-131796515.html?neo">maeligeb</a><br>
+  
+  <sup class="fn">3</sup> <b>gwircholch</b> <i>n.</i> "basket, (lit.) woven-box" ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-608955601.html?neo">vircolca</a> <i>n.</i> “basket, (lit.) woven-box” [Elaran]
+</div>
+  
+  <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+  </main>
+
+  <script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            // On mobile, treat as accordion; on desktop allow open/close
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Make sure the panel doesn't overflow off the right edge of the viewport
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    // (This replaces per-dropdown identical listeners to avoid N duplicate handlers.)
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+
+    /* FALLBACK: intercept anchors if browser doesn't support scroll-margin/scroll-padding */
+    (function anchorOffsetFallback(){
+      const testEl = document.createElement('div');
+      const supportsScrollMargin = ('scrollMarginTop' in testEl.style) || ('scrollMargin' in testEl.style);
+      if (supportsScrollMargin) return;
+
+      const anchors = Array.from(document.querySelectorAll('a[href^="#"]')).filter(a => a.hash && a.hash.length > 1);
+      if (!anchors.length) return;
+
+      function getNavHeight() {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-height').trim();
+        const n = parseFloat(raw);
+        return isNaN(n) ? 72 : n;
+      }
+
+      anchors.forEach(a => {
+        a.addEventListener('click', function(ev) {
+          if (!this.hash) return;
+          const id = this.hash.slice(1);
+          const target = document.getElementById(id);
+          if (!target) return;
+          ev.preventDefault();
+          const navH = getNavHeight() + 12;
+          const top = target.getBoundingClientRect().top + window.scrollY - navH;
+          window.scrollTo({ top, behavior: 'smooth' });
+          try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = '#' + id; }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

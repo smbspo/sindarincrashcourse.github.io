@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>1.2.2 Ceraith (Verbs)</title>
+  <meta name="description" content="An introduction to Sindarin verb classes, present-tense conjugation, subject endings, future and past forms, verbal nouns, and commands, with interactive practice." />
+  
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+ <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:100%; border-collapse:separate; border-spacing:0; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+/* Round the header itself, including when a caption sits above it. */
+thead tr:first-child th:first-child { border-top-left-radius:10px; }
+thead tr:first-child th:last-child { border-top-right-radius:10px; }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+main h4 { font-size:1.05rem; line-height:1.45; margin:22px 0 10px; }
+.source-note { font-size:0.9rem; color:var(--muted); }
+.verb-table { min-width:700px; }
+.verb-table td { vertical-align:top; }
+.verb-table tbody th { padding:10px; text-align:left; vertical-align:top; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+.lesson-table { min-width:480px; }
+.lesson-table td, .lesson-table th { vertical-align:top; }
+.lesson-table tbody th { padding:10px; text-align:left; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+table caption { text-align:left; padding:0 0 8px; color:var(--muted); font-size:0.9rem; }
+.chart-key li { margin:6px 0; }
+:root[data-theme="dark"] table { background:var(--card); }
+:root[data-theme="dark"] tbody td,
+:root[data-theme="dark"] .verb-table tbody th,
+:root[data-theme="dark"] .lesson-table tbody th { border-bottom-color:rgba(255,255,255,0.1); }
+@media (max-width:700px) { .intro-list { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5em 1.5em; } }
+@media (max-width:440px) { .intro-list { grid-template-columns:1fr; } }
+@media print { .responsive-table { overflow:visible; } .verb-table, .lesson-table { min-width:0; } }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+
+@media (max-width:820px) {
+  .dropdown-panel {
+    position: static;
+    transform: none !important;
+    opacity:1 !important;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    border: none;
+    display: none; 
+  }
+  .dropdown.open > .dropdown-panel { display:block; padding:8px 0 16px 0; }
+  .panel-grid nav { grid-template-columns: 1fr; gap:6px; }
+  .dropdown-panel nav a { padding:10px 6px; border-radius:6px; }
+  /* mobile override: keep font-size readable/tappable with a larger hit area */
+  .dropdown-panel nav a { font-size: 12px; line-height:1.3; padding:12px 8px; }
+}
+.responsive-grid {
+  width: 100%;
+  margin: 12px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  font-family: var(--font-ui);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Desktop layout: CSS Grid with 5 equal columns */
+.responsive-grid .rg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* first column wider */
+  align-items: center;
+  gap: 0;
+}
+
+/* header band */
+.responsive-grid .rg-header { 
+  background: linear-gradient(180deg,var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight:700;
+  font-size:14px;
+}
+
+.responsive-grid .rg-head {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* body rows */
+.responsive-grid .rg-row:not(.rg-header) {
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell { /* subtle banding */
+  background: rgba(14,165,164,0.01);
+}
+.responsive-grid .rg-cell {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* hover highlight of row (like your table behavior) */
+.responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* Small screens: keep the exact same grid/table layout but scale down to fit */
+@media (max-width: 720px) {
+  .responsive-grid {
+    font-size: clamp(12px, 2.2vw, 14px);
+  }
+
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header {
+    display: grid;
+    align-items: center;
+    gap: 0;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .responsive-grid .rg-head {
+    padding: 8px 8px;
+    font-size: 0.95em;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-cell {
+    padding: 7px 8px;
+    font-size: inherit;
+    line-height: 1.15;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell {
+    background: rgba(14,165,164,0.01);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+    background: rgba(14,165,164,0.03);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-row:last-child .rg-cell {
+    border-bottom: none;
+  }
+}
+
+/* print-friendly tweaks */
+@media print{
+  .responsive-grid .rg-row { page-break-inside: avoid; }
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell::before { content: ""; } /* remove labels for print */
+}
+
+/* Very small devices: tighten further */
+@media (max-width:420px){
+  .responsive-grid{
+    font-size: clamp(11px, 3.0vw, 13px);
+  }
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header{
+    grid-template-columns:1.15fr 0.95fr 0.85fr 0.8fr 0.8fr;
+  }
+  .responsive-grid .rg-cell{
+    padding:6px 6px;
+  }
+}
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+
+
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+          <a href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+          <a href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+          <a href="/mutations.html">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop.html">Aesop Stories</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1a">1.2.2.1a Verb Meanings and Objects</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#participles">1.2.2.3b Participles: Voice, Time, and Agreement</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3c">1.2.2.3c Passive and Impersonal Constructions</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3d">1.2.3.3d Possessives and Adjectives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1a">1.2.4.1a Lists of Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1b">1.2.4.1b Adjectives Before Nouns</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2a">1.2.4.2a Existence and Location</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2b">1.2.4.2b Adjectives After Predicate Verbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3c">1.2.4.3c Names and Historical Usage</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5c">1.2.5c The Meanings of By and Through</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2b">1.2.5.2b Longer Genitive Chains</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3b">1.2.5.3b What Does the Phrase Describe?</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1b">1.2.6.1b Conditional Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2d">1.2.6.2d Demonstratives with Relative Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+<div class="site" id="1.2.2">
+    <main class="main-center" role="main" aria-labelledby="page-title">
+      <h1 id="page-title">1.2.2 Verbs</h1>
+
+      <section aria-labelledby="contents">
+        <p><strong id="contents">Contents</strong></p>
+        <ul>
+          <li><strong><a href="#1.2.2.1">1.2.2.1 Aorist/Present Tense</a></strong></li>
+          <li><strong><a href="#1.2.2.1a">1.2.2.1a Verb Meanings and Objects</a></strong></li>
+          <li><strong><a href="#1.2.2.2">1.2.2.2 Verb Suffixes</a></strong></li>
+          <li><strong><a href="#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a></strong></li>
+          <li><strong><a href="#1.2.2.3">1.2.2.3 Future and Past</a></strong></li>
+          <li><strong><a href="#other-verb-forms">1.2.2.3a Other Verb Forms</a></strong></li>
+          <li><strong><a href="#participles">1.2.2.3b Participles: Voice, Time, and Agreement</a></strong></li>
+          <li><strong><a href="#1.2.2.3c">1.2.2.3c Passive and Impersonal Constructions</a></strong></li>
+          <li><strong><a href="#1.2.2.4">1.2.2.4 Section Summary</a></strong></li>
+          <li><strong><a href="#1.1">Exercise 1.1</a></strong></li>
+        </ul>
+      </section>
+
+<p>
+    Verbs describe actions, events, and states. In dictionaries, Sindarin verbs are usually listed by their stem followed by a hyphen, such as <b><em>mad-</em></b> “to eat”. The hyphen simply shows that you are looking at the verb stem; it is not written in an actual sentence. When you use the verb, its form may change depending on tense and subject. Sometimes the finished form looks just like the stem without the hyphen.
+</p>
+
+<ul class="intro-list">
+  <li><b>rista-</b> <i>v.</i> “to cut”</li>
+  <li><b>lor-</b> <i>v.</i> “to sleep”</li>
+  <li><b>mad-</b> <i>v.</i> “to eat”</li>
+  <li><b>men-</b> <i>v.</i> “to go”</li>
+  <li><b>nor-</b> <i>v.</i> “to run”</li>
+  <li><b>sav-</b> <i>v.</i> “to have”</li>
+  <li><b>síla-</b> <i>v.</i> “to shine”</li>
+  <li><b>tir-</b> <i>v.</i> “to look (towards)”</li>
+  <li><b>hir-</b> <i>v.</i> “to find”</li>
+</ul>
+
+<div class="callout">
+  <strong>Note ¹:</strong> ᴺS. <strong>rista-</strong> “to cut; to rend, rip” per HSD.<br>
+  <strong>Note ²:</strong> ᴺS. <strong>lor-</strong> “to sleep, slumber” by Elaran.<br>
+  <strong>Note ³:</strong> ᴺS. <strong>hir-</strong> “to find, <em>light on, chance on</em>” per David Salo.
+</div>
+
+<img src="Teleri.png" align="right" alt="Drawing of Teleri Elf" style="margin-left:18px;max-width:160px;max-height:180px;border-radius:10px;box-shadow:0 2px 8px #0001;"/>
+
+<p>
+    Sindarin verbs are usually divided into two main groups: basic verbs, which come from simple primitive roots, and derived verbs, which were formed with verbal suffixes. You may also see these called <b>i-stem</b> and <b>a-stem</b> based on the
+    <em>i</em> or <em>a</em> that commonly appears in their present tense forms. David Salo uses these terms in Gateway to Sindarin, although I do not know whether he was the first to use them. Paul Strack instead calls them “<b>basic</b>” and “<b>derived</b>” verbs, which better matches the terminology used for similar verb classes in Quenya.
+</p>
+
+<ul>
+  <li><strong>Basic verbs</strong> usually have a dictionary stem ending in a consonant.</li>
+  <li><strong>Derived verbs</strong> commonly have a stem ending in <em>-a</em>.</li>
+  <li><strong>Half-strong verbs</strong> form a special group with their own present and past patterns. Their dictionary stems may show a final vowel in parentheses.</li>
+</ul>
+<p class="source-note">These are useful starting groups, but an individual verb's history can affect its forms. See <a href="https://eldamo.org/content/words/word-3611866869.html">Eldamo's discussion of verb classes</a>.</p>
+
+<h3 id="1.2.2.1">1.2.2.1 Aorist/Present Tense</h3> 
+
+<p>The simple present tense in Sindarin appears to originate from the ancient Common Eldarin aorist tense.</p>
+    <p>Because we have so few examples, its exact use is difficult to pin down. In Neo-Sindarin it is generally treated much like the English simple present, but it can also express an ongoing action. For example, “<b><em>tôl achar(n)</em></b>” has been interpreted as either “<b>vengeance comes</b>” or “<b>vengeance is coming</b>” In this course, I use the simple present for my example sentences.</p>
+
+<ul>
+<li><i>Edhel <b>lôr</b>.</i> “[An] elf <b>sleeps</b>.”</li>
+<li><i>e·Chothron <b>hâf</b> vegil.</i> “The captain <b>has</b> [a] sword.”</li>
+<li><i>e·Chadhod <b>dîr</b> en·orch.</i> “The dwarf <b>watches</b> the orc.”</li>
+<li><i>Orch <b>vâd</b> aew.</i> “An orc <b>eats</b> birds.”</li>
+</ul>
+
+<div class="callout">
+  <strong>Note ¹:</strong> The last sentence could also mean “An orc eats a bird.”<br>
+  <strong>Remember:</strong> Sindarin has no separate indefinite article corresponding to English “<b>a, an</b>”. The definite article has several forms, including <b><em>e</em></b> “the”.
+</div>
+<p>
+  A noun without an article can be indefinite, but names, generic expressions, and some genitive constructions can also appear without one. Context matters. See the <a href="/1.2.1.html#1.2.1.5">noun lesson</a> and <a href="https://eldamo.org/content/words/word-3256437065.html">Eldamo's article guide</a>.
+</p>
+
+<div class="callout">
+  <strong>Conjugation and mutation</strong> are two separate steps. First form the verb for the correct tense and subject. Then look at its place in the sentence to see whether its initial consonant mutates. Vowel lengthening and internal <em>i</em>-affection are also separate from that initial mutation.
+</div>
+
+<h4>Basic verbs</h4>
+
+<p><b>Present Tense:</b> 
+With a basic verb, the third-person singular normally has no ending. If the verb is monosyllabic, its stem vowel is usually lengthened without otherwise changing: <b><i>en·edhel nôr</i></b> “the elf runs (<b><i>nor-</i></b>)”, <b><i>en·edhel orthor</i></b> “the elf conquers (<b><i>orthor-</i></b>)”.<p>
+  <p>When you add a personal ending, an <b><i>-i-</i></b> is inserted between the stem and the ending. This also causes internal <i>i</i>-affection, so <i>a, o, u</i> become <i>e, e, y</i>: <b><i>nerin</i></b> “I run”.<p>
+  Prefix behavior is less certain. A prefix still felt as a separate element may resist <i>i</i>-affection: <i><b>or</b>therin</i> “I conquer (= over-rule)”, while a prefix absorbed into the stem may change: <b><i>ephedin</i></b> (aphad-) “I follow”. For a stated plural noun subject, the verb uses the joining vowel followed by <i>-r</i>, again with internal <i>i</i>-affection: <b><i>in·edhil nerir</i></b> “the elves run”, <b><i>in·edhil ortherir</i></b> “the elves conquer”.
+</p>
+<ul>
+  <li><b><i>i</i> → <i>i</i>:</b> <i>en·edhel <b>dîr</b></i> “the elf watches,” <b><i>tirin</i></b> “I watch.”</li>
+  <li><b><i>e</i> → <i>e</i>:</b> <i>en·edhel <b>gên</b></i> “the elf sees,” <b><i>cenin</i></b> “I see.”</li>
+  <li><b><i>a</i> → <i>e</i>:</b> <i>en·edhel <b>gâr</b></i> “the elf makes,” <b><i>cerin</i></b> “I make.”</li>
+  <li><b><i>o</i> → <i>e</i>:</b> <i>en·edhel <b>nôr</b></i> “the elf runs,” <b><i>nerin</i></b> “I run.”</li>
+  <li><b><i>o</i> → <i>e</i>:</b> <i>en·edhel <b>orthor</b></i> “the elf conquers,” <b><i>ortherin</i></b> “I conquer.”</li>
+  <li><b><i>u</i> → <i>y</i>:</b> *<i>en·edhel <b>rûn</b></i> “the elf rubs,” <b><i>rynin</i></b> “I rub.”</li>
+</ul>
+<p>* Basic verbs with <i>u</i> in Sindarin are very rare (none are attested), and this example verb *<i><a href="https://eldamo.org/content/words/word-694019533.html?neo">run-</a></i> “to rub” is created for demonstration purposes.</p>
+
+<h4>Derived and half-strong verbs</h4>
+<p>For derived verbs, the third singular present form (without any suffix) is just the verb stem: <i>en·edhel padra</i> “the elf walks (<b><i>padra-</i></b>)”. When many personal endings are added, the final <i>a</i> becomes <i>o</i>: <b><i>padron</i></b> “I walk”. The suffix <i>-r</i> is added without changing the vowel: <b><i>in·edhil badrar</i></b> “the elves walk”. The inclusive ending <em>-b</em> also preserves the final vowel in the paradigm used here.</p>
+<p>Half-strong verbs drop the final <i>a</i> in the third singular: <b><i>en·edhel dangod</i></b> “the elf confirms (<b><i>tangad(a)-</i></b>)”. The <i>a</i> returns with subject suffixes but usually does not change to <i>o</i> as with derived verbs: <b><i>tangadan</i></b> “I confirm”.</p>
+<p>Some half-strong verbs also change an internal vowel in the third singular. This group is only partly documented, so the table represents a practical Neo-Sindarin paradigm rather than a completely attested set of forms.</p>
+<p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-3277881707.html">present-tense formation</a> and <a href="https://eldamo.org/content/words/word-2515398979.html">verb inflections</a>.</p>
+
+<h3 id="1.2.2.1a">1.2.2.1a Verb Meanings and Objects</h3>
+<p>When learning a verb, you also need to know how it is used in a sentence. Can it take a direct object? Does it need a preposition? Can it stand on its own? This is part of what linguists call its <b>transitivity</b>.</p>
+<ul>
+  <li><b>Transitive:</b> the verb can take a direct object, such as the person or thing watched, carried, or made.</li>
+  <li><b>Intransitive:</b> the verb expresses an action or state without a direct object. A location or another participant may still be added in a separate phrase.</li>
+  <li><b>Do not assume</b> that a Sindarin verb uses a certain preposition just because its English translation does.</li>
+</ul>
+<p>For example, weeping and mourning someone are related ideas with different possible constructions. Likewise, grinding a substance into powder and grinding one's teeth do not necessarily use the same verb. Ellanto raised these distinctions in the older translation discussions.</p>
+<p>Identify the subject, the verb's intended sense, and any object before applying <a href="/1.2.1.html#1.2.1.6">direct-object mutation</a>. A noun following a verb may instead be its subject, so position alone does not establish the role. And if a particular preposition has only been suggested for an uncertain verb, treat it as a proposal for that verb rather than a general rule.</p>
+<p class="source-note">For more vocabulary distinctions, see <a href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>.</p>
+<p>A verb can also introduce a description of its subject. Compare English “the sky becomes dark” with “the traveler sees the sky”. In the first, “dark” is a predicate adjective, not a direct object. Continue with <a href="/1.2.4.html#1.2.4.2b">1.2.4.2b Adjectives After Predicate Verbs</a>.</p>
+
+<h3 id="1.2.2.2">1.2.2.2 Verb Suffixes</h3>
+<p>The following present-tense paradigm draws on Paul Strack's discussions of <a href="https://eldamo.org/content/words/word-3277881707.html">the present tense</a> and <a href="https://eldamo.org/content/words/word-1090138655.html">subject suffixes</a>. This course keeps the inclusive and exclusive distinction shown below.
+</p>
+<div class="responsive-table" role="region" aria-label="Present-tense conjugation chart" tabindex="0">
+<table class="verb-table" aria-describedby="reading-verb-chart">
+<caption>Present-tense forms by subject and verb class</caption>
+<thead>
+  <tr>
+    <th scope="col">Present Tense</th>
+    <th scope="col">Basic (car-)</th>
+    <th scope="col">Derived (gala-)</th>
+    <th scope="col">Half-Strong (tangad(a)-)</th>
+  </tr>
+  </thead>
+<tbody>
+  <tr>
+    <th scope="row">1st: Singular</th>
+    <td><b><i>cerin</i></b> “I do”</td>
+    <td><b><i>galon</i></b> “I grow”</td>
+    <td><b><i>tangadan</i></b> “I confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">2nd: Singular Familiar</th>
+    <td><b><i>cerig</i></b> “you do”</td>
+    <td><b><i>galog</i></b> “you grow”</td>
+    <td><b><i>tangadag</i></b> “you confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">2nd: Singular Formal</th>
+    <td><b><i>ceril, †ceridh</i></b> “you do”</td>
+    <td><b><i>galol, †galodh</i></b> “you grow”</td>
+    <td><b><i>tangadal, †tangadadh</i></b> “you confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">3rd: Singular</th>
+    <td><b><i>câr</i></b> “he/she does”</td>
+    <td><b><i>gala</i></b> “he/she grows”</td>
+    <td><b><i>tangod</i></b> “he/she confirms”</td>
+  </tr>
+  <tr>
+    <th scope="row">1st: Plural Inclusive</th>
+    <td><b><i>cerib</i></b> “we (and you) do”</td>
+    <td><b><i>galab</i></b> “we (and you) grow”</td>
+    <td><b><i>tangadab</i></b> “we (and you) confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">1st: Plural Exclusive</th>
+    <td><b><i>cerif</i></b> “we (not you) do”</td>
+    <td><b><i>galof</i></b> “we (not you) grow”</td>
+    <td><b><i>tangadaf</i></b> “we (not you) confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">2nd: Plural Formal</th>
+    <td><b><i>ceridh, †ceridhir</i></b> “you do”</td>
+    <td><b><i>galodh, †galodhir</i></b> “you grow”</td>
+    <td><b><i>tangadadh, †tangadadhir</i></b> “you confirm”</td>
+  </tr>
+  <tr>
+    <th scope="row">3rd: Plural</th>
+    <td><b><i>cerir</i></b> “they do”</td>
+    <td><b><i>galar</i></b> “they grow”</td>
+    <td><b><i>tangadar</i></b> “they confirm”</td>
+  </tr>
+</tbody>
+</table>
+</div>
+<div class="callout" id="reading-verb-chart">
+  <ul class="chart-key">
+    <li><strong>Inclusive</strong> means the listener is part of “we”; <strong>exclusive</strong> means the listener is left out.</li>
+    <li><strong>Familiar</strong> and <strong>formal</strong> describe how someone is addressed. Singular and plural tell you how many people are addressed.</li>
+    <li>The dagger <strong>†</strong> marks an archaic form in this chart.</li>
+    <li>Third singular has no personal ending. The plural ending <em>-r</em> can agree with a stated plural subject or accompany an understood “they”. It does not add a second subject to the sentence.</li>
+  </ul>
+</div>
+<p>Compare how the verb changes with different subjects:</p>           
+
+<ul>
+<li><b><i>Lerin.</i></b> “<b>I sleep</b>.” vs. <i>Edhel <b>lôr</b>.</i> “[An] elf <b>sleeps</b>.”<ul>
+<li>Here <b><i>leri-n</i></b> = “sleep-I”.</li>
+</ul></li>
+<li><i><b>Sevin</b> vegil.</i> “<b>I have</b> a sword.” vs. <i>e·Chothron <b>hâf</b> vegil.</i> “The captain <b>has</b> [a] sword.”<ul>
+<li>Here <b><i>sevi-n</i></b> = “have-I”.</li>
+</ul></li>
+<li><i>i·Chedhyd <b>dirir</b> en·orch.</i> “The dwarves <b>watch</b> the orc.” vs. <i>e·Chadhod <b>dîr</b> en·orch.</i> “The dwarf <b>watches</b> the orc.”<ul>
+<li>Here <b><i>tiri-r</i></b> = “watch”; the -r does not mean “they” by itself. It simply shows that the verb agrees with a plural subject.</li>
+</ul></li>
+<li><i>Yrch <b>vedir</b> aew.</i> “Orcs <b>eat</b> birds” vs. <i>Orch <b>vâd</b> aew.</i> “An orc <b>eats</b> birds”<ul>
+<li>Here <b><i>medi-r</i></b> = “eat”; again, the -r does not add a separate “they”. It marks agreement with the plural subject.</li>
+</ul></li>
+</ul>
+<p>
+    In the last two sentences, <em><b>aew</b></em> can be ambiguous. One way to make the meaning clearer is to add the definite article: <b><em>Yrch vedir in·aew.</em></b> “Orcs eat the birds.”
+</p>
+
+<h3 id="vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</h3>
+<p>Practice the present-tense forms in isolation. Sentence-level mutation is a separate step. You can explore other tenses in the <a href="/VerbConjugator.html">Verb Conjugator</a>.</p>
+<div id="exercise-verbs"></div>
+<noscript><p>Enable JavaScript to use the interactive practice. The conjugation chart above is available without it.</p></noscript>
+
+<h3 id="1.2.2.3">1.2.2.3 Future and Past</h3>
+<p>The present tense is the main focus of this lesson. The following is a short introduction to future and past formation; the <a href="/VerbConjugator.html">Verb Conjugator</a> provides fuller paradigms. There is also a <a href="https://www.elfdict.com/discuss/7-translations/876-verb_conjugation_lhossa_to_whisper">discussion of conjugation on Parf Edhellen</a>.
+</p>
+<ul>
+<li><b>Future:</b> A first-person singular future uses <b><i>-athon</i></b> with a basic verb stem: <b><i>nor-</i></b> “to run” → <b><i>norathon</i></b> “(I) will run”</li>
+<li><b>Past:</b> Some basic verbs use a prefixed vowel and a change within the stem, as in this example: <b><i>nor-</i></b> “to run” → <b><i>onúren</i></b> “(I) ran”</li>
+</ul>
+
+<h4>Future formation</h4>
+<p>The usual Neo-Sindarin pattern adds <b><em>-atha</em></b> to a basic stem or <b><em>-tha</em></b> to a derived stem ending in <em>-a</em>, followed by the appropriate personal ending. So the <b><i>-athon</i></b> in the first example already includes the first-person singular ending; <b><i>-athon</i></b> is not the future ending for every subject.</p>
+<p class="source-note">This course uses the ordinary Neo-Sindarin future. Tolkien also explored a narrower meaning expressing intention in 1969. See <a href="https://eldamo.org/content/words/word-824238907.html">Eldamo's future-tense discussion</a>.</p>
+
+<h4>Past formation</h4>
+
+<p>
+    The Sindarin past seems to work much like the English past tense, but forming it is considerably more complicated, and we have relatively few examples to work from. Several different features can mark the past, and not every verb uses the same ones:
+</p>
+<ol start="1" type="1">
+    <li>
+        A vocalic augment causing soft mutation of the following consonant: <b><em><u>ag</u>or</em></b> “did” for
+        <a href="https://eldamo.org/content/words/word-3736354243.html"> <b><em>car-</em></b></a>“do”; this is mostly used for basic verbs.
+    </li>
+    <li>
+        Mutation of the base vowel via vowel lengthening: <b><em>onúr</em></b> “ran” for <a href="https://eldamo.org/content/words/word-2693935519.html?neo">
+            <b><em>nor-</em></b></a> “run”; this is mostly used for certain basic verbs.
+    </li>
+    <li>
+        Nasal infixion: <b><em>echa<u>n</u>t</em></b> “formed, made” for <a href="https://eldamo.org/content/words/word-630017767.html">
+            <b><em>echad-</em></b></a> “to form, make, shape, cut out”; this is mostly used for half-strong verbs and certain basic verbs.
+    </li>
+    <li>
+        Past suffix <b><em>-ant</em></b>: <b><em>teitha<u>nt</u></em></b> “wrote, drew” for <a href="https://eldamo.org/content/words/word-956996613.html">
+            <b><em>teitha-</em></b></a> “to write, draw, inscribe, make marks or signs”; this is mostly used for (transitive) derived verbs.
+    </li>
+    <li>
+        Past suffix <b><em>-as(t)</em></b>: <b><em>síla<u>s(t)</u></em></b> “shined” for <b><em>síla</em></b> “shine”; this is mostly used for (intransitive) derived verbs.
+    </li>
+</ol>
+<p>
+    These are alternative patterns, not five steps to apply to every verb. A <strong>transitive</strong> use takes a direct object; an <strong>intransitive</strong> use does not. That distinction often matters for derived pasts, although individual verbs can be irregular. Adding a subject ending may also change the past stem, so do not simply attach a present-tense ending to a third-singular past.
+</p>
+<p><strong>What about the perfect?</strong> Sindarin past formation incorporates features of older past and perfect formations. This introduction does not teach a separate productive perfect or pluperfect paradigm corresponding directly to English “has done” or “had done”.</p>
+<p class="source-note">See <a href="https://eldamo.org/content/words/word-2212943647.html">Eldamo's past-tense discussion</a> for the evidence and the remaining uncertainties.</p>
+
+<h3 id="other-verb-forms">1.2.2.3a Other Verb Forms</h3>
+<p>You do not need to master all of these yet, but they are useful to recognize while you are learning the present tense.</p>
+
+<h4 id="verbal-nouns">Verbal nouns and infinitives</h4>
+<p>A verbal noun names an action. It can also serve as the complement of another verb, much like an English infinitive. Basic verbs commonly use <em>-ed</em>; derived stems ending in <em>-a</em> commonly add <em>-d</em>. Individual verbs may have other attested forms.</p>
+<p>When a verbal noun is used like an English infinitive, it is not lenited simply because it follows another verb. It can take its own direct object, which may undergo mutation. When used as an ordinary noun after an article or preposition, it follows that construction instead.</p>
+<p class="source-note">See <a href="https://eldamo.org/content/words/word-285541985.html">Eldamo's verbal-noun guide</a>.</p>
+
+<h4 id="commands-wishes">Commands, wishes, and prohibitions</h4>
+<p>The usual imperative adds <em>-o</em> to a basic stem or replaces a derived stem's final <em>-a</em> with <em>-o</em>. An imperative can express a command or a wish. A noun following it may be the person addressed, the subject of a wish, or a direct object; its role determines the mutation.</p>
+<p>A negative command commonly uses <em>avo</em> followed by a lenited imperative. This is distinct from ordinary factual negation or a speaker expressing refusal.</p>
+<p class="source-note">Further detail: <a href="https://eldamo.org/content/words/word-3326716807.html">imperatives and wishes</a> and <a href="https://eldamo.org/content/words/word-1148356225.html">negation</a>.</p>
+
+<h3 id="participles">1.2.2.3b Participles: Voice, Time, and Agreement</h3>
+<p>Participles are verb forms that describe someone or something. An active participle describes the one performing the action, while a passive participle describes the one affected by it. Sindarin does not simply have one form corresponding to every English word ending in “-ing” or “-ed”, so you first need to ask what the participle is actually describing.</p>
+<div class="responsive-table" role="region" aria-labelledby="participle-agreement-caption" tabindex="0">
+  <table class="lesson-table" aria-describedby="participle-evidence-note">
+    <caption id="participle-agreement-caption">Participle distinctions used in this course</caption>
+    <thead><tr><th scope="col">Type</th><th scope="col">What it describes</th><th scope="col">Plural agreement</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Present active</th><td>The participant performing an ongoing action.</td><td>Normally unchanged.</td></tr>
+      <tr><th scope="row">Past active</th><td>The participant that has completed an action.</td><td>Normally unchanged.</td></tr>
+      <tr><th scope="row">Passive</th><td>The participant undergoing an action or described by its result.</td><td>Normally agrees like an adjective.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p id="participle-evidence-note" class="source-note">These are the usual Neo-Sindarin agreement patterns I follow in this course, but the evidence is limited, and individual forms still need to be considered on their own.</p>
+<p>Agreement in number and initial mutation are separate questions. First identify the participle and the noun it describes, then consider their grammatical relationship. See <a href="/1.2.4.html#1.2.4.1">Plural Adjectives</a> for adjective agreement.</p>
+<p class="source-note">Continue with Eldamo's guides to <a href="https://eldamo.org/content/words/word-957492101.html">active participles</a> and <a href="https://eldamo.org/content/words/word-3022208083.html">passive participles</a>.</p>
+
+<h3 id="1.2.2.3c">1.2.2.3c Passive and Impersonal Constructions</h3>
+<p>An English passive presents someone or something as undergoing an action. Sindarin can sometimes express the same event with a different construction. So rather than translating an English passive mechanically, first ask what is happening and who is involved.</p>
+<p><b>Passive naming:</b> a third-person plural form of <b>esta-</b> can express naming by unspecified people. In context, this can have the force of English “is called” or “was called”, according to the tense. This use does not require a named group of people as its subject. The person or thing being named must still be clear.</p>
+<p class="source-note">Ellanto discussed this in the Ufgor corrections. <a href="https://eldamo.org/content/words/word-2151084605.html">Eldamo's impersonal-verb discussion</a> relates the naming construction to the King's Letter. It does not establish a general passive paradigm for every verb.</p>
+<p id="impersonal-experiencers"><b>Dative experiencers:</b> Some verbs can put the person experiencing something in the dative rather than making that person the grammatical subject. In other words, the person corresponding to English “I” or “he”, and so on is not necessarily the Sindarin subject. This depends on the particular verb and the meaning in which it is being used.</p>
+<div class="callout">
+  <p><strong>A proposal from the translation discussions:</strong> on 12 April 2026, Parmandil suggested an impersonal interpretation of the supplied <b>lítha annin</b>, drawing on an older Gnomish example for the forgetting sense. This is an interpretation of that evidence, not a settled requirement for every use of <b>lítha-</b>.</p>
+  <p>See <a href="https://eldamo.org/content/words/word-4017635688.html">Eldamo's lítha- entry</a> and <a href="/1.2.3.html#dative-experiencers">Dative Experiencers in the pronoun lesson</a>.</p>
+</div>
+<p>A passive participle, an unspecified third-person plural, and a lexical impersonal verb are different constructions. Choose the one supported by the intended sense. A complete statement still needs a predicate saying what happens or what is true, even when a linking verb is omitted.</p>
+
+<h3 id="1.2.2.4">1.2.2.4 Section Summary</h3>
+<p>This summary brings together the main points from the noun and verb sections.
+</p>
+<ul>
+<li>Many plural nouns involve vowel changes: internal <em>i</em>-affection, final <em>i</em>-affection, or final <em>i</em>-intrusion. The pattern depends on the noun:
+<ul>
+<li><b><i>bâr</i></b> “house” → <b><i>bair</i></b> “houses”, <b><i>gil/gail</i></b> “star” → <b><i>gil/gîl</i></b> “stars”, <b><i>taur</i></b> “forest” → <b><i>toer</i></b> “forests”.</li>
+<li><b><i>gil</i></b> has varying etymologies, and its singular form is variously attested as <b><i>gil</i></b> or <b><i>gail</i></b>. The plural gîl likely corresponds to <b><i>gail</i></b>, and would be regular (cf. <b><i>cair</i></b> > <b><i>cîr</i></b>). However, if you use <b><i>gil</i></b> as singular, it should remain unchanged in plural.</li>
+</ul></li>
+    <li>
+        The present forms taught here descend from the older aorist and can express a general or ongoing action. <b><em>nor-</em></b> → <b><em>nôr</em></b>, “run/runs”.
+    </li>
+    <li>Verb class, tense, and subject determine the conjugated form. A verb agrees with its subject, not its direct object.</li>
+    <li>The chart supplies forms before sentence-level initial mutation. An ending and an initial mutation can occur together.</li>
+    <li>Future forms need the appropriate subject ending; past formation depends on the verb's class and history.</li>
+    <li>Verbal nouns, imperatives, and participles have different functions and should be learned separately.</li>
+    <li>The verb's intended sense determines whether it takes a direct object or another kind of complement.</li>
+    <li>Active participles normally remain unchanged for plural number here; passive participles normally agree like adjectives. These are adopted defaults with limited evidence.</li>
+    <li>Passive naming and dative-experiencer constructions need their own analysis. English subject and passive patterns do not automatically carry over.</li>
+</ul>
+
+<div class="callout">
+<strong>Sentence-level mutation:</strong>
+<p>Under the PE23 pattern I use here, a verb immediately following a noun or emphatic-pronoun subject undergoes soft mutation. A directly following object can also undergo soft mutation, but these are two different grammatical relationships.</p>
+<p>A subject placed after the verb is not mutated merely because it comes after the verb. When an object contains a definite article, use the article's own construction; do not apply a second automatic mutation to its noun. See the <a href="/1.2.1.html#1.2.1.6">direct-object section</a> and the <a href="/mutations.html">mutation chart</a>.</p>
+<p class="source-note">Further discussion and PE23 references: <a href="https://eldamo.org/content/words/word-2795181045.html">direct objects</a>.</p>
+</div>
+
+<h3 id="1.1">Exercise 1.1</h3>
+
+<div id="exercise-1-1"></div>
+<noscript><p>Enable JavaScript to use Exercise 1.1.</p></noscript>
+
+<div class="cta-row" style="margin-top:16px;">
+        <a href="/1.2.3.html" class="primary">1.2.3 Pemith (Pronouns) →</a>
+        <div style="flex:1"></div>
+      </div>
+
+<button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+</main>
+</div>
+<script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+<script>
+(function initExerciseWidget(){
+  function start() {
+    // ===== CONFIG =====
+    const COLORS = {
+      bg: "#f5f3ec",
+      card: "#ffffff",
+      ink: "#2C2C2C",
+      primary: "#4C668C",
+      primaryInk: "#FFEEAA",
+      accent: "#AA6539",
+      accentDark: "#803F15",
+      line: "#bcc6dd"
+    };
+
+    // Special characters toolbar
+    const CHAR_PALETTE = ["·","ñ","í","î","ô","â"];
+
+    // Modes key
+    const MODE_KEY = "scx-ex1-mode";
+    let mode = localStorage.getItem(MODE_KEY) || "MIXED";
+
+    // Items (kept to match your current page content)
+    let _id = 0;
+    const ITEMS = [
+      { id: _id++, prompt: "Megil ristar yrch.", dir: "EN", expect: ["swords cut orcs"]},
+      { id: _id++, prompt: "en·Edhel chîr garas.", dir: "EN", expect: ["the elf finds a city","the elf finds city"]},
+      { id: _id++, prompt: "Sílon.", dir: "EN", expect: ["i shine"]},
+      { id: _id++, prompt: "en·Aran dîr aew.", dir: "EN", expect: ["the king watches birds","the king watches a bird"]},
+      { id: _id++, prompt: "i·Chedhyd nerir.", dir: "EN", expect: ["the dwarves run"]},
+      { id: _id++, prompt: "Edain hevir mair.", dir: "EN", expect: ["men have houses"]},
+      { id: _id++, prompt: "Tirin ñîl.", dir: "EN", expect: ["i watch stars"]},
+      { id: _id++, prompt: "in·Aew lerir.", dir: "EN", expect: ["the birds sleep"]},
+
+      { id: _id++, prompt: "I have a bird.", dir: "SINDARIN", expect: ["sevin aew"]},
+      { id: _id++, prompt: "The stars shine.", dir: "SINDARIN", expect: ["i·ñgîl hílar","i·ngîl hílar"]},
+      { id: _id++, prompt: "An orc cuts the man.", dir: "SINDARIN", expect: ["orch rista en·adan"]},
+      { id: _id++, prompt: "The captain sleeps.", dir: "SINDARIN", expect: ["e·chothron lôr"]},
+      { id: _id++, prompt: "Birds eat.", dir: "SINDARIN", expect: ["aew vedir"]},
+      { id: _id++, prompt: "I watch the house.", dir: "SINDARIN", expect: ["tirin e·mbâr","tirin e·mbâr","tirin e·mâr"]},
+      { id: _id++, prompt: "The men find the elves.", dir: "SINDARIN", expect: ["in·edain chirir in·edhil"]},
+      { id: _id++, prompt: "Elves go home.", dir: "SINDARIN", expect: ["edhil venir mbâr","edhil venir mâr"]}
+    ];
+
+    // Track progress per mode
+    const answeredByMode = { EN:new Set(), SINDARIN:new Set(), MIXED:new Set() };
+
+    // ===== UTILITIES =====
+    const norm = (s) => s
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // strip diacritics
+      .toLowerCase()
+      .replace(/[·⋅∙•・]/g, "")        // remove middots
+      .replace(/[-\u2013\u2014]/g, "") // remove hyphens/dashes
+      .replace(/[\[\](){}.,;:!?'"“”‘’`~_/\\]/g, "") // remove punctuation
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const tokenize = (s) => norm(s).split(" ");
+
+    function nearestMatchFeedback(input, expects) {
+      const toksIn = tokenize(input);
+      let best = { score: -1, tokens: [], expect: "" };
+      for (const exp of expects) {
+        const toksExp = tokenize(exp);
+        let k = 0;
+        while (k < Math.min(toksIn.length, toksExp.length) && toksIn[k] === toksExp[k]) k++;
+        if (k > best.score) best = { score: k, tokens: toksExp, expect: exp };
+      }
+      return best;
+    }
+
+    function subtleDiffHint(input, expect) {
+      const a = tokenize(input), b = tokenize(expect);
+      let i = 0; while (i < Math.min(a.length, b.length) && a[i] === b[i]) i++;
+      if (i === 0) return "Start with: “" + b[0] + "”";
+      if (i < b.length && i === a.length) return "Good so far. Next word: “" + b[i] + "”";
+      if (i < b.length) return "Check this word: “" + b[i] + "”";
+      if (a.length > b.length) return "You added extra words at the end.";
+      return "Looks close. Mind articles and number (singular/plural).";
+    }
+
+    const filtered = () => mode === "MIXED" ? ITEMS : ITEMS.filter(it => it.dir === mode);
+
+    // ===== MOUNT =====
+    const mount = document.getElementById("exercise-1-1");
+    if (!mount) return;
+
+    // Scoped styles (use site vars so it matches your main theme)
+    const style = document.createElement("style");
+    style.textContent = `
+      .scx-ex1 { font-family: inherit; color: var(--text); }
+      .scx-ex1 * { box-sizing: border-box; }
+      .scx-card { background: var(--card); border: 2px solid var(--accent); border-radius: 12px; box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
+      .scx-header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.6rem .8rem; background: var(--accent); color: var(--pill-fore); border-radius:10px 10px 0 0; flex-wrap:wrap; }
+      .scx-title { font-weight:700; letter-spacing:.02em; }
+      .scx-progress { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; }
+      .scx-bar { height:100%; width:0%; background: var(--accent-2); transition: width .25s ease; }
+
+      .scx-modes { display:flex; gap:.35rem; align-items:center; flex-wrap:wrap; }
+      .scx-mode { appearance:none; border:1px solid var(--line); background:transparent; color:var(--pill-fore); padding:.25rem .5rem; border-radius:8px; cursor:pointer; font: inherit; opacity:.95; }
+      .scx-mode[aria-pressed="true"] { background: var(--pill-bg); color: var(--pill-fore); border-color: var(--pill-bg); opacity:1; }
+
+      .scx-body { padding: .9rem .9rem .6rem; display:grid; gap:.8rem; }
+      .scx-prompt { font-style: italic; color: var(--accent); font-weight:700; }
+
+      .scx-inputrow { display:grid; grid-template-columns: 1fr auto; gap:.5rem; align-items:center; }
+      .scx-input { width:100%; padding:.6rem .7rem; border:1px solid var(--line); border-radius:10px; font-size:1rem; background: var(--card); color:var(--text); }
+      .scx-input.correct { border-color: #3b9142; box-shadow: 0 0 0 3px rgba(59,145,66,0.08); }
+      .scx-input.incorrect { border-color: #b6483f; box-shadow: 0 0 0 3px rgba(182,72,63,0.08); }
+
+      .scx-charbar { display:flex; flex-wrap:wrap; gap:.35rem; align-items:center; }
+      .scx-chlabel { font-size:.9rem; color:var(--accent); font-weight:700; margin-right:.2rem; }
+      .scx-char { appearance:none; border:1px solid var(--line); background: var(--card); color: var(--text); border-radius:8px; padding:.25rem .45rem; cursor:pointer; box-shadow:0 1px 4px rgba(2,6,23,0.04); }
+      .scx-char:hover { border-color: var(--accent-2); transform: translateY(-1px); }
+
+      .scx-btn { appearance:none; border:none; cursor:pointer; font: inherit; padding:.55rem .9rem; border-radius:10px; box-shadow: 0 2px 8px rgba(2,6,23,0.04); }
+      .scx-btn.primary { background: var(--accent-2); color: var(--pill-fore); }
+      .scx-btn.primary:hover { filter: brightness(.98); }
+      .scx-btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--line); }
+
+      .scx-foot { display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding: .2rem .9rem .9rem; }
+      .scx-ctrls { display:flex; gap:.4rem; flex-wrap:wrap; }
+
+      .scx-msg { min-height: 1.25rem; font-size:.95rem; color:var(--muted); }
+      .scx-msg.ok { color:#256d2c; }
+      .scx-msg.err { color:#7a2a22; }
+
+      .scx-compact { display:flex; align-items:center; gap:.5rem; }
+      .scx-index { font-weight:700; color:var(--accent); }
+
+      .scx-kudos { display:inline-flex; align-items:center; gap:.35rem; font-weight:700; color:#256d2c; }
+      .scx-dot { width:.6rem; height:.6rem; border-radius:999px; background:#256d2c; box-shadow:0 0 0 4px rgba(37,109,44,.15); }
+
+      @media (max-width: 640px) { .scx-inputrow { grid-template-columns: 1fr; } }
+    `;
+    document.head.appendChild(style);
+
+    // Build widget DOM
+    const root = document.createElement("section");
+    root.className = "scx-ex1 scx-card";
+    root.setAttribute("aria-label","Exercise 1.1 Interactive");
+    root.innerHTML = `
+      <div class="scx-header">
+        <div class="scx-title">Exercise 1.1 · Interactive</div>
+        <div class="scx-modes" role="group" aria-label="Practice mode">
+          <button class="scx-mode" data-mode="EN" aria-pressed="false" title="Sindarin → English">EN</button>
+          <button class="scx-mode" data-mode="SINDARIN" aria-pressed="false" title="English → Sindarin">SIND</button>
+          <button class="scx-mode" data-mode="MIXED" aria-pressed="false" title="Both directions">MIX</button>
+        </div>
+        <div style="flex:1; min-width:160px; margin: 0 .6rem;">
+          <div class="scx-progress" aria-hidden="true"><div class="scx-bar"></div></div>
+        </div>
+        <div class="scx-compact"><span class="scx-index">1</span><span>/ 16</span></div>
+      </div>
+      <div class="scx-body">
+        <div class="scx-prompt"></div>
+        <div class="scx-inputrow">
+          <input class="scx-input" type="text" enterkeyhint="done" placeholder="Type your answer here…"/>
+          <button class="scx-btn primary scx-check">Check</button>
+        </div>
+        <div class="scx-charbar" aria-label="Special characters">
+          <span class="scx-chlabel">Special chars:</span>
+          <div class="scx-chwrap"></div>
+        </div>
+        <div class="scx-msg" aria-live="polite"></div>
+      </div>
+      <div class="scx-foot">
+        <div class="scx-ctrls">
+          <button class="scx-btn ghost scx-prev" title="Previous (←)">◀ Prev</button>
+          <button class="scx-btn ghost scx-next" title="Next (→)">Next ▶</button>
+          <button class="scx-btn ghost scx-hint" title="Show a small hint">Hint</button>
+          <button class="scx-btn ghost scx-show" title="Reveal the answer">Show</button>
+        </div>
+        <div class="scx-kudos" style="visibility:hidden;" role="status"><span class="scx-dot"></span><span>Correct!</span></div>
+      </div>
+    `;
+
+    // Robust replacement (polyfill)
+    if (mount.parentNode && typeof mount.replaceWith === "function") {
+      mount.replaceWith(root);
+    } else if (mount.parentNode) {
+      mount.parentNode.replaceChild(root, mount);
+    } else {
+      mount.innerHTML = "";
+      mount.appendChild(root);
+    }
+
+    // ===== STATE & ELEMENTS =====
+    let i = 0;
+
+    const el = {
+      prompt: root.querySelector(".scx-prompt"),
+      input: root.querySelector(".scx-input"),
+      check: root.querySelector(".scx-check"),
+      msg: root.querySelector(".scx-msg"),
+      prev: root.querySelector(".scx-prev"),
+      next: root.querySelector(".scx-next"),
+      hint: root.querySelector(".scx-hint"),
+      show: root.querySelector(".scx-show"),
+      index: root.querySelector(".scx-index"),
+      bar: root.querySelector(".scx-bar"),
+      kudos: root.querySelector(".scx-kudos"),
+      modes: Array.from(root.querySelectorAll(".scx-mode")),
+      total: root.querySelector(".scx-compact span:last-child"),
+      charwrap: root.querySelector(".scx-chwrap")
+    };
+
+    function setMode(newMode) {
+      mode = newMode;
+      localStorage.setItem(MODE_KEY, mode);
+      i = 0;
+      el.modes.forEach(btn => btn.setAttribute("aria-pressed", btn.dataset.mode === mode ? "true" : "false"));
+      el.total.textContent = "/ " + filtered().length;
+      render();
+    }
+
+    function progressPercent() {
+      const ids = new Set(filtered().map(x => x.id));
+      const done = Array.from(answeredByMode[mode]).filter(id => ids.has(id)).length;
+      return Math.round((done / ids.size) * 100) || 0;
+    }
+
+    function safeFocusIfVisible() {
+      const rect = el.input.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const visible = rect.top >= 0 && rect.bottom <= vh && rect.bottom > 0;
+      if (visible) {
+        try { el.input.focus({ preventScroll: true }); } catch(_) { /* older browsers */ }
+      }
+    }
+
+    function render() {
+      const list = filtered();
+      const item = list[i];
+      el.prompt.textContent = (item.dir === "EN" ? "→ English: " : "→ Sindarin: ") + item.prompt;
+      el.index.textContent = (i + 1).toString();
+      el.input.value = "";
+      el.input.classList.remove("correct","incorrect");
+      el.msg.textContent = "";
+      el.kudos.style.visibility = "hidden";
+      el.bar.style.width = progressPercent() + "%";
+      el.total.textContent = "/ " + list.length;
+      safeFocusIfVisible();
+    }
+
+    function insertChar(ch) {
+      const inp = el.input;
+      const start = inp.selectionStart ?? inp.value.length;
+      const end = inp.selectionEnd ?? inp.value.length;
+      const before = inp.value.slice(0, start);
+      const after = inp.value.slice(end);
+      inp.value = before + ch + after;
+      const newPos = start + ch.length;
+      inp.setSelectionRange(newPos, newPos);
+      inp.focus();
+    }
+
+    function buildCharBar() {
+      el.charwrap.innerHTML = "";
+      CHAR_PALETTE.forEach(ch => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "scx-char";
+        b.textContent = ch;
+        b.setAttribute("aria-label", 'Insert "'+ch+'"');
+        b.addEventListener("click", () => insertChar(ch));
+        el.charwrap.appendChild(b);
+      });
+    }
+
+    function checkAnswer() {
+      const item = filtered()[i];
+      const input = el.input.value;
+      const expects = item.expect;
+      const ok = expects.some(exp => {
+        const a = norm(exp);
+        const b = norm(input);
+        return a === b || a.replace(/\s+/g,"") === b.replace(/\s+/g,"");
+      });
+
+      if (ok) {
+        answeredByMode[mode].add(item.id);
+        el.input.classList.add("correct");
+        el.input.classList.remove("incorrect");
+        el.msg.textContent = item.dir === "EN" ? "Nice! Your translation is correct." : "Mae lîn! (Correct)";
+        el.msg.className = "scx-msg ok";
+        el.kudos.style.visibility = "visible";
+        el.bar.style.width = progressPercent() + "%";
+        setTimeout(() => go(+1), 650);
+      } else {
+        el.input.classList.add("incorrect");
+        el.input.classList.remove("correct");
+        const best = nearestMatchFeedback(input, expects);
+        const hint = subtleDiffHint(input, best.expect);
+        el.msg.textContent = hint;
+        el.msg.className = "scx-msg err";
+      }
+    }
+
+    function go(delta) {
+      const list = filtered();
+      i = (i + delta + list.length) % list.length;
+      render();
+    }
+
+    function bindEvents() {
+      el.check.addEventListener("click", checkAnswer);
+      el.input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkAnswer();
+        if (e.key === "ArrowRight" && (e.metaKey || e.ctrlKey)) go(+1);
+        if (e.key === "ArrowLeft" && (e.metaKey || e.ctrlKey)) go(-1);
+      });
+      el.prev.addEventListener("click", () => go(-1));
+      el.next.addEventListener("click", () => go(+1));
+      el.hint.addEventListener("click", () => {
+        const item = filtered()[i];
+        const best = nearestMatchFeedback(el.input.value, item.expect);
+        el.msg.textContent = subtleDiffHint(el.input.value, best.expect);
+        el.msg.className = "scx-msg";
+      });
+      el.show.addEventListener("click", () => {
+        const item = filtered()[i];
+        el.input.value = item.expect[0];
+        el.msg.textContent = "Shown correct answer.";
+        el.msg.className = "scx-msg";
+        el.input.classList.remove("incorrect");
+      });
+      root.querySelectorAll(".scx-mode").forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+    }
+
+    buildCharBar();
+    bindEvents();
+    setMode(mode);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
+</script>
+
+<script>
+/* Verbs-only trainer (CONJ + PARSE). No sentences, no noun/plural work. */
+(function initVerbWidget(){
+  function start(){
+    // ===== THEME (kept for backwards compatibility but UI uses site vars) =====
+    const COLORS = {
+      bg:"#f5f3ec", card:"#fff", ink:"#2C2C2C",
+      primary:"#4C668C", primaryInk:"#FFEEAA",
+      accent:"#AA6539", accentDark:"#803F15", line:"#bcc6dd"
+    };
+
+    const CHAR_PALETTE = ["·","í","î","ô","â","ê","û"];
+    const MODE_KEY = "scx-ex-verbs-mode";
+    let mode = localStorage.getItem(MODE_KEY) || "CONJ";
+
+    // ===== DATA (your tables) =====
+    const VERBS = [
+      {key:"cut",   stem:"rista-", forms:{ "1s":"riston","2s_fam":"ristog","2s_form":"ristol","3s":"rista","1p_inc":"ristab","1p_exc":"ristof","2p_form":"ristodh","3p":"ristar" }},
+      {key:"sleep", stem:"lor-",   forms:{ "1s":"lerin","2s_fam":"lerig","2s_form":"leril","3s":"lôr","1p_inc":"lerib","1p_exc":"lerif","2p_form":"leridh","3p":"lerir" }},
+      {key:"eat",   stem:"mad-",   forms:{ "1s":"medin","2s_fam":"medig","2s_form":"medil","3s":"mâd","1p_inc":"medib","1p_exc":"medif","2p_form":"medidh","3p":"medir" }},
+      {key:"go",    stem:"men-",   forms:{ "1s":"menin","2s_fam":"menig","2s_form":"menil","3s":"mên","1p_inc":"menib","1p_exc":"menif","2p_form":"menidh","3p":"menir" }},
+      {key:"run",   stem:"nor-",   forms:{ "1s":"nerin","2s_fam":"nerig","2s_form":"neril","3s":"nôr","1p_inc":"nerib","1p_exc":"nerif","2p_form":"neridh","3p":"nerir" }},
+      {key:"have",  stem:"sav-",   forms:{ "1s":"sevin","2s_fam":"sevig","2s_form":"sevil","3s":"sâf","1p_inc":"sevib","1p_exc":"sevif","2p_form":"sevidh","3p":"sevir" }},
+      {key:"shine", stem:"síla-",  forms:{ "1s":"sílon","2s_fam":"sílog","2s_form":"sílol","3s":"síla","1p_inc":"sílab","1p_exc":"sílof","2p_form":"sílodh","3p":"sílar" }},
+      {key:"look",  stem:"tir-",   forms:{ "1s":"tirin","2s_fam":"tirig","2s_form":"tiril","3s":"tîr","1p_inc":"tirib","1p_exc":"tirif","2p_form":"tiridh","3p":"tirir" }},
+      {key:"find",  stem:"hir-",   forms:{ "1s":"hirin","2s_fam":"hirig","2s_form":"hiril","3s":"hîr","1p_inc":"hirib","1p_exc":"hirif","2p_form":"hiridh","3p":"hirir" }}
+    ];
+
+    const PPL = [
+      ["1s","I"],["2s_fam","You (fam.)"],["2s_form","You (form.)"],["3s","He/She/It"],
+      ["1p_inc","We (incl.)"],["1p_exc","We (excl.)"],["2p_form","You (pl./form.)"],["3p","They"]
+    ];
+
+    // ===== EN helpers (for PARSE mode) =====
+    const EN_BASE = {
+      cut:["cut"],
+      sleep:["sleep"],
+      eat:["eat"],
+      go:["go"],
+      run:["run"],
+      have:["have"],
+      shine:["shine"],
+      look:["look","look at","look toward","look towards"],
+      find:["find"]
+    };
+
+    function en3s(base){
+      if(base==="go") return "goes";
+      if(base==="have") return "has";
+      return base.endsWith("s")||base.endsWith("x")||base.endsWith("z")||base.endsWith("ch")||base.endsWith("sh")||base.endsWith("o")
+        ? base + "es"
+        : base + "s";
+    }
+    const EN_PRON = {
+      "1s": ["i"],
+      "2s_fam": ["you"],
+      "2s_form": ["you","you (formal)","you (form.)"],
+      "3s": ["he","she","it"],
+      "1p_inc": ["we","we (inclusive)"],
+      "1p_exc": ["we","we (exclusive)"],
+      "2p_form": ["you","you (plural)","you (pl.)","you (form.)"],
+      "3p": ["they"]
+    };
+
+    // ===== Build items =====
+    let _id = 0;
+    const ITEMS_CONJ = [];
+    for (const v of VERBS){
+      for (const [k,label] of PPL){
+        ITEMS_CONJ.push({
+          id:_id++,
+          dir:"EN2SIND",
+          prompt:`${label} ${v.key}.`,
+          expect:[ v.forms[k] ]
+        });
+      }
+    }
+
+    const ITEMS_PARSE = [];
+    for (const v of VERBS){
+      for (const [k,_label] of PPL){
+        const pronOpts = EN_PRON[k];
+        const bases = EN_BASE[v.key];
+        const verbForms = k==="3s" ? bases.map(en3s) : bases;
+        const expects = [];
+        for (const p of pronOpts){
+          for (const vf of verbForms){
+            expects.push(`${p} ${vf}`, `${p} ${vf}.`);
+          }
+        }
+        ITEMS_PARSE.push({
+          id:_id++,
+          dir:"SIND2EN",
+          prompt: v.forms[k],
+          expect: expects
+        });
+      }
+    }
+
+    const BANK = { CONJ: ITEMS_CONJ, PARSE: ITEMS_PARSE };
+    const answeredByMode = { CONJ:new Set(), PARSE:new Set() };
+
+    // ===== Matching (forgiving) =====
+    const norm = s => s
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .toLowerCase()
+      .replace(/[·⋅∙•・]/g,"")
+      .replace(/[-\u2013\u2014]/g,"-")
+      .replace(/[\[\](){}.,;:!?'"“”‘’`~_/\\]/g,"")
+      .replace(/\s+/g," ")
+      .trim();
+
+    const eqLoose = (a,b) => {
+      const A = norm(a), B = norm(b);
+      return A===B || A.replace(/\s+/g,"")===B.replace(/\s+/g,"");
+    };
+
+    function nearest(expectArr, input){
+      const tIn = norm(input).split(" ");
+      let best = {score:-1, exp:expectArr[0]};
+      for (const exp of expectArr){
+        const tEx = norm(exp).split(" ");
+        let k=0; while(k<Math.min(tIn.length,tEx.length)&&tIn[k]===tEx[k]) k++;
+        if (k>best.score) best={score:k,exp};
+      }
+      return best;
+    }
+    function hintFor(expect, input){
+      const a = norm(input).split(" "), b = norm(expect).split(" ");
+      let i=0; while(i<Math.min(a.length,b.length)&&a[i]===b[i]) i++;
+      if(i===0) return `Start with: “${expect.split(" ")[0]}”`;
+      if(i<b.length && i===a.length) return `Next word: “${expect.split(" ")[i]}”`;
+      if(i<b.length) return `Check: “${expect.split(" ")[i]}”`;
+      if(a.length>b.length) return "You added extra words.";
+      return "Very close.";
+    }
+
+    const mount = document.getElementById("exercise-verbs");
+    if(!mount) return;
+
+    // ===== UI (use site vars for colors) =====
+    const style = document.createElement("style");
+    style.textContent = `
+      .scx-verbs { font-family: inherit; color: var(--text); }
+      .scx-verbs * { box-sizing: border-box; }
+      .scx-card { background: var(--card); border:2px solid var(--accent); border-radius:12px; box-shadow:0 4px 12px rgba(2,6,23,0.04); }
+      .scx-header { display:flex; align-items:center; gap:.75rem; padding:.6rem .8rem; background: var(--accent); color: var(--pill-fore); border-radius:10px 10px 0 0; flex-wrap:wrap; }
+      .scx-title { font-weight:700; letter-spacing:.02em; }
+      .scx-modes { margin-left:auto; display:flex; gap:.35rem; flex-wrap:wrap; }
+      .scx-mode { appearance:none; border:1px solid var(--line); background:transparent; color:var(--pill-fore); padding:.25rem .5rem; border-radius:8px; cursor:pointer; font:inherit; opacity:.95; }
+      .scx-mode[aria-pressed="true"]{ background:var(--pill-bg); color:var(--pill-fore); border-color:var(--pill-bg); opacity:1; }
+      .scx-progress{ height:6px; background:var(--line); border-radius:999px; overflow:hidden; min-width:160px; }
+      .scx-bar{ height:100%; width:0%; background:var(--accent-2); transition:width .25s ease; }
+      .scx-compact{ display:flex; align-items:center; gap:.5rem; }
+      .scx-index{ font-weight:700; color:var(--accent); }
+
+      .scx-body{ padding:.9rem .9rem .6rem; display:grid; gap:.8rem; }
+      .scx-prompt{ font-style:italic; color:var(--accent); font-weight:700; }
+
+      .scx-inputrow{ display:grid; grid-template-columns:1fr auto; gap:.5rem; align-items:center; }
+      .scx-input{ width:100%; padding:.6rem .7rem; border:1px solid var(--line); border-radius:10px; font-size:1rem; background:var(--card); color:var(--text); }
+      .scx-input.correct{ border-color:#3b9142; box-shadow:0 0 0 3px rgba(59,145,66,.12); }
+      .scx-input.incorrect{ border-color:#b6483f; box-shadow:0 0 0 3px rgba(182,72,63,.12); }
+
+      .scx-charbar{ display:flex; flex-wrap:wrap; gap:.35rem; align-items:center; }
+      .scx-chlabel{ font-size:.9rem; color:var(--accent); font-weight:700; margin-right:.2rem; }
+      .scx-char{ appearance:none; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:8px; padding:.25rem .45rem; cursor:pointer; box-shadow:0 1px 4px rgba(2,6,23,0.04); }
+
+      .scx-foot{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.2rem .9rem .9rem; }
+      .scx-ctrls{ display:flex; gap:.4rem; flex-wrap:wrap; }
+      .scx-btn{ appearance:none; border:none; cursor:pointer; font:inherit; padding:.55rem .9rem; border-radius:10px; box-shadow:0 2px 8px rgba(2,6,23,0.04); }
+      .scx-btn.primary{ background:var(--accent-2); color:var(--pill-fore); }
+      .scx-btn.primary:hover{ filter:brightness(.98); }
+      .scx-btn.ghost{ background:transparent; color:var(--accent); border:1px solid var(--line); }
+
+      .scx-msg{ min-height:1.25rem; font-size:.95rem; color:var(--muted); }
+      .scx-msg.ok{ color:#256d2c; }
+      .scx-msg.err{ color:#7a2a22; }
+
+      @media (max-width:640px){ .scx-inputrow{ grid-template-columns:1fr; } }
+    `;
+    document.head.appendChild(style);
+
+    const root = document.createElement("section");
+    root.className = "scx-verbs scx-card";
+    root.setAttribute("aria-label","Verb Conjugation Interactive");
+    root.innerHTML = `
+      <div class="scx-header">
+        <div class="scx-title">Verb Conjugation</div>
+        <div class="scx-modes" role="group" aria-label="Practice mode">
+          <button class="scx-mode" data-mode="CONJ"  aria-pressed="false">CONJ</button>
+          <button class="scx-mode" data-mode="PARSE" aria-pressed="false">PARSE</button>
+        </div>
+        <div class="scx-progress" aria-hidden="true"><div class="scx-bar"></div></div>
+        <div class="scx-compact"><span class="scx-index">1</span><span class="scx-total"></span></div>
+      </div>
+      <div class="scx-body">
+        <div class="scx-prompt"></div>
+        <div class="scx-inputrow">
+          <input class="scx-input" type="text" enterkeyhint="done" placeholder="Type your answer here…">
+          <button class="scx-btn primary scx-check">Check</button>
+        </div>
+        <div class="scx-charbar" aria-label="Special characters">
+          <span class="scx-chlabel">Special chars:</span>
+          <div class="scx-chwrap"></div>
+        </div>
+        <div class="scx-msg" aria-live="polite"></div>
+      </div>
+      <div class="scx-foot">
+        <div class="scx-ctrls">
+          <button class="scx-btn ghost scx-prev" title="Previous (←)">◀ Prev</button>
+          <button class="scx-btn ghost scx-next" title="Next (→)">Next ▶</button>
+          <button class="scx-btn ghost scx-hint" title="Small hint">Hint</button>
+          <button class="scx-btn ghost scx-show" title="Reveal the answer">Show</button>
+        </div>
+        <div class="scx-kudos" style="visibility:hidden;" role="status"><span style="width:.6rem;height:.6rem;border-radius:999px;background:#256d2c;box-shadow:0 0 0 4px rgba(37,109,44,.15);display:inline-block;"></span><span>Correct!</span></div>
+      </div>
+    `;
+    const parent = mount.parentNode;
+    if(parent && parent.replaceChild){ parent.replaceChild(root, mount); } else { mount.innerHTML=""; mount.appendChild(root); }
+
+    // ===== STATE & HOOKS =====
+    let i = 0;
+    const el = {
+      prompt: root.querySelector(".scx-prompt"),
+      input: root.querySelector(".scx-input"),
+      check: root.querySelector(".scx-check"),
+      msg: root.querySelector(".scx-msg"),
+      prev: root.querySelector(".scx-prev"),
+      next: root.querySelector(".scx-next"),
+      hint: root.querySelector(".scx-hint"),
+      show: root.querySelector(".scx-show"),
+      index: root.querySelector(".scx-index"),
+      total: root.querySelector(".scx-total"),
+      bar: root.querySelector(".scx-bar"),
+      kudos: root.querySelector(".scx-kudos"),
+      modes: Array.from(root.querySelectorAll(".scx-mode")),
+      charwrap: root.querySelector(".scx-chwrap")
+    };
+
+    function filtered(){ return BANK[mode]; }
+    function progressPct(){
+      const ids = new Set(filtered().map(x=>x.id));
+      const done = Array.from(answeredByMode[mode]).filter(id=>ids.has(id)).length;
+      return Math.round((done/(ids.size||1))*100);
+    }
+    function safeFocusIfVisible(){
+      const r = el.input.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      if(r.top>=0 && r.bottom<=vh && r.bottom>0){ try{ el.input.focus({preventScroll:true}); }catch(_){} }
+    }
+    function render(){
+      const list = filtered(), item = list[i];
+      el.prompt.textContent = (item.dir==="EN2SIND" ? "→ Sindarin: " : "→ English: ") + item.prompt;
+      el.index.textContent = (i+1).toString();
+      el.total.textContent = "/ " + list.length;
+      el.input.value = "";
+      el.input.classList.remove("correct","incorrect");
+      el.msg.textContent = "";
+      el.kudos.style.visibility = "hidden";
+      el.bar.style.width = progressPct() + "%";
+      safeFocusIfVisible();
+    }
+
+    function buildCharBar(){
+      el.charwrap.innerHTML="";
+      CHAR_PALETTE.forEach(ch=>{
+        const b=document.createElement("button");
+        b.type="button"; b.className="scx-char"; b.textContent=ch;
+        b.setAttribute("aria-label",'Insert "'+ch+'"');
+        b.addEventListener("click",()=>{
+          const inp = el.input;
+          const s = inp.selectionStart ?? inp.value.length;
+          const e = inp.selectionEnd ?? inp.value.length;
+          const before = inp.value.slice(0,s);
+          const after = inp.value.slice(e);
+          inp.value = before + ch + after;
+          const pos = s + ch.length;
+          inp.setSelectionRange(pos,pos);
+          inp.focus();
+        });
+        el.charwrap.appendChild(b);
+      });
+    }
+
+    function check(){
+      const item = filtered()[i];
+      const ok = item.expect.some(exp => eqLoose(exp, el.input.value));
+      if(ok){
+        answeredByMode[mode].add(item.id);
+        el.input.classList.add("correct");
+        el.input.classList.remove("incorrect");
+        el.msg.textContent = "Correct!";
+        el.msg.className = "scx-msg ok";
+        el.kudos.style.visibility = "visible";
+        el.bar.style.width = progressPct() + "%";
+        setTimeout(()=>go(+1), 650);
+      }else{
+        el.input.classList.add("incorrect");
+        el.input.classList.remove("correct");
+        const best = nearest(item.expect, el.input.value);
+        el.msg.textContent = hintFor(best.exp, el.input.value);
+        el.msg.className = "scx-msg err";
+      }
+    }
+
+    function go(delta){
+      const list = filtered();
+      i = (i + delta + list.length) % list.length;
+      render();
+    }
+
+    function bind(){
+      el.check.addEventListener("click", check);
+      el.input.addEventListener("keydown", (e)=>{
+        if(e.key==="Enter") check();
+        if((e.key==="ArrowRight") && (e.metaKey||e.ctrlKey)) go(+1);
+        if((e.key==="ArrowLeft")  && (e.metaKey||e.ctrlKey)) go(-1);
+      });
+      el.prev.addEventListener("click", ()=>go(-1));
+      el.next.addEventListener("click", ()=>go(+1));
+      el.hint.addEventListener("click", ()=>{
+        const item = filtered()[i];
+        const best = nearest(item.expect, el.input.value);
+        el.msg.textContent = hintFor(best.exp, el.input.value);
+        el.msg.className = "scx-msg";
+      });
+      el.show.addEventListener("click", ()=>{
+        const item = filtered()[i];
+        el.input.value = item.expect[0];
+        el.msg.textContent = "Shown correct answer.";
+        el.msg.className = "scx-msg";
+        el.input.classList.remove("incorrect");
+      });
+      root.querySelectorAll(".scx-mode").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+    }
+
+    function setMode(newMode){
+      mode = newMode;
+      localStorage.setItem(MODE_KEY, mode);
+      i = 0;
+      el.modes.forEach(b => b.setAttribute("aria-pressed", b.dataset.mode===mode ? "true":"false"));
+      render();
+    }
+
+    // Init
+    buildCharBar();
+    bind();
+    setMode(mode);
+  }
+
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
+</script>
+
+</body>
+</html>

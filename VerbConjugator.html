@@ -1,0 +1,3244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Verb Conjugator</title>
+
+<!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+:root{
+  --bg: #f6f8fa;
+  --bg-end: #eef2f3;
+  --card: rgba(255,255,255,0.98);
+  --surface-soft: #f8fafc;
+  --border: rgba(15,23,36,0.12);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --danger: #b42318;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --bg-end: #11191c;
+  --card: rgba(12,14,16,0.92);
+  --surface-soft: #11191c;
+  --border: rgba(230,238,246,0.16);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --danger: #ff8a80;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-end) 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+/* VERB SEARCH */
+.verb-search {
+  position: relative;
+  max-width: 760px;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.verb-search label {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--accent-2);
+  font-size: 1.17em;
+  font-weight: 700;
+}
+
+.search-help {
+  margin: 0 0 .6rem;
+  color: var(--muted);
+  font-size: .94rem;
+}
+
+.search-control {
+  display: flex;
+  gap: .55rem;
+  align-items: stretch;
+}
+
+#verbInput {
+  min-width: 0;
+  flex: 1;
+  padding: .68rem .8rem;
+  border: 1px solid var(--accent);
+  border-radius: 9px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+}
+
+.clear-search {
+  padding: .6rem .9rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clear-search:hover { border-color: var(--accent-2); color: var(--accent-2); }
+
+.search-status {
+  min-height: 1.5em;
+  margin: .35rem 0 0;
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+.search-results {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 900;
+  max-height: 390px;
+  margin-top: .25rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: 0 18px 36px rgba(2,6,23,.16);
+}
+
+.search-results[hidden] { display: none; }
+
+.search-result {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(110px, .7fr) minmax(180px, 1.6fr) auto;
+  gap: .75rem;
+  align-items: start;
+  padding: .72rem .8rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.search-result:last-child { border-bottom: 0; }
+.search-result:hover,
+.search-result.is-active { background: rgba(14,165,164,.09); }
+.search-result-word { color: var(--accent); font-weight: 800; }
+.search-result-gloss { font-size: .92rem; }
+.search-result-meta { color: var(--muted); font-size: .78rem; white-space: nowrap; }
+
+.verb-card {
+  margin: 1rem 0 1.4rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.verb-card[hidden] { display: none; }
+.verb-card h2 { margin: 0; color: var(--accent); font-size: 1.35rem; }
+.verb-card p { margin: .35rem 0; }
+.verb-card-meta { display: flex; gap: .4rem; flex-wrap: wrap; margin: .45rem 0; }
+.verb-badge {
+  display: inline-flex;
+  padding: .18rem .5rem;
+  border-radius: 999px;
+  background: rgba(14,165,164,.11);
+  color: var(--text);
+  font-size: .78rem;
+  font-weight: 700;
+}
+.verb-badge.deprecated,
+.verb-badge.deleted { background: rgba(180,35,24,.11); color: var(--danger); }
+.verb-badge.community { background: rgba(91,33,182,.12); color: #5b21b6; }
+.verb-card-details { color: var(--muted); font-size: .88rem; }
+.recognition-award {
+  display: inline-flex;
+  align-items: center;
+  gap: .22rem;
+  margin: 0 .08rem;
+  white-space: nowrap;
+}
+.recognition-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: contain;
+  vertical-align: middle;
+}
+.database-credit { color: var(--muted); font-size: .82rem; }
+
+.conjugation-layout {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.conjugation-layout > .table-card { flex: 1 1 430px; min-width: 0; overflow-x: auto; }
+.conjugation-layout table { width: 100%; }
+.notification { padding: .7rem .85rem; border-left: 4px solid var(--accent-2); border-radius: 7px; background: var(--surface-soft); }
+
+@media (max-width:640px) {
+  .search-result { grid-template-columns: 1fr; gap: .15rem; }
+  .search-result-meta { white-space: normal; }
+  .search-control { align-items: stretch; }
+}
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions, .search-results, .clear-search { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 0.72em;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+<header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+  
+  <div class="site">
+    <main class="main-center" role="main" aria-labelledby="page-title">
+      <h1 id="page-title">Verb Conjugator</h1>
+
+      <!-- Top nav / intro list (keeps the structure from your old content) -->
+      <section aria-labelledby="contents">
+        <p><strong id="contents">Contents</strong></p>
+        
+  <div class="callout">
+    <strong>IMPORTANT:</strong> Search results marked <strong>[nd-]</strong>, <strong>[mb-]</strong>, or <strong>[ng-]</strong> restore their ancient nasal in the past tense only for monosyllabic I-stems. Multisyllabic I-stems such as <i>dangar- [nd-]</i> retain the surface stem <i>dangar-</i>. For a manually entered monosyllabic verb, include the ancient nasal yourself—for example, <i>ndag-</i> or <i>ngal-</i>.
+  </div>
+  <p>Search for an <strong>I-stem</strong> or <strong>A-stem</strong> verb by its Elvish form or English meaning. Selecting a result immediately displays its full conjugation paradigm.</p>
+
+  <div class="verb-search" id="verbSearch">
+    <label for="verbInput">VERB SEARCH:</label>
+    <p class="search-help" id="verbSearchHelp">Search Sindarin, Noldorin, and Neo-Sindarin verbs, or enter a stem manually and press Enter.</p>
+    <div class="search-control">
+      <input type="search" id="verbInput"
+        placeholder="Try tir- or “to watch”"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls="verbResults"
+        aria-describedby="verbSearchHelp verbSearchStatus"
+        aria-expanded="false"
+        autocomplete="off"
+        spellcheck="false">
+      <button type="button" class="clear-search" id="clearVerbSearch">Clear</button>
+    </div>
+    <p class="search-status" id="verbSearchStatus" role="status" aria-live="polite">Loading verb database…</p>
+    <div class="search-results" id="verbResults" role="listbox" hidden></div>
+  </div>
+
+  <article class="verb-card" id="selectedVerbCard" aria-live="polite" hidden></article>
+  <div id="resultPresent"></div>
+  <p class="database-credit">Lexical data from <a href="https://eldamo.org/" target="_blank" rel="noopener">Eldamo — An Elvish Lexicon</a>, used under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Community Neo-Sindarin additions are stored separately and credited on their entries.</p>
+
+  <div class="callout">
+    <strong>DISCLAIMER:</strong>
+    <ul>
+      <li><strong>A-Stem verbs ending in (anna):</strong> Haplology probably takes place for these verbs (e.g., <i>panna-</i> “to open, enlarge” yields <i>pannannen</i> in past tense, and may reduce to <i>pannen</i>).</li>
+      <li><strong>Complexity of Sindarin:</strong> Sindarin is a constructed language with intricate rules. Although this tool aims to account for these complexities, some nuances may not be fully captured.</li>
+      <li><strong>Potential for Errors:</strong> Despite best efforts, certain renditions may be incorrect due to the complexity of the language and algorithmic limitations.</li>
+      <li><strong>User Responsibility:</strong> Cross-reference results with trusted Sindarin resources or consult with knowledgeable linguists for scholarly/formal work.</li>
+      <li><strong>Updates and Feedback:</strong> This tool is continuously evolving. Feedback and error reports are welcomed to enhance accuracy and functionality.</li>
+    </ul>
+  </div>
+  
+   <div class="cta-row" style="margin-top:16px;">
+        <a href="/stress.html" class="primary">Stress Analyzer →</a>
+        <div style="flex:1"></div>
+  </div>
+
+  </section>
+
+  <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+
+    </main>
+    </div>
+<script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+<script>
+    const PERSON_ROWS = [
+        ['1st Singular', '1st Sg.', 'I'],
+        ['2nd Singular Familiar', '2nd Sg. Fam.', 'You'],
+        ['2nd Singular Formal', '2nd Sg. Form.', 'You'],
+        ['3rd Singular', '3rd Sg.', 'He/She/It'],
+        ['1st Plural Inclusive', '1st Pl. Inc.', 'We'],
+        ['1st Plural Exclusive', '1st Pl. Exc.', 'We'],
+        ['2nd Plural Formal', '2nd Pl. Form.', 'You'],
+        ['3rd Plural', '3rd Pl.', 'They']
+    ];
+
+    const NONFINITE_FORMS = [
+        ['Present Active Participle', 'Active Present Participle'],
+        ['Past Active Participle', 'Active Past Participle'],
+        ['Passive Past Participle (Singular)', 'Passive Participle Singular'],
+        ['Passive Past Participle (Plural)', 'Passive Participle Plural'],
+        ['Imperative', 'Imperative'],
+        ['Infinitive', 'Infinitive'],
+        ['Gerund', 'Gerund']
+    ];
+
+    function escapeHTML(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+    function renderPersonTable(columns) {
+        const headers = columns.map(({ label }) => `<th>${escapeHTML(label)}</th>`).join('');
+        const rows = PERSON_ROWS.map(([key, label, pronoun]) => {
+            const cells = columns.map(({ values }) => `<td>${escapeHTML(values[key] ?? '')}</td>`).join('');
+            return `<tr><td>${escapeHTML(label)}</td><td>${escapeHTML(pronoun)}</td>${cells}</tr>`;
+        }).join('');
+
+        return `
+          <table>
+            <thead><tr><th></th><th>Pronoun</th>${headers}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+    }
+
+    function renderNonfiniteTable(getForm) {
+        const rows = NONFINITE_FORMS.map(([label, form]) =>
+            `<tr><td>${escapeHTML(label)}</td><td>${escapeHTML(getForm(form))}</td></tr>`
+        ).join('');
+
+        return `
+          <table>
+            <thead><tr><th>Form</th><th>Conjugation</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+    }
+
+    const POL_PRESENT_FORMS = {
+        '1st Singular': 'pelin',
+        '2nd Singular Familiar': 'pelig',
+        '2nd Singular Formal': 'pelil',
+        '3rd Singular': 'pôl',
+        '1st Plural Inclusive': 'pelib',
+        '1st Plural Exclusive': 'pelif',
+        '2nd Plural Formal': 'pelidh',
+        '3rd Plural': 'pelir'
+    };
+
+    const POL_PAST_FORMS = {
+        '1st Singular': 'obúlen',
+        '2nd Singular Familiar': 'obúleg',
+        '2nd Singular Formal': 'obúlel',
+        '3rd Singular': 'obul',
+        '1st Plural Inclusive': 'obúleb',
+        '1st Plural Exclusive': 'obúlef',
+        '2nd Plural Formal': 'obúledh',
+        '3rd Plural': 'obúler'
+    };
+
+    function softMutateInitialWord(word) {
+        if (!word) return word;
+
+        const mutations = [
+            ['lh', 'thl'],
+            ['rh', 'thr'],
+            ['th', 'th'],
+            ['ph', 'f'],
+            ['ch', 'ch'],
+            ['br', 'vr'],
+            ['bl', 'vl'],
+            ['dr', 'dhr'],
+            ['gr', 'r'],
+            ['gl', 'l'],
+            ['gw', 'w'],
+            ['p', 'b'],
+            ['t', 'd'],
+            ['c', 'g'],
+            ['b', 'v'],
+            ['d', 'dh'],
+            ['g', ''],
+            ['m', 'v'],
+            ['s', 'h'],
+            ['h', 'ch']
+        ];
+
+        for (const [from, to] of mutations) {
+            if (word.startsWith(from)) return to + word.slice(from.length);
+        }
+        return word;
+    }
+
+    function generateCanCannotTable(gerund) {
+        const rows = PERSON_ROWS.map(([key, label, pronoun]) => {
+            const canForm = `${POL_PRESENT_FORMS[key]} ${gerund}`;
+            const cannotPol = softMutateInitialWord(POL_PRESENT_FORMS[key]);
+            const cannotForm = `ú-${cannotPol} ${gerund} / ló-${cannotPol} ${gerund}`;
+            const couldForm = `${POL_PAST_FORMS[key]} ${gerund}`;
+            const couldNotPol = softMutateInitialWord(POL_PAST_FORMS[key]);
+            const couldNotForm = `ú-${couldNotPol} ${gerund} / ló-${couldNotPol} ${gerund}`;
+
+            return `
+                  <tr>
+                    <td>${escapeHTML(label)}</td>
+                    <td>${escapeHTML(pronoun)}</td>
+                    <td>${escapeHTML(canForm)}</td>
+                    <td>${escapeHTML(cannotForm)}</td>
+                    <td>${escapeHTML(couldForm)}</td>
+                    <td>${escapeHTML(couldNotForm)}</td>
+                  </tr>`;
+        }).join('');
+
+        return `
+  <div style="margin-top: 14px;">
+    <table>
+      <thead>
+        <tr><th></th><th>Pronoun</th><th>Can</th><th>Cannot</th><th>Could</th><th>Could Not</th></tr>
+      </thead>
+      <tbody>
+        ${rows}
+      </tbody>
+    </table>
+  </div>`;
+    }
+
+
+    function generateConjugationTable() {
+    const verb = getCurrentConjugationStem();
+    const lexicalVerb = verbSearchState.selectedEntry?._stem || verb;
+    const specialAStemVerbs = ['na', 'tho'];
+    
+    // Block boe
+    if (lexicalVerb === "boe") {
+        document.getElementById('resultPresent').innerHTML =
+    "<div style='color:red; margin-top: 18px;'>Sorry, this verb cannot be conjugated.</div>";
+        return;
+    }
+
+    if (verb.at(-1) === 'a' || specialAStemVerbs.includes(verb)) {
+        aStemVerb.conjugate(verb);
+    } else {
+        iStemVerb.conjugate(verb);
+    }
+}
+
+
+    function clearResultsIfEmpty() {
+        const inputField = document.getElementById('verbInput');
+        if (inputField.value.trim() === '') {
+            document.getElementById('resultPresent').innerHTML = '';
+            document.getElementById('selectedVerbCard').hidden = true;
+        }
+    }
+
+    /**
+     * I-stem verbs
+     */
+    const iStemVerb = (function() {
+        function removeNOrMPrefixIfPresent(verb) {
+            if ((verb.startsWith('n') || verb.startsWith('m')) && verb.length > 1) {
+                const remainingVerb = verb.slice(1);
+                if (['d', 'b', 'g'].includes(remainingVerb.charAt(0))) {
+                    return remainingVerb;
+                }
+            }
+            return verb;
+        }
+
+        function applyVowelChanges(verb, personNumber, vowelChangesOneVowel, vowelChangesTwoVowels, vowelChangesThreeVowels, suffixes) {
+            const vowelCount = verb.match(/[aeiou]/g)?.length;
+
+            if (vowelCount === 1) {
+                let vowelChange = personNumber === '3rd Singular' ? vowelChangesOneVowel['3rd Singular'] : vowelChangesOneVowel['All Others'];
+                for (const [vowel, replacement] of Object.entries(vowelChange)) {
+                    verb = verb.replace(new RegExp(vowel), replacement);
+                }
+                verb += suffixes[personNumber];
+            } else if (vowelCount === 2) {
+                if (personNumber !== '3rd Singular') {
+                    for (const [vowel, replacement] of Object.entries(vowelChangesTwoVowels)) {
+                        verb = verb.replace(new RegExp(vowel, 'g'), replacement);
+                    }
+                }
+                verb += suffixes[personNumber];
+            } else if (vowelCount === 3) {
+                if (personNumber !== '3rd Singular') {
+                    for (const [vowel, replacement] of Object.entries(vowelChangesThreeVowels)) {
+                        verb = verb.replace(new RegExp(vowel, 'g'), replacement);
+                    }
+                }
+                verb += suffixes[personNumber];
+            }
+
+            if (verb.endsWith('v') && personNumber === '3rd Singular') {
+                verb = verb.slice(0, -1) + 'f'; 
+            }
+
+            return verb;
+        }
+
+        function conjugateIstemPast(verb, personNumber) {
+            const selectedPastForm = getSelectedPastForm(personNumber);
+            if (selectedPastForm) return selectedPastForm;
+
+            const longVowels = /[íéáóýú]/;
+            const shortVowels = /[iyeaou]/;
+            const diphthongs = /(?:ae|ai|ei|oe|ui|au|eu)/;
+
+            const specialConsonantGroups = {
+                'th': 'θ',
+                'dh': 'ð',
+                'ch': 'x',
+                'ph': 'ɸ',
+            };
+
+            const vowelChangeMap = {
+                'i': { '3rd Singular': 'i', 'other': 'í' },
+                'e': { '3rd Singular': 'i', 'other': 'í' },
+                'o': { '3rd Singular': 'u', 'other': 'ú' },
+                'u': { '3rd Singular': 'u', 'other': 'ú' },
+                'a': { '3rd Singular': 'o', 'other': 'ó' },
+                'y': { '3rd Singular': 'y', 'other': 'ú' }
+            };
+
+            const specialGVowelMap = {
+                'i': { '3rd Singular': 'i', 'other': 'í' },
+                'e': { '3rd Singular': 'e', 'other': 'í' },
+                'o': { '3rd Singular': 'o', 'other': 'ú' },
+                'u': { '3rd Singular': 'u', 'other': 'ú' },
+                'a': { '3rd Singular': 'au', 'other': 'ó' },
+            };
+
+            const pronominalSuffixes = {
+                '1st Singular': 'en',
+                '2nd Singular Familiar': 'eg',
+                '2nd Singular Formal': 'el',
+                '3rd Singular': '', 
+                '1st Plural Inclusive': 'eb',
+                '1st Plural Exclusive': 'ef',
+                '2nd Plural Formal': 'edh',
+                '3rd Plural': 'er'
+            };
+
+            const mutations = {
+                'p': 'b',
+                't': 'd',
+                'c': 'g',
+                'b': 'v',
+                'd': 'dh',
+                'g': '', 
+                'mb': 'mm',
+                'nd': 'nn',
+                'ng': 'ng', 
+                'ñg': 'ñg', 
+                'm': 'v',
+                'th': 'th', 
+                'h': 'ch',
+                's': 'h',
+                'rh': 'thr',
+                'lh': 'thl',
+                'hw': 'chw',
+                'gw': 'w',
+                'gl': 'l',
+                'gr': 'r', 
+                'br': 'vr',
+                'dr': 'dhr',
+                'bl': 'vl'
+            };
+
+            let conjugatedVerb = verb;
+
+            const specialCases = {
+                'sedh': {
+                    '1st Singular': 'eidhen',
+                    '2nd Singular Familiar': 'eidheg',
+                    '2nd Singular Formal': 'eidhel',
+                    '3rd Singular': 'aidh',
+                    '1st Plural Inclusive': 'eidheb',
+                    '1st Plural Exclusive': 'eidhef',
+                    '2nd Plural Formal': 'eidhedh',
+                    '3rd Plural': 'eidher'
+                },
+                'sav': {
+                    '1st Singular': 'óven',
+                    '2nd Singular Familiar': 'óveg',
+                    '2nd Singular Formal': 'óvel',
+                    '3rd Singular': 'aw',
+                    '1st Plural Inclusive': 'óveb',
+                    '1st Plural Exclusive': 'óvef',
+                    '2nd Plural Formal': 'óvedh',
+                    '3rd Plural': 'óver'
+                },
+                'nið': {
+                    '1st Singular': 'enidhen',
+                    '2nd Singular Familiar': 'enidheg',
+                    '2nd Singular Formal': 'enidhel',
+                    '3rd Singular': 'enidh',
+                    '1st Plural Inclusive': 'enidheb',
+                    '1st Plural Exclusive': 'enidhef',
+                    '2nd Plural Formal': 'enidhedh',
+                    '3rd Plural': 'enidher'
+                },
+                'run': {
+                    '1st Singular': 'orúnen',
+                    '2nd Singular Familiar': 'orúneg',
+                    '2nd Singular Formal': 'orúnel',
+                    '3rd Singular': 'orun',
+                    '1st Plural Inclusive': 'orúneb',
+                    '1st Plural Exclusive': 'orúnef',
+                    '2nd Plural Formal': 'orúnedh',
+                    '3rd Plural': 'orúner'
+                },
+                'caw': {
+                    '1st Singular': 'agówen',
+                    '2nd Singular Familiar': 'agóweg',
+                    '2nd Singular Formal': 'agówel',
+                    '3rd Singular': 'agow/agaw',
+                    '1st Plural Inclusive': 'agóweb',
+                    '1st Plural Exclusive': 'agówef',
+                    '2nd Plural Formal': 'agówedh',
+                    '3rd Plural': 'agówer'
+                },
+                'car': {
+                    '1st Singular': 'agóren',
+                    '2nd Singular Familiar': 'agóreg',
+                    '2nd Singular Formal': 'agórel',
+                    '3rd Singular': 'agor',
+                    '1st Plural Inclusive': 'agóreb',
+                    '1st Plural Exclusive': 'agóref',
+                    '2nd Plural Formal': 'agóredh',
+                    '3rd Plural': 'agórer'
+                },
+                'cov': {
+                    '1st Singular': 'ogúven',
+                    '2nd Singular Familiar': 'ogúveg',
+                    '2nd Singular Formal': 'ogúvel',
+                    '3rd Singular': 'ogu(f)',
+                    '1st Plural Inclusive': 'ogúveb',
+                    '1st Plural Exclusive': 'ogúvef',
+                    '2nd Plural Formal': 'ogúvedh',
+                    '3rd Plural': 'ogúver'
+                },
+                'gal': {
+                    '1st Singular': 'ólenen',
+                    '2nd Singular Familiar': 'óleneg',
+                    '2nd Singular Formal': 'ólenel',
+                    '3rd Singular': 'ólen',
+                    '1st Plural Inclusive': 'óleneb',
+                    '1st Plural Exclusive': 'ólenef',
+                    '2nd Plural Formal': 'ólenedh',
+                    '3rd Plural': 'ólener'
+                },
+                'iav': {
+                    '1st Singular': 'aióven',
+                    '2nd Singular Familiar': 'aióveg',
+                    '2nd Singular Formal': 'aióvel',
+                    '3rd Singular': 'iavof',
+                    '1st Plural Inclusive': 'aióveb',
+                    '1st Plural Exclusive': 'aióvef',
+                    '2nd Plural Formal': 'aióvedh',
+                    '3rd Plural': 'aióver'
+                },
+                'gwae': {
+                    '1st Singular': 'waen',
+                    '2nd Singular Familiar': 'waeg',
+                    '2nd Singular Formal': 'wael',
+                    '3rd Singular': 'wae',
+                    '1st Plural Inclusive': 'waeb',
+                    '1st Plural Exclusive': 'waef',
+                    '2nd Plural Formal': 'waedh',
+                    '3rd Plural': 'waener'
+                },
+                'gwaew': {
+                    '1st Singular': 'waewen',
+                    '2nd Singular Familiar': 'waeweg',
+                    '2nd Singular Formal': 'waewel',
+                    '3rd Singular': 'waew',
+                    '1st Plural Inclusive': 'waeweb',
+                    '1st Plural Exclusive': 'waewef',
+                    '2nd Plural Formal': 'waewedh',
+                    '3rd Plural': 'waewer'
+                },
+                'raph': {
+                    '1st Singular': 'aró̥en',
+                    '2nd Singular Familiar': 'aró̥eneg',
+                    '2nd Singular Formal': 'aró̥enel',
+                    '3rd Singular': 'aro̥',
+                    '1st Plural Inclusive': 'aró̥eneb',
+                    '1st Plural Exclusive': 'aró̥enef',
+                    '2nd Plural Formal': 'aró̥enedh',
+                    '3rd Plural': 'aró̥ener'
+                },
+                'tiph': {
+                    '1st Singular': 'idimmen',
+                    '2nd Singular Familiar': 'idimmeg',
+                    '2nd Singular Formal': 'idimmnel',
+                    '3rd Singular': 'idímp',
+                    '1st Plural Inclusive': 'idimmeb',
+                    '1st Plural Exclusive': 'idimmef',
+                    '2nd Plural Formal': 'idimmedh',
+                    '3rd Plural': 'idimmer'
+                },
+                'ndev': {
+                    '1st Singular': 'enníven',
+                    '2nd Singular Familiar': 'enníveg',
+                    '2nd Singular Formal': 'ennível',
+                    '3rd Singular': 'enniw',
+                    '1st Plural Inclusive': 'enníveb',
+                    '1st Plural Exclusive': 'ennívef',
+                    '2nd Plural Formal': 'ennívedh',
+                    '3rd Plural': 'enníver'
+                },
+                'dev': {
+                    '1st Singular': 'enníven',
+                    '2nd Singular Familiar': 'enníveg',
+                    '2nd Singular Formal': 'ennível',
+                    '3rd Singular': 'enniw',
+                    '1st Plural Inclusive': 'enníveb',
+                    '1st Plural Exclusive': 'ennívef',
+                    '2nd Plural Formal': 'ennívedh',
+                    '3rd Plural': 'enníver'
+                },
+                'nev': {
+                    '1st Singular': 'eníven',
+                    '2nd Singular Familiar': 'eníveg',
+                    '2nd Singular Formal': 'enível',
+                    '3rd Singular': 'eniw',
+                    '1st Plural Inclusive': 'eníveb',
+                    '1st Plural Exclusive': 'enívef',
+                    '2nd Plural Formal': 'enívedh',
+                    '3rd Plural': 'eníver'
+                },
+                'tev': {
+                    '1st Singular': 'edíven',
+                    '2nd Singular Familiar': 'edíveg',
+                    '2nd Singular Formal': 'edível',
+                    '3rd Singular': 'ediw',
+                    '1st Plural Inclusive': 'edíveb',
+                    '1st Plural Exclusive': 'edívef',
+                    '2nd Plural Formal': 'edívedh',
+                    '3rd Plural': 'edíver'
+                },
+                'athraweth': {
+                    '1st Singular': 'athrawithen',
+                    '2nd Singular Familiar': 'athrawitheg',
+                    '2nd Singular Formal': 'athrawithel',
+                    '3rd Singular': 'athrawith',
+                    '1st Plural Inclusive': 'athrawitheb',
+                    '1st Plural Exclusive': 'athrawithef',
+                    '2nd Plural Formal': 'athrawithedh',
+                    '3rd Plural': 'athrawither'
+                },
+                'gad': {
+                    '1st Singular': 'annen/gannen',
+                    '2nd Singular Familiar': 'anneg/ganneg',
+                    '2nd Singular Formal': 'annel/gannel',
+                    '3rd Singular': 'ant/gant',
+                    '1st Plural Inclusive': 'anneb/ganneb',
+                    '1st Plural Exclusive': 'annef/gannef',
+                    '2nd Plural Formal': 'annedh/gannedh',
+                    '3rd Plural': 'anner/gannedh'
+                },
+                'tog': {
+                    '1st Singular': 'odúngen',
+                    '2nd Singular Familiar': 'odúngeg',
+                    '2nd Singular Formal': 'odúngel',
+                    '3rd Singular': 'odunc',
+                    '1st Plural Inclusive': 'odúngeb',
+                    '1st Plural Exclusive': 'odúngef',
+                    '2nd Plural Formal': 'odúngedh',
+                    '3rd Plural': 'odúnger'
+                },
+                'sog': {
+                    '1st Singular': 'sungen',
+                    '2nd Singular Familiar': 'sungeg',
+                    '2nd Singular Formal': 'sungel',
+                    '3rd Singular': 'sunc',
+                    '1st Plural Inclusive': 'sungeb',
+                    '1st Plural Exclusive': 'sungef',
+                    '2nd Plural Formal': 'sungedh',
+                    '3rd Plural': 'sunger'
+  },
+                'gwae': {
+                    '1st Singular': 'anwen',
+                    '2nd Singular Familiar': 'anweg',
+                    '2nd Singular Formal': 'anwel',
+                    '3rd Singular': 'anw',
+                    '1st Plural Inclusive': 'anweb',
+                    '1st Plural Exclusive': 'anwef',
+                    '2nd Plural Formal': 'anwedh',
+                    '3rd Plural': 'anwer'
+                },
+                
+                'sab': {
+                    '1st Singular': 'ammen/sammen',
+                    '2nd Singular Familiar': 'ammeg/sammeg',
+                    '2nd Singular Formal': 'ammel/sammel',
+                    '3rd Singular': 'amp/samp',
+                    '1st Plural Inclusive': 'ammeb/sammeb',
+                    '1st Plural Exclusive': 'ammef/sammef',
+                    '2nd Plural Formal': 'ammedh/sammedh',
+                    '3rd Plural': 'ammer/sammer'
+                },
+                
+                'nachav': {
+                    '1st Singular': 'nachóven',
+                    '2nd Singular Familiar': 'nachóveg',
+                    '2nd Singular Formal': 'nachóvel',
+                    '3rd Singular': 'nachof',
+                    '1st Plural Inclusive': 'nachóveb',
+                    '1st Plural Exclusive': 'nachóvef',
+                    '2nd Plural Formal': 'nachóvedh',
+                    '3rd Plural': 'nachóver'
+                }
+
+            };
+
+            if (specialCases[verb]) {
+                return specialCases[verb][personNumber];
+            }
+
+            if (verb.length === 2 && verb.match(/[aeiouy]/)) {
+                const vowel = verb.match(/[aeiouy]/)[0];
+                const newVowel = vowelChangeMap[vowel][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+                conjugatedVerb = newVowel + verb[1];
+                if (pronominalSuffixes[personNumber]) {
+                    conjugatedVerb += pronominalSuffixes[personNumber];
+                }
+            } else if (verb.match(/[aeiouy]/) && verb.length >= 3) {
+                var modifiedVerb = verb.replace(/(dh|th|ph|ch)/g, "X");
+                const vowel = modifiedVerb.match(/[aeiouy]/)[0];
+                let newVowel = vowelChangeMap[vowel][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+                let mutatedConsonant = mutations[modifiedVerb.slice(0, 2)] || mutations[modifiedVerb[0]] || modifiedVerb[0];
+                let ending = modifiedVerb.slice(-1);
+
+                let prependVowel = vowel;
+                if (vowel === 'i') {
+                    prependVowel = 'e';
+                }
+
+                conjugatedVerb = prependVowel + mutatedConsonant + newVowel + ending;
+
+                if (['g', 'b', 'd', 'ph'].includes(modifiedVerb.slice(-1))) {
+                    const bdgEndingMap = {
+                        'd': { '3rd Singular': 'nt', 'other': 'nn' },
+                        'g': { '3rd Singular': 'nc', 'other': 'ng' },
+                        'b': { '3rd Singular': 'mp', 'other': 'mm' },
+                        'ph': { '3rd Singular': 'mp', 'other': 'mm' },
+                    };
+                    ending = bdgEndingMap[modifiedVerb.slice(-1)][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+                    newVowel = vowel;
+                    conjugatedVerb = prependVowel + mutatedConsonant + newVowel + ending;
+                }
+
+                conjugatedVerb = conjugatedVerb.replace(/X/g, function(match) {
+                    return verb.match(/(dh|th|ph|ch)/)[0];
+                });
+
+                if (pronominalSuffixes[personNumber]) {
+                    conjugatedVerb += pronominalSuffixes[personNumber];
+                }
+            }
+
+            if (verb.startsWith('g') && verb.length === 3 && verb.match(/[aeiouy]/)) {
+                const nextVowel = verb[1];
+                const mutatedVowel = specialGVowelMap[nextVowel][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+                conjugatedVerb = mutatedVowel + verb.slice(2) + pronominalSuffixes[personNumber];
+            }
+
+            if (verb.endsWith('v') && personNumber === '3rd Singular') {
+                conjugatedVerb = conjugatedVerb.slice(0, -1) + 'f';
+            }
+
+            if (verb.match(/[aeiouy]/g) && verb.match(/[aeiouy]/g).length === 2 && ['b', 'd', 'g', 'ph'].includes(verb.slice(-1))) {
+                const vowels = verb.match(/[aeiouy]/g);
+                const firstVowel = vowels[0];
+                const secondVowel = vowels[1];
+                let base = verb.slice(0, verb.lastIndexOf(vowels[1]) + 1);
+
+                const bdgEndingMap = {
+                    'd': { '3rd Singular': 'nt', 'other': 'nn' },
+                    'g': { '3rd Singular': 'nc', 'other': 'ng' },
+                    'b': { '3rd Singular': 'mp', 'other': 'mm' },
+                    'ph': { '3rd Singular': 'mp', 'other': 'mm' }
+                };
+                conjugatedVerb = base + bdgEndingMap[verb.slice(-1)][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+
+                if (pronominalSuffixes[personNumber]) {
+                    conjugatedVerb += pronominalSuffixes[personNumber];
+                }
+            }
+
+            if (verb.match(/[aeiouy]/g) && verb.match(/[aeiouy]/g).length === 2 && !['b', 'd', 'g', 'ph'].includes(verb.slice(-1))) {
+                const vowels = verb.match(/[aeiouy]/g);
+                const firstVowel = vowels[0];
+                let secondVowel = vowelChangeMap[vowels[1]][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+                let indexOfSecondVowel = verb.indexOf(vowels[1], verb.indexOf(vowels[0]) + 1);
+                let base = verb.slice(0, indexOfSecondVowel);
+
+                conjugatedVerb = base + secondVowel + verb.slice(indexOfSecondVowel + 1);
+                if (pronominalSuffixes[personNumber]) {
+                    conjugatedVerb += pronominalSuffixes[personNumber];
+                }
+            }
+
+            if (verb.match(/[aeiouy]/g) && verb.match(/[aeiouy]/g).length === 3 && ['b', 'd', 'g', 'ph'].includes(verb.slice(-1))) {
+                const bdgEndingMap = {
+                    'd': { '3rd Singular': 'nt', 'other': 'nn' },
+                    'g': { '3rd Singular': 'nc', 'other': 'ng' },
+                    'b': { '3rd Singular': 'mp', 'other': 'mm' },
+                    'ph': { '3rd Singular': 'mp', 'other': 'mm' }
+                };
+                conjugatedVerb = verb.slice(0, -1) + bdgEndingMap[verb.slice(-1)][personNumber === '3rd Singular' ? '3rd Singular' : 'other'];
+
+                if (pronominalSuffixes[personNumber]) {
+                    conjugatedVerb += pronominalSuffixes[personNumber];
+                }
+            }
+
+            return conjugatedVerb;
+        }
+
+  function conjugateIstemFuture(baseVerb, personNumber) {
+    // Special conjugations for "gwae"
+    const specialFutureForms = {
+        'gwae': {
+            '1st Singular': 'gwathon',
+            '2nd Singular Familiar': 'gwathog',
+            '2nd Singular Formal': 'gwathol',
+            '3rd Singular': 'gwatha',
+            '1st Plural Inclusive': 'gwathab',
+            '1st Plural Exclusive': 'gwaeathof',
+            '2nd Plural Formal': 'gwathodh',
+            '3rd Plural': 'gwathar'
+        }
+    };
+
+    // Check if the verb has a special future form
+    if (specialFutureForms[baseVerb]) {
+        return specialFutureForms[baseVerb][personNumber] || '';
+    }
+
+    // Regular suffixes for i-stem future tense
+    const suffixes = {
+        '1st Singular': 'athon',
+        '1st Plural Exclusive': 'athof',
+        '1st Plural Inclusive': 'athab',
+        '2nd Singular Formal': 'athol',
+        '2nd Plural Formal': 'athodh',
+        '2nd Singular Familiar': 'athog',
+        '3rd Singular': 'atha',
+        '3rd Plural': 'athar'
+    };
+
+    const suffix = suffixes[personNumber] || '';
+    const conjugatedVerb = baseVerb + suffix;
+
+    return conjugatedVerb;
+}
+
+
+function conjugateVerb(verb, tense) {
+    const diphthongs = ['ae', 'ai', 'oe', 'œ', 'ui', 'au', 'eu'];
+
+    // Special case for "gwae"
+    if (verb === 'gwae') {
+        switch (tense) {
+            case "Imperative":
+                return "gwaw";
+            case "Active Present Participle":
+                return "gwanu";
+            case "Active Past Participle":
+                return "gwawn";
+            case "Passive Participle Singular":
+                return "gwanwen";
+            case "Passive Participle Plural":
+                return "gwenwin";
+            case "Infinitive":
+            case "Gerund":
+                return "gwaed"; // fallback, or you can choose a more idiomatic custom form
+            default:
+                return "Invalid tense";
+        }
+    }
+
+    switch (tense) {
+        case "Infinitive":
+        case "Gerund":
+            if (diphthongs.some(diphthong => verb.includes(diphthong))) {
+                return verb + "d";
+            } else {
+                return verb + "ed";
+            }
+        case "Imperative":
+            return verb + "o";
+        case "Active Present Participle":
+            return verb + "ol";
+        case "Active Past Participle":
+            return conjugateActivePastParticiple(verb);
+        case "Passive Participle Singular":
+            return conjugatePassiveParticipleSingular(verb);
+        case "Passive Participle Plural":
+            return conjugatePassiveParticiplePlural(verb);
+        default:
+            return "Invalid tense";
+    }
+}
+
+
+   function conjugateActivePastParticiple(verb) {
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+    const diphthongs = ['ae', 'ai', 'oe', 'œ', 'ui', 'au', 'eu'];
+    const singleConsonants = ['b', 'd', 'f', 'g', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'z', 'θ', 'ð'];
+    const vowelCount = verb.split('').filter(char => vowels.includes(char)).length;
+
+    if (verb === 'iav') {
+        return 'ióviel';
+    }
+
+    function isLastVowelFollowedBySingleConsonant(verb) {
+        for (let i = verb.length - 2; i >= 0; i--) {
+            if (vowels.includes(verb[i])) {
+                const nextChars = verb.slice(i + 1, i + 3);
+                if (singleConsonants.some(consonant => nextChars.startsWith(consonant))) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    const lastVowelIndex = isLastVowelFollowedBySingleConsonant(verb);
+
+    // Handle diphthongs first
+    if (diphthongs.some(diphthong => verb.includes(diphthong))) {
+        return verb + 'l';
+    }
+
+    // Handle 'ia' ending: remove 'a', append 'iel'
+    if (verb.endsWith('ia')) {
+        return verb.slice(0, -1) + 'iel';
+    }
+
+    if (vowelCount === 1 || lastVowelIndex !== -1) {
+        const i = Math.max(lastVowelIndex, 0);
+        const mutatedVowel = verb[i].replace(/[aeo]/, match => ({ 'a': 'ó', 'e': 'í', 'o': 'ú' }[match]));
+
+        let transformedVerb = verb.slice(0, i) + mutatedVowel + verb.slice(i + 1);
+
+        transformedVerb = transformedVerb.split('').map((char, index) => {
+            if (vowels.includes(char) && index !== i) {
+                return char.replace(/[ao]/, match => ({ 'a': 'e', 'o': 'e' }[match]));
+            }
+            return char;
+        }).join('');
+
+        return transformedVerb + 'iel';
+    }
+
+    return verb.replace(/[ao]/g, 'e').replace(/u/, 'y') + 'iel';
+}
+
+        const getEndingConsonantOrGroup = (string) => {
+            const match = string.match(/(ph|th|dh|ng|[bdgflnrwv])$/);
+
+            return !!match ? match[0] : undefined
+        }
+
+ function conjugatePassiveParticipleSingular(verb) { const diphthongs = ['ae', 'ai', 'oe', 'œ', 'ui', 'au', 'eu']; const consonantChanges = { 'b': 'mm', 'd': 'nn', 'dh': 'nn', 'f': 'mm', 'g': 'ng', 'l': 'll', 'n': 'nn', 'r': 'rn', 'th': 'nn', 'v': 'mm', 'w': 'wn', 'ph': 'mm' }; if (diphthongs.some(diphthong => verb.includes(diphthong))) { return verb + 'n'; } let endingConsonantOrGroup = getEndingConsonantOrGroup(verb) ?? ''; let changedEnding = consonantChanges[endingConsonantOrGroup] || endingConsonantOrGroup; let changedVerb = verb.slice(0, -endingConsonantOrGroup.length) + changedEnding; return changedVerb + 'en'; } function conjugatePassiveParticiplePlural(verb) { const diphthongs = ['ae', 'ai', 'oe', 'œ', 'ui', 'au', 'eu']; const consonantChanges = { 'b': 'mm', 'd': 'nn', 'dh': 'nn', 'f': 'mm', 'g': 'ng', 'l': 'll', 'n': 'nn', 'r': 'rn', 'th': 'nn', 'v': 'mm', 'w': 'wn', 'ph': 'mm' }; if (diphthongs.some(diphthong => verb.includes(diphthong))) { return verb + 'n'; } let endingConsonantOrGroup = getEndingConsonantOrGroup(verb) ?? ''; let changedEnding = consonantChanges[endingConsonantOrGroup] || endingConsonantOrGroup; let changedVerb = verb.slice(0, -endingConsonantOrGroup.length) + changedEnding; changedVerb = changedVerb.replace(/[ao]/g, 'e').replace(/u/, 'y'); return changedVerb + 'in'; }
+
+        function generateConjugationTable(verb) {
+            if (verb.trim() === '') {
+                document.getElementById('resultPresent').innerHTML = '';
+                return;
+            }
+
+            // Remove "n" or "m" prefix for present, future, and additional forms
+            var baseVerbForPresentAndFuture = removeNOrMPrefixIfPresent(verb);
+
+            var suffixes = {
+                '1st Singular': 'in',
+                '2nd Singular Familiar': 'ig',
+                '2nd Singular Formal': 'il',
+                '3rd Singular': '',
+                '1st Plural Inclusive': 'ib',
+                '1st Plural Exclusive': 'if',
+                '2nd Plural Formal': 'idh',
+                '3rd Plural': 'ir'
+            };
+
+            const vowelChangesOneVowel = {
+                '3rd Singular': { a: 'â', e: 'ê', i: 'î', o: 'ô', u: 'û' },
+                'All Others': { a: 'e', e: 'e', i: 'i', o: 'e', u: 'y' }
+            };
+
+            const vowelChangesTwoVowels = { a: 'e', o: 'e', u: 'y' };
+            
+            const vowelChangesThreeVowels = { a: 'e', e: 'e', i: 'i', o: 'e', u: 'y' };
+
+            let presentConjugationMap;
+            if (baseVerbForPresentAndFuture === 'gwae') {
+                presentConjugationMap = {
+                    '1st Singular': 'gwaen',
+                    '2nd Singular Familiar': 'gwaeg',
+                    '2nd Singular Formal': 'gwael',
+                    '3rd Singular': 'gwae',
+                    '1st Plural Inclusive': 'gwaeb',
+                    '1st Plural Exclusive': 'gwaef',
+                    '2nd Plural Formal': 'gwaedh',
+                    '3rd Plural': 'gwaer'
+                };
+
+            } else if (baseVerbForPresentAndFuture === 'gwaew') {
+                presentConjugationMap = {
+                    '1st Singular': 'gwaewin',
+                    '2nd Singular Familiar': 'gwaewig',
+                    '2nd Singular Formal': 'gwaewil',
+                    '3rd Singular': 'gwaew',
+                    '1st Plural Inclusive': 'gwaewib',
+                    '1st Plural Exclusive': 'gwaewif',
+                    '2nd Plural Formal': 'gwaewidh',
+                    '3rd Plural': 'gwaewir'
+                };
+            } else if (baseVerbForPresentAndFuture === 'iav') {
+                presentConjugationMap = {
+                    '1st Singular': 'ievin',
+                    '2nd Singular Familiar': 'ievig',
+                    '2nd Singular Formal': 'ievil',
+                    '3rd Singular': 'iâv',
+                    '1st Plural Inclusive': 'ievib',
+                    '1st Plural Exclusive': 'ievif',
+                    '2nd Plural Formal': 'ievidh',
+                    '3rd Plural': 'ievir'
+                };
+            } else {
+                presentConjugationMap = {};
+                for (const personNumber of Object.keys(suffixes)) {
+                    presentConjugationMap[personNumber] = applyVowelChanges(baseVerbForPresentAndFuture, personNumber, vowelChangesOneVowel, vowelChangesTwoVowels, vowelChangesThreeVowels, suffixes);
+                }
+            }
+
+            let pastConjugationMap = {};
+            for (const personNumber of Object.keys(suffixes)) {
+                pastConjugationMap[personNumber] = conjugateIstemPast(verb, personNumber); // Use original verb (with "n" or "m" prefix)
+            }
+
+            let futureConjugationMap = {};
+            for (const personNumber of Object.keys(suffixes)) {
+                futureConjugationMap[personNumber] = conjugateIstemFuture(baseVerbForPresentAndFuture, personNumber); // Use base verb (without "n" or "m" prefix)
+            }
+
+            const finiteTable = renderPersonTable([
+                { label: 'Present', values: presentConjugationMap },
+                { label: 'Past', values: pastConjugationMap },
+                { label: 'Future', values: futureConjugationMap }
+            ]);
+            const nonfiniteTable = renderNonfiniteTable(form =>
+                conjugateVerb(baseVerbForPresentAndFuture, form)
+            );
+            const gerund = conjugateVerb(baseVerbForPresentAndFuture, 'Gerund');
+            const tableContent = `
+              <div class="conjugation-layout">
+                <div class="table-card">${finiteTable}</div>
+                <div class="table-card">${nonfiniteTable}</div>
+              </div>
+              ${generateCanCannotTable(gerund)}`;
+
+            document.getElementById('resultPresent').innerHTML = tableContent;
+        }
+
+        return {
+            conjugate: generateConjugationTable,
+        }
+    })();
+
+
+ /**
+ * A-stem verbs
+ */
+const aStemVerb = (function() {
+    // Function to normalize verb for internal matching (strip accents)
+    function normalizeVerbForMatching(verb) {
+        return verb.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Strip diacritics
+    }
+
+    function conjugateAndDisplayPastT(verb, personNumber) {
+        const selectedPastForm = getSelectedPastForm(personNumber);
+        if (selectedPastForm) return selectedPastForm;
+
+        let conjugatedVerb;
+
+        // Special exceptions for certain verbs
+        const specialConjugations = {
+            'bachanna': {
+                '1st Singular': 'bachónen',
+                '1st Plural Exclusive': 'bachónef',
+                '1st Plural Inclusive': 'bachóneb',
+                '2nd Singular Formal': 'bachónel',
+                '2nd Plural Formal': 'bachónedh',
+                '2nd Singular Familiar': 'bachóneg',
+                '3rd Singular': 'bachón',
+                '3rd Plural': 'bachóner'
+            },
+            'suilanna': {
+                '1st Singular': 'suilónen',
+                '1st Plural Exclusive': 'suilónef',
+                '1st Plural Inclusive': 'suilóneb',
+                '2nd Singular Formal': 'suilónel',
+                '2nd Plural Formal': 'suilónedh',
+                '2nd Singular Familiar': 'suilóneg',
+                '2nd Plural Familiar': 'suilónegir',
+                '3rd Singular': 'suilón',
+                '3rd Plural': 'suilóner'
+            },
+            'anna': {
+                '1st Singular': 'ónen',
+                '1st Plural Exclusive': 'ónef',
+                '1st Plural Inclusive': 'óneb',
+                '2nd Singular Formal': 'ónel',
+                '2nd Plural Formal': 'ónedh',
+                '2nd Singular Familiar': 'óneg',
+                '2nd Plural Familiar': 'ónegir',
+                '3rd Singular': 'ón',
+                '3rd Plural': 'óner'
+            },
+            'gala': {
+                '1st Singular': 'ólen/angolen',
+                '1st Plural Exclusive': 'ólef/angolef',
+                '1st Plural Inclusive': 'óleb/angoleb',
+                '2nd Singular Formal': 'ólel/angolel',
+                '2nd Plural Formal': 'óledh/angoledh',
+                '2nd Singular Familiar': 'óleg/angoleg',
+                '3rd Singular': 'aul/angol',
+                '3rd Plural': 'óler/angoler'
+            },
+            'pannada': {
+                '1st Singular': 'pannannen',
+                '1st Plural Exclusive': 'pannannef',
+                '1st Plural Inclusive': 'pannanneb',
+                '2nd Singular Formal': 'pannannel',
+                '2nd Plural Formal': 'pannannedh',
+                '2nd Singular Familiar': 'pannanneg',
+                '3rd Singular': 'pannant',
+                '3rd Plural': 'pannanner'
+            },
+            'adbannada': {
+                '1st Singular': 'adbannannen',
+                '1st Plural Exclusive': 'adbannannef',
+                '1st Plural Inclusive': 'adbannanneb',
+                '2nd Singular Formal': 'adbannannel',
+                '2nd Plural Formal': 'adbannannedh',
+                '2nd Singular Familiar': 'adbannanneg',
+                '3rd Singular': 'adbannant',
+                '3rd Plural': 'adbannannef'
+            },
+            'gannada-': {
+                '1st Singular': 'gannannen',
+                '1st Plural Exclusive': 'gannannef',
+                '1st Plural Inclusive': 'gannanneb',
+                '2nd Singular Formal': 'gannaannel',
+                '2nd Plural Formal': 'gannannedh',
+                '2nd Singular Familiar': 'gannaanneg',
+                '3rd Singular': 'gannant',
+                '3rd Plural': 'gannannef'
+            },
+            'na-': {
+                '1st Singular': 'nîn',
+                '1st Plural Exclusive': 'nîf',
+                '1st Plural Inclusive': 'nîb',
+                '2nd Singular Formal': 'nîl',
+                '2nd Plural Formal': 'nîdh',
+                '2nd Singular Familiar': 'nîg',
+                '3rd Singular': 'nî',
+                '3rd Plural': 'nîr'
+            }
+        };
+
+        // ✅ PRIORITY: Handle special cases FIRST
+        if (specialConjugations[verb]) {
+            return specialConjugations[verb][personNumber];
+        }
+
+        // Variable to store the haplology note
+        let haplologyNote = "";
+
+        // Check for specific pattern: Vowel + "nna"
+        const vowels = ['e', 'i', 'o', 'u', 'y'];
+        if (vowels.includes(verb[verb.length - 4]) && verb.endsWith('nna')) {
+            const suffixes = {
+                '1st Singular': 'nnen',
+                '1st Plural Exclusive': 'nnef',
+                '1st Plural Inclusive': 'nneb',
+                '2nd Singular Formal': 'nnel',
+                '2nd Plural Formal': 'nnedh',
+                '2nd Singular Familiar': 'nneg',
+                '2nd Plural Familiar': 'nnegir',
+                '3rd Singular': 'nt',
+                '3rd Plural': 'nner'
+            };
+            conjugatedVerb = verb + (suffixes[personNumber] || '');
+            return conjugatedVerb;
+        }
+
+        // Haplology: Check for "anna" endings and adjust
+        if (verb.endsWith('anna')) {
+            const suffixes = {
+                '1st Singular': 'nen',
+                '1st Plural Exclusive': 'nef',
+                '1st Plural Inclusive': 'neb',
+                '2nd Singular Formal': 'nel',
+                '2nd Plural Formal': 'nedh',
+                '2nd Singular Familiar': 'neg',
+                '2nd Plural Familiar': 'negir',
+                '3rd Singular': 'nt',
+                '3rd Plural': 'ner'
+            };
+
+            if (personNumber === '3rd Singular') {
+                conjugatedVerb = verb + suffixes[personNumber];
+            } else {
+                verb = verb.slice(0, -4) + "an"; // Apply haplology
+                conjugatedVerb = verb + (suffixes[personNumber] || '');
+
+                haplologyNote = "Note: Haplology may apply, reducing the form due to repeated 'ann'.";
+            }
+
+            // Append haplology note to results
+            if (haplologyNote) {
+                document.getElementById('resultPresent').innerHTML += `
+                    <p style="color: red;">${haplologyNote}</p>
+                `;
+            }
+
+            return conjugatedVerb;
+        }
+
+        // General suffix rules
+        const suffixes = {
+            '1st Singular': 'nnen',
+            '1st Plural Exclusive': 'nnef',
+            '1st Plural Inclusive': 'nneb',
+            '2nd Singular Formal': 'nnel',
+            '2nd Plural Formal': 'nnedh',
+            '2nd Singular Familiar': 'nneg',
+            '2nd Plural Familiar': 'nnegir',
+            '3rd Singular': 'nt',
+            '3rd Plural': 'nner'
+        };
+
+        // Handle special endings like na, ada, etc.
+        const specialEndings = ["ada", "nnada", "ida"];
+        const endingLengths = {
+            
+            'ada': 2,
+            'nnada': 5,
+            'ida': 2
+        };
+
+        let longestEnding = "";
+        for (let ending of specialEndings) {
+            if (verb.endsWith(ending) && ending.length > longestEnding.length) {
+                longestEnding = ending;
+            }
+        }
+
+        if (longestEnding) {
+            verb = verb.slice(0, -endingLengths[longestEnding]);
+        }
+
+        const suffix = suffixes[personNumber] || '';
+        conjugatedVerb = verb + suffix;
+
+        return conjugatedVerb;
+    }
+
+    function conjugateAstemPresent(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'on',
+            '2nd Singular Familiar': 'og',
+            '2nd Singular Formal': 'ol',
+            '3rd Singular': '',
+            '1st Plural Inclusive': 'ab',
+            '1st Plural Exclusive': 'of',
+            '2nd Plural Formal': 'odh',
+            '3rd Plural': 'ar'
+        };
+
+        if (verb.endsWith('a') && personNumber !== '3rd Singular') {
+            verb = verb.slice(0, -1);
+        }
+
+        return { conjugation: verb + suffixes[personNumber] };
+    }
+
+    function conjugateIntransitivePast(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'ssen',
+            '1st Plural Exclusive': 'ssef',
+            '1st Plural Inclusive': 'sseb',
+            '2nd Singular Formal': 'ssel',
+            '2nd Singular Familiar': 'sseg',
+            '2nd Plural Formal': 'ssedh',
+            '3rd Singular': 's(t)',
+            '3rd Plural': 'sser'
+        };
+
+        return { conjugation: verb + (suffixes[personNumber] || '') };
+    }
+
+    function conjugateAstemFuture(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'thon',
+            '2nd Singular Familiar': 'thog',
+            '2nd Singular Formal': 'thol',
+            '3rd Singular': 'tha',
+            '1st Plural Inclusive': 'thab',
+            '1st Plural Exclusive': 'thof',
+            '2nd Plural Formal': 'thodh',
+            '3rd Plural': 'thar'
+        };
+
+        return { conjugation: verb + suffixes[personNumber] };
+    }
+
+    function conjugateVerb(baseVerb, form) {
+    let conjugatedVerb;
+
+    // --- SPECIAL: gala → galod (Infinitive & Gerund) ---
+    const normalizedBase = normalizeVerbForMatching(baseVerb);
+    if ((form === "Infinitive" || form === "Gerund") && normalizedBase === "gala") {
+        return { conjugation: "galod" };
+    }
+
+        // Define consonant clusters that should be treated as single consonants
+        const singleConsonants = ["dh", "th", "ph", "lh", "rh", "ng"];
+
+        // Define vowel change and lengthen maps
+        const vowelChangeMap = { a: "e", e: "e", o: "e", u: "y" };
+        const vowelLengthenMap = { a: "ó", e: "í", o: "ú" };
+        const diphthongs = ["ae", "ai", "ui", "oe", "au", "ei", "eu"];
+
+        // Function to determine if a vowel is followed by a consonant cluster
+        function isFollowedByCluster(baseVerb, baseVowelIndex) {
+            let remaining = baseVerb.slice(baseVowelIndex + 1);
+            for (let cluster of singleConsonants) {
+                if (remaining.startsWith(cluster)) {
+                    remaining = remaining.slice(cluster.length);  // Skip the cluster
+                    break;
+                }
+            }
+            // Check if what's left starts with two consonants
+            return /^[^aeiou]{2}/.test(remaining);
+        }
+
+        // Function to apply vowel changes based on rules
+        function applyVowelChanges(verb) {
+            let vowels = verb.match(/[aeou]/g) || [];
+
+            if (vowels.length === 1 && isFollowedByCluster(verb, verb.indexOf(vowels[0]))) {
+                // Single vowel before two consonants: apply vowelChangeMap
+                return verb.replace(/[aeou]/, match => vowelChangeMap[match]);
+            } else if (vowels.length === 1) {
+                // Single vowel: apply vowel lengthening map
+                return verb.replace(/[aeou]/, match => vowelLengthenMap[match]);
+            } else if (vowels.length >= 2) {
+                // Multiple vowels: first vowel uses vowelChangeMap, second uses vowelLengthenMap
+                let firstVowelIndex = verb.indexOf(vowels[0]);
+                let lastVowelIndex = verb.lastIndexOf(vowels[1]);
+
+                return verb.replace(/[aeou]/g, (match, offset) => {
+                    if (offset === lastVowelIndex) {
+                        return isFollowedByCluster(verb, offset) ? vowelChangeMap[match] : vowelLengthenMap[match];
+                    } else if (offset === firstVowelIndex) {
+                        return vowelChangeMap[match];
+                    }
+                    return match;
+                });
+            }
+
+            return verb; // Return the verb unchanged if no rules apply
+        }
+
+        // Define special endings to remove for Passive Participle forms
+        const specialEndings = ["na", "nna", "ada", "nnada", "ida"];
+        const endingLengths = {
+            'na': 2,
+            'nna': 3,
+            'ada': 2,
+            'nnada': 5,
+            'ida': 2
+        };
+
+        // Function to remove special endings
+        function removeSpecialEnding(verb) {
+            let longestEnding = "";
+            for (let ending of specialEndings) {
+                if (verb.endsWith(ending) && ending.length > longestEnding.length) {
+                    longestEnding = ending;
+                }
+            }
+            if (longestEnding) {
+                verb = verb.slice(0, -endingLengths[longestEnding]);
+            }
+            return verb;
+        }
+
+        // Function to handle special rules for verbs ending in "ada"
+        function handleAdaEndings(baseVerb, form) {
+            const adaForms = ["Present", "Future", "Active Present Participle", "Active Past Participle", "Infinitive", "Gerund"];
+            if (!baseVerb.endsWith("ada") || !adaForms.includes(form)) return null;
+
+            switch (form) {
+                case "Present":
+                    return baseVerb.slice(0, -3) + "odan/ódan";
+                case "Future":
+                    return baseVerb.slice(0, -3) + "odathon/ódathon";
+                case "Active Present Participle":
+                    return baseVerb.slice(0, -3) + "ódal/ódel";
+                case "Active Past Participle":
+                    return applyVowelChanges(baseVerb.slice(0, -3)) + "ódiel";
+                case "Infinitive":
+                case "Gerund":
+                    return baseVerb.slice(0, -3) + "óded/ódad";
+            }
+        }
+
+        switch (form) {
+            case "Infinitive":
+            case "Gerund":
+                conjugatedVerb = handleAdaEndings(baseVerb, form) || (baseVerb + "d");
+                break;
+
+            case "Imperative":
+                conjugatedVerb = baseVerb.slice(0, -1) + "o";
+                break;
+
+            case "Active Present Participle":
+                conjugatedVerb = handleAdaEndings(baseVerb, form) || (baseVerb.slice(0, -1) + "ol");
+                break;
+
+            case "Active Past Participle":
+                // Special case: "ia" ending → drop "a", don't mutate
+                if (baseVerb.endsWith("ia")) {
+                    conjugatedVerb = baseVerb.slice(0, -1) + "el";  // Or "iel" depending on your desired outcome
+                }
+                // Special case: "aea" pattern → no mutation
+                else if (baseVerb.includes("aea")) {
+                    conjugatedVerb = baseVerb.slice(0, -1) + "iel";
+                } else {
+                    let modifiedBaseVerb = baseVerb.slice(0, -1);
+                    modifiedBaseVerb = modifiedBaseVerb.replace(/a(?![eiu])|o(?!e)|u(?!i)/g, match => vowelChangeMap[match]);
+                    conjugatedVerb = modifiedBaseVerb + "iel";
+                }
+                break;
+
+           case "Passive Participle Singular":
+    // Special-case only ...rna / ...rna-
+    if (/rna-?$/i.test(baseVerb)) {
+        const core = baseVerb.replace(/-$/, '');   // strip trailing hyphen if present
+        conjugatedVerb = core.slice(0, -1) + "en"; // replace final 'a' -> 'en'
+        break;
+    }
+
+    // existing behavior for all other verbs
+    baseVerb = removeSpecialEnding(baseVerb);
+    conjugatedVerb = baseVerb + "nnen";
+    break;
+
+case "Passive Participle Plural":
+    // Special-case only ...rna / ...rna-
+    if (/rna-?$/i.test(baseVerb)) {
+        const core = baseVerb.replace(/-$/, '');
+        let stem = core.slice(0, -1); // drop final 'a'
+
+        // Apply your usual plural vowel rules, unless "aea" (your existing exception)
+        if (!stem.includes("aea")) {
+            stem = stem.replace(/a(?![eiu])|o(?!e)|u(?!i)/g, m => vowelChangeMap[m]);
+        }
+
+        conjugatedVerb = stem + "in"; // add plural "in"
+        break;
+    }
+
+    // existing behavior for all other verbs
+    baseVerb = removeSpecialEnding(baseVerb);
+    if (baseVerb.includes("aea")) {
+        conjugatedVerb = baseVerb + "nnin";
+    } else {
+        baseVerb = baseVerb.replace(/a(?![eiu])|o(?!e)|u(?!i)/g, m => vowelChangeMap[m]);
+        conjugatedVerb = baseVerb + "nnin";
+    }
+    break;
+
+
+            default:
+                conjugatedVerb = "Invalid form";
+        }
+
+        return { conjugation: conjugatedVerb };
+    }
+
+   function generateConjugationTable(verb) {
+    const normalizedVerb = normalizeVerbForMatching(verb);
+    if (normalizedVerb === 'tho') verb = 'na';
+
+        if (verb === '') {
+            clearResultsIfEmpty();
+            return;
+        }
+
+        const personNumbers = [
+            '1st Singular', '2nd Singular Familiar', '2nd Singular Formal', '3rd Singular',
+            '1st Plural Inclusive', '1st Plural Exclusive', '2nd Plural Formal', '3rd Plural'
+        ];
+
+        const presentConjugationMap = {};
+        const pastConjugationMap = {};
+        const intransitivePastConjugationMap = {};
+        const futureConjugationMap = {};
+        let notification = ''
+
+        // === SPECIAL EXCEPTION FOR "na-" (to be) START ===
+        const normalized = normalizeVerbForMatching(verb);
+        const isNaVerb = (normalized === 'na' || normalized === 'tho');
+
+        const naPast = {
+            '1st Singular': 'nîn',
+            '1st Plural Exclusive': 'nîf',
+            '1st Plural Inclusive': 'nîb',
+            '2nd Singular Formal': 'nîl',
+            '2nd Plural Formal': 'nîdh',
+            '2nd Singular Familiar': 'nîg',
+            '3rd Singular': 'nî',
+            '3rd Plural': 'nîr'
+        };
+
+        const thoFuture = {
+            '1st Singular': 'thon',
+            '1st Plural Exclusive': 'thof',
+            '1st Plural Inclusive': 'thab',
+            '2nd Singular Formal': 'thol',
+            '2nd Plural Formal': 'thodh',
+            '2nd Singular Familiar': 'thog',
+            '3rd Singular': 'tho',
+            '3rd Plural': 'thar'
+        };
+        // === SPECIAL EXCEPTION FOR "na-" (to be) END ===
+
+        personNumbers.forEach(personNumber => {
+            if (isNaVerb) {
+                // Suppress present and intransitive past
+                presentConjugationMap[personNumber] = "";
+                intransitivePastConjugationMap[personNumber] = "";
+                // Past: nî- forms
+                pastConjugationMap[personNumber] = naPast[personNumber] || '';
+                // Future: tho- forms
+                futureConjugationMap[personNumber] = thoFuture[personNumber] || '';
+            } else {
+                // Default logic
+                const presentResult = conjugateAstemPresent(verb, personNumber);  // Keep original verb in output
+                const pastResult = conjugateAndDisplayPastT(verb, personNumber);
+                const intransitivePastResult = conjugateIntransitivePast(verb, personNumber);
+                const futureResult = conjugateAstemFuture(verb, personNumber);
+
+                presentConjugationMap[personNumber] = presentResult.conjugation;
+                pastConjugationMap[personNumber] = pastResult;
+                intransitivePastConjugationMap[personNumber] = intransitivePastResult.conjugation;
+                futureConjugationMap[personNumber] = futureResult.conjugation;
+            }
+        });
+
+        if (/anna$/i.test(verb)) {
+            notification = `
+                <div role="note" class="notification" style="margin-top: 18px; margin-bottom: 18px;">
+                    Note: Haplology may apply, reducing the form due to repeated "annann"
+                </div>  
+            `
+        }
+       if (isNaVerb) {
+    let noteVerb = (normalized === 'tho') ? '<b>tho-</b>' : '<b>na-</b>';
+    notification += `
+        <div role="note" class="notification" style="margin-top: 18px; margin-bottom: 18px;">
+            Note: ${noteVerb} (“to be”) has no Present only Past tense. Please note that these are very hypothetical.<br>
+            Past is formed with <b>nî-</b>, and Future with <b>tho-</b>.
+        </div>
+    `;
+}
+
+        const finiteTable = renderPersonTable([
+            { label: 'Present', values: presentConjugationMap },
+            { label: 'Past (tr.)', values: pastConjugationMap },
+            { label: 'Past (intr.)', values: intransitivePastConjugationMap },
+            { label: 'Future', values: futureConjugationMap }
+        ]);
+        const nonfiniteTable = renderNonfiniteTable(form =>
+            conjugateVerb(verb, form).conjugation
+        );
+        const gerund = conjugateVerb(verb, 'Gerund').conjugation;
+        const tableContent = `
+          ${notification}
+          <div class="conjugation-layout">
+            <div class="table-card">${finiteTable}</div>
+            <div class="table-card">${nonfiniteTable}</div>
+          </div>
+          ${generateCanCannotTable(gerund)}`;
+
+        document.getElementById('resultPresent').innerHTML = tableContent;
+    }
+
+    return {
+        conjugate: generateConjugationTable,
+    }
+})();
+
+    const ELDAMO_DATABASE_BUILD = '20260726-multisyllable-nasals-5';
+    const COMMUNITY_DATABASE_BUILD = '20260726-community-verbs-4';
+    const BUILTIN_COMMUNITY_VERBS = Object.freeze([
+        {
+            id: 'community-rinor-ediesta-001',
+            type: 'verb',
+            word: 'ediesta-',
+            sort: 'ediesta',
+            gloss: 'restart, resume',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: 'S., N. #ad- pref. “back, again, re-” + ᴺS. !iesta-¹ v. “to begin”',
+            phoneticDevelopments: null,
+            author: 'Rínor',
+            recognition: 'Elaran 1x /ingil.png 1x /faenorel.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524027114024865885',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-gwinna-001',
+            type: 'verb',
+            word: 'gwinna-',
+            sort: 'gwinna',
+            gloss: 'to scatter, blow about',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '*√WIÑ + ✶-tā suf. “verb suffix (intransitive)”, A verb appearing as winta “scatter, blow about” in notes from the late 1960s.',
+            phoneticDevelopments: 'wiŋtā- > winta- > wintʰa- > winθa- > gwinθa- > gwinna-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë, Echuidor Luinérion, & Elaran x1 each /faenorel.png, Parmandil 1x /morfaenorel.png, and Elaran 1x /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524089414081450145',
+            additionalNotes: 'cognate of Q. vinta- [w]  v. “to scatter, blow about”'
+        },
+        {
+            id: 'community-rinor-cirtha-001',
+            type: 'verb',
+            word: 'cirtha-',
+            sort: 'cirtha',
+            gloss: 'to carve (either wood or stone)',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '√, ᴹ√KIR root. “cut, cleave, pass swiftly through; ⚠️shave; skim (surface), slip along, glide quickly” + ✶-tā suf. “verb suffix (transitive), causative”',
+            phoneticDevelopments: 'kirtā- > kirta- > kirtʰa- > kirθa-',
+            author: 'Rínor',
+            recognition: 'Parmandil 1x /morfaenorel.png & Valerie | Curulócë 1x /faenorel.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524089507304050759',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-dassag-001',
+            type: 'verb',
+            word: 'dassag-',
+            displayWord: 'dassag- [nd]',
+            ancientNasal: 'nd',
+            ancientStem: 'ndassag-',
+            sort: 'dassag',
+            gloss: 'to retreat, withdraw, pull back',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '√(N)DAN “back (again); retreat, go back, give way (as one advances), revert” + √SAK “draw, pull”',
+            phoneticDevelopments: 'ndansak- > dansak- > dassak- > dassag-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë 1x /faenorel.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524089924977037312',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-gliv-001',
+            type: 'verb',
+            word: 'gliv-',
+            sort: 'gliv',
+            gloss: 'to anoint; using a salve or ointment',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: 'ᴹ√(G)LIB',
+            phoneticDevelopments: 'glib- > gliv-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë, Echuidor Luinérion, & Elaran x1 each /faenorel.png, and Elaran 1x /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524090825624129606',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-balasta-001',
+            type: 'verb',
+            word: 'balasta-',
+            sort: 'balasta',
+            gloss: 'to deserve, (lit.) be worthy',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '[ᴱ]^ᴺ√BALAD root. “worth, value” + ✶-tā suf. “verb suffix (transitive), causative”',
+            phoneticDevelopments: 'baladtā- > balastā- > balasta-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë, & Elaran x1 each /faenorel.png, and Elaran 1x /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524090825624129606',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-iodh-001',
+            type: 'verb',
+            word: 'iodh-',
+            sort: 'iodh',
+            gloss: 'to include, consist of',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '√YOD',
+            phoneticDevelopments: 'jod- > jod- > joð-',
+            pastStem: 'uiode-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë, Echuidor Luinérion & Elaran x1 each /faenorel.png, and Elaran 1x /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524090825624129606',
+            additionalNotes: 'I believe it would yield uiode- for past tense'
+        },
+         {
+            id: 'community-telpefindele-lab-001',
+            type: 'verb',
+            word: 'lab-',
+            sort: 'lab',
+            gloss: 'to fold',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '√LAP',
+            phoneticDevelopments: 'lap- > lab-',
+            pastStem: null,
+            author: 'Telpefindelë | Celephinnel',
+            recognition: 'Valerie | Curulócë, Parmandil, Rínor x3 each /morfaenorel.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1539205010418827299',
+            additionalNotes: null
+        },
+        {
+            id: 'community-rinor-elenna-001',
+            type: 'verb',
+            word: 'elenna-',
+            sort: 'elenna',
+            gloss: 'to impress, (lit.) make marvel',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '^ᴺ√ELEM root. “wonder, marvel” + ✶-tā suf. “verb suffix (transitive), causative”',
+            phoneticDevelopments: 'elemtā- > elentā- > elenta- > elentʰa- > elenθa- > elenna-',
+            author: 'Rínor',
+            recognition: 'Valerie | Curulócë, & Elaran x1 each /faenorel.png, and Elaran 1x /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524190100399853788',
+            additionalNotes: 'cognate of ᴺQ. !elenta- v. “to impress, (lit.) make marvel”'
+        },
+        {
+            id: 'community-ellanto-bachanna-001',
+            type: 'verb',
+            word: 'bachanna-',
+            sort: 'bachanna',
+            gloss: 'to pay, to give in exchange',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: 'N. bach [mb-] n. “article (for exchange), ware, thing” + S., N. #anna- v. “to give, †add to”',
+            phoneticDevelopments: null,
+            pastStem: 'bachóne-',
+            author: 'Lanto | Ellanto | Dúvestel',
+            recognition: 'Parmandil & Rínor x1 each /faenorel.png, and Αγωνιζῆς 1x /morfaenorel.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524393957948391425',
+            additionalNotes: 'past tense bachóne-'
+        },
+        {
+            id: 'community-echuidor-rhoda-001',
+            type: 'verb',
+            word: 'rhóda-',
+            sort: 'rhoda',
+            gloss: 'to embody, personify',
+            alternateGloss: null,
+            language: 'Neo-Sindarin',
+            languageCode: 'ns',
+            languageAbbreviation: 'ᴺS.',
+            partOfSpeech: 'Verb',
+            mark: null,
+            status: 'community',
+            derivationElements: '√SRAW root. “body, flesh” + ✶-tā suf. “verb suffix (transitive), causative”',
+            phoneticDevelopments: null,
+            author: 'Echuidor Luinérion',
+            recognition: 'Parmandil, Valerie | Curulócë, Elaran & Rínor x1 each /faenorel.png, and Elaran x1 /ingil.png',
+            source: 'discord origins-sindarin',
+            sourceUrl: 'https://discord.com/channels/397489292185960468/1523951516434698315/1524456363785322538',
+            additionalNotes: null
+        }
+    ]);
+    const ANCIENT_NASAL_BY_ID = Object.freeze({
+        '1267393719': 'mb-',
+        '2211901887': 'mb-',
+        '142452841': 'mb-',
+        '3704530975': 'mb-',
+        '2415185761': 'mb-',
+        '2721488385': 'mb-',
+        '149213931': 'mb-',
+        '4052827481': 'mb-',
+        '4019869031': 'mb-',
+        '3290551529': 'mb-',
+        '1519369531': 'mb-',
+        '934021397': 'mb-',
+        '2211000187': 'nd-',
+        '2252881215': 'nd-',
+        '346566117': 'nd-',
+        '2874359237': 'nd-',
+        '110861457': 'nd-',
+        '3229749443': 'nd-',
+        '2000002847': 'nd-',
+        '2021640795': 'nd-',
+        '587384161': 'nd-',
+        '2689183125': 'nd-',
+        '3490785861': 'nd-',
+        '601692547': 'nd-',
+        '3881118769': 'nd-',
+        '2513556933': 'nd-',
+        '2667204883': 'nd-',
+        '1840778187': 'nd-',
+        '2900548937': 'nd-',
+        '3098311947': 'ng-',
+        '3394851203': 'ng-',
+        '2923975229': 'ng-',
+        '4211148585': 'ng-',
+        '1922137513': 'ng-',
+        '4044064233': 'ng-',
+        '4020454361': 'ng-'
+    });
+
+    const verbSearchState = {
+        verbs: [],
+        matches: [],
+        activeIndex: -1,
+        selectedEntry: null,
+        conjugationStem: '',
+        communityCount: 0,
+        communityExternalLoaded: false,
+        ready: false,
+        failed: false
+    };
+
+    const verbSearchElements = {
+        root: document.getElementById('verbSearch'),
+        input: document.getElementById('verbInput'),
+        clear: document.getElementById('clearVerbSearch'),
+        status: document.getElementById('verbSearchStatus'),
+        results: document.getElementById('verbResults'),
+        card: document.getElementById('selectedVerbCard'),
+        conjugations: document.getElementById('resultPresent')
+    };
+
+    function readyStatusText() {
+        const source = verbSearchState.communityExternalLoaded
+            ? `${verbSearchState.communityCount} community entr${verbSearchState.communityCount === 1 ? 'y' : 'ies'} loaded from community-verbs.json`
+            : `${verbSearchState.communityCount} built-in community entr${verbSearchState.communityCount === 1 ? 'y' : 'ies'} active; community-verbs.json was not found`;
+        return `${verbSearchState.verbs.length} verbs ready to search · ${source}.`;
+    }
+
+    function normalizeSearchText(value) {
+        return String(value ?? '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, ' ')
+            .trim()
+            .replace(/\s+/g, ' ');
+    }
+
+    function toConjugationStem(value) {
+        return String(value ?? '')
+            .normalize('NFC')
+            .trim()
+            .toLowerCase()
+            .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, '')
+            .replace(/\(([^()]*)\)/g, '$1')
+            .replace(/[‐‑‒–—-]+$/g, '')
+            .trim();
+    }
+
+    function toManualConjugationStem(value) {
+        const text = String(value ?? '');
+        const nasal = text.match(/\[(mb|nd|ng)-?\]/i)?.[1]?.toLowerCase() || '';
+        const stem = toConjugationStem(
+            text.replace(/\[(?:mb|nd|ng)-?\]/gi, '')
+        );
+
+        if (!nasal || !stem || isAStem(stem) || !isMonosyllabic(stem)) return stem;
+        return stem.startsWith(nasal) ? stem : nasal.charAt(0) + stem;
+    }
+
+    function isAStem(stem) {
+        return stem.endsWith('a') || stem === 'na' || stem === 'tho';
+    }
+
+    function vowelNucleusCount(stem) {
+        const normalized = String(stem ?? '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/œ/g, 'oe')
+            .toLowerCase();
+        return normalized.match(/[aeiouy]+/g)?.length ?? 0;
+    }
+
+    function isMonosyllabic(stem) {
+        return vowelNucleusCount(stem) <= 1;
+    }
+
+    function nasalizedStem(entry) {
+        const stem = entry?._stem || toConjugationStem(entry?.word);
+        if (!entry?.ancientNasal || isAStem(stem) || !isMonosyllabic(stem)) {
+            return stem;
+        }
+
+        // Eldamo's [mb-], [nd-], and [ng-] notation restores the ancient
+        // nasal before the modern initial stop in monosyllabic I-stems:
+        // badh- → mbadh-, dag- → ndag-, and gal- → ngal-. Multisyllabic
+        // I-stems retain their surface initial in every tense.
+        return toConjugationStem(entry.ancientStem) ||
+            entry.ancientNasal.charAt(0) + stem;
+    }
+
+    function setConjugationEntry(entry) {
+        verbSearchState.selectedEntry = entry;
+        verbSearchState.conjugationStem = nasalizedStem(entry);
+    }
+
+    function clearConjugationEntry() {
+        verbSearchState.selectedEntry = null;
+        verbSearchState.conjugationStem = '';
+    }
+
+    function getCurrentConjugationStem() {
+        return verbSearchState.conjugationStem ||
+            toManualConjugationStem(verbSearchElements.input.value);
+    }
+
+    function getSelectedPastForm(personNumber) {
+        const entry = verbSearchState.selectedEntry;
+        const pastStem = toConjugationStem(entry?.pastStem);
+        if (!pastStem) return '';
+
+        if (personNumber === '3rd Singular') {
+            return toConjugationStem(entry.pastThirdSingular) ||
+                pastStem.replace(/e$/u, '');
+        }
+
+        const suffixes = {
+            '1st Singular': 'n',
+            '2nd Singular Familiar': 'g',
+            '2nd Singular Formal': 'l',
+            '1st Plural Inclusive': 'b',
+            '1st Plural Exclusive': 'f',
+            '2nd Plural Formal': 'dh',
+            '3rd Plural': 'r'
+        };
+        return pastStem + (suffixes[personNumber] || '');
+    }
+
+    function formatVerbLabel(entry) {
+        const mark = entry.mark ? ` ${entry.mark}` : '';
+        return `${entry.languageAbbreviation ?? ''} ${entry.displayWord}${mark}`.trim();
+    }
+
+    function indexVerb(rawEntry) {
+        const ancientNasal = rawEntry.ancientNasal ||
+            ANCIENT_NASAL_BY_ID[String(rawEntry.id)] ||
+            null;
+        const displayWord = rawEntry.displayWord ||
+            `${rawEntry.word}${ancientNasal ? ` [${ancientNasal}]` : ''}`;
+        const ancientStem = rawEntry.ancientStem ||
+            (ancientNasal ? ancientNasal.charAt(0) + rawEntry.word : null);
+        const entry = {
+            ...rawEntry,
+            ancientNasal,
+            displayWord,
+            ancientStem
+        };
+        const expandedStem = toConjugationStem(entry.word);
+        const optionalOmitted = String(entry.word ?? '')
+            .replace(/\([^()]*\)/g, '')
+            .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, '')
+            .replace(/[‐‑‒–—-]+$/g, '');
+        const wordKeys = [
+            normalizeSearchText(entry.word),
+            normalizeSearchText(entry.displayWord),
+            normalizeSearchText(entry.ancientStem),
+            normalizeSearchText(expandedStem),
+            normalizeSearchText(optionalOmitted),
+            normalizeSearchText(
+                entry.ancientNasal
+                    ? entry.ancientNasal.charAt(0) + expandedStem
+                    : ''
+            )
+        ].filter((value, index, values) => value && values.indexOf(value) === index);
+
+        return {
+            ...entry,
+            _stem: expandedStem,
+            _wordKeys: wordKeys,
+            _glossKey: normalizeSearchText([
+                entry.gloss,
+                entry.alternateGloss,
+                entry.derivationElements,
+                entry.phoneticDevelopments,
+                entry.pastStem,
+                entry.author,
+                entry.recognition,
+                entry.additionalNotes
+            ].filter(Boolean).join(' '))
+        };
+    }
+
+    function statusRank(status) {
+        return ({ current: 0, community: 1, deprecated: 2, deleted: 3 })[status] ?? 4;
+    }
+
+    function languageRank(language) {
+        return ({
+            'Sindarin / Noldorin': 0,
+            Sindarin: 1,
+            'Neo-Sindarin': 2,
+            Noldorin: 3
+        })[language] ?? 4;
+    }
+
+    function matchScore(entry, query) {
+        if (!query) return Number.POSITIVE_INFINITY;
+        if (entry._wordKeys.some(key => key === query)) return 0;
+        if (entry._wordKeys.some(key => key.startsWith(query))) return 1;
+        if (entry._wordKeys.some(key => key.includes(query))) return 2;
+        if (entry._glossKey.startsWith(query)) return 3;
+        if (entry._glossKey.includes(query)) return 4;
+
+        const tokens = query.split(' ').filter(Boolean);
+        const searchable = `${entry._wordKeys.join(' ')} ${entry._glossKey}`;
+        return tokens.length && tokens.every(token => searchable.includes(token))
+            ? 5
+            : Number.POSITIVE_INFINITY;
+    }
+
+    function findVerbMatches(queryValue) {
+        const query = normalizeSearchText(queryValue);
+        if (!query) return [];
+
+        return verbSearchState.verbs
+            .map(entry => ({ entry, score: matchScore(entry, query) }))
+            .filter(result => Number.isFinite(result.score))
+            .sort((a, b) =>
+                a.score - b.score ||
+                statusRank(a.entry.status) - statusRank(b.entry.status) ||
+                languageRank(a.entry.language) - languageRank(b.entry.language) ||
+                String(a.entry.sort ?? a.entry.word).localeCompare(String(b.entry.sort ?? b.entry.word))
+            )
+            .map(result => result.entry);
+    }
+
+    function findExactVerb(queryValue, matches = verbSearchState.verbs) {
+        const query = normalizeSearchText(queryValue);
+        return matches.find(entry => entry._wordKeys.some(key => key === query)) ?? null;
+    }
+
+    function hideSearchResults() {
+        verbSearchElements.results.hidden = true;
+        verbSearchElements.input.setAttribute('aria-expanded', 'false');
+        verbSearchElements.input.removeAttribute('aria-activedescendant');
+        verbSearchState.activeIndex = -1;
+    }
+
+    function setActiveResult(index) {
+        const buttons = Array.from(verbSearchElements.results.querySelectorAll('.search-result'));
+        if (!buttons.length) return;
+
+        verbSearchState.activeIndex = Math.max(0, Math.min(index, buttons.length - 1));
+        buttons.forEach((button, buttonIndex) => {
+            const active = buttonIndex === verbSearchState.activeIndex;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-selected', String(active));
+            if (active) {
+                verbSearchElements.input.setAttribute('aria-activedescendant', button.id);
+                button.scrollIntoView({ block: 'nearest' });
+            }
+        });
+    }
+
+    function renderSearchResults(matches) {
+        const visibleMatches = matches.slice(0, 12);
+        verbSearchElements.results.replaceChildren();
+        verbSearchState.matches = visibleMatches;
+        verbSearchState.activeIndex = -1;
+
+        if (!visibleMatches.length) {
+            hideSearchResults();
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        visibleMatches.forEach((entry, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'search-result';
+            button.id = `verb-result-${index}`;
+            button.setAttribute('role', 'option');
+            button.setAttribute('aria-selected', 'false');
+
+            const word = document.createElement('span');
+            word.className = 'search-result-word';
+            word.textContent = formatVerbLabel(entry);
+
+            const gloss = document.createElement('span');
+            gloss.className = 'search-result-gloss';
+            gloss.textContent = entry.gloss || 'No gloss listed';
+
+            const meta = document.createElement('span');
+            meta.className = 'search-result-meta';
+            meta.textContent = `${entry.language} · ${entry.status}`;
+
+            button.append(word, gloss, meta);
+            button.addEventListener('click', () => selectVerb(entry));
+            fragment.appendChild(button);
+        });
+
+        verbSearchElements.results.appendChild(fragment);
+        verbSearchElements.results.hidden = false;
+        verbSearchElements.input.setAttribute('aria-expanded', 'true');
+    }
+
+    function appendVerbDetail(label, value) {
+        if (!value) return;
+        const line = document.createElement('p');
+        line.className = 'verb-card-details';
+        const strong = document.createElement('strong');
+        strong.textContent = `${label}: `;
+        line.append(strong, document.createTextNode(value));
+        verbSearchElements.card.appendChild(line);
+    }
+
+    function appendRecognitionDetail(value) {
+        if (!value) return;
+
+        const line = document.createElement('p');
+        line.className = 'verb-card-details recognition-details';
+        const strong = document.createElement('strong');
+        strong.textContent = 'Reviewed or recognized by: ';
+        line.appendChild(strong);
+
+        const text = String(value);
+        const awardPattern =
+            /((?:\d+\s*x|x\s*\d+)(?:\s+each)?)\s+((?:\/)?(?:morfaenorel|faenorel|ingil)\.png|morfaenorel|faenorel|ingil)\b/giu;
+        let cursor = 0;
+
+        for (const match of text.matchAll(awardPattern)) {
+            line.appendChild(document.createTextNode(text.slice(cursor, match.index)));
+
+            const award = document.createElement('span');
+            award.className = 'recognition-award';
+
+            const count = document.createElement('span');
+            count.textContent = match[1];
+
+            const iconToken = match[2].toLowerCase();
+            const type = iconToken
+                .replace(/^\//u, '')
+                .replace(/\.png$/u, '');
+            const icon = document.createElement('img');
+            icon.className = 'recognition-icon';
+            icon.src = iconToken.endsWith('.png')
+                ? (iconToken.startsWith('/') ? iconToken : `/${iconToken}`)
+                : `/${type}.png`;
+            icon.alt = type;
+            icon.title = type;
+            icon.loading = 'lazy';
+            icon.addEventListener('error', () => {
+                icon.replaceWith(document.createTextNode(type));
+            });
+
+            award.append(count, icon);
+            line.appendChild(award);
+            cursor = match.index + match[0].length;
+        }
+
+        line.appendChild(document.createTextNode(text.slice(cursor)));
+        verbSearchElements.card.appendChild(line);
+    }
+
+    function renderVerbCard(entry) {
+        verbSearchElements.card.replaceChildren();
+
+        const heading = document.createElement('h2');
+        heading.textContent = formatVerbLabel(entry);
+
+        const gloss = document.createElement('p');
+        gloss.textContent = entry.gloss || 'No gloss listed';
+
+        const badges = document.createElement('div');
+        badges.className = 'verb-card-meta';
+        [entry.language, entry.status].filter(Boolean).forEach((value, index) => {
+            const badge = document.createElement('span');
+            badge.className = `verb-badge${index === 1 ? ` ${entry.status}` : ''}`;
+            badge.textContent = value;
+            badges.appendChild(badge);
+        });
+
+        verbSearchElements.card.append(heading, gloss, badges);
+        appendVerbDetail('Ancient initial', entry.ancientNasal ? `[${entry.ancientNasal}]` : '');
+        if (entry.ancientNasal && !isAStem(entry._stem)) {
+            appendVerbDetail('Conjugation stem', `${nasalizedStem(entry)}-`);
+        }
+
+        if (entry.status === 'community') {
+            appendVerbDetail('Derivation/elements', entry.derivationElements);
+            appendVerbDetail('Phonetic developments', entry.phoneticDevelopments);
+            appendVerbDetail('Past-tense stem', entry.pastStem);
+            appendVerbDetail('Author', entry.author);
+            appendRecognitionDetail(entry.recognition);
+            appendVerbDetail('Source', entry.source);
+            appendVerbDetail('Additional notes', entry.additionalNotes);
+        }
+
+        const sourceUrl = entry.status === 'community'
+            ? entry.sourceUrl
+            : entry.eldamoUrl;
+        if (sourceUrl) {
+            const sourceLink = document.createElement('a');
+            sourceLink.href = sourceUrl;
+            sourceLink.target = '_blank';
+            sourceLink.rel = 'noopener';
+            sourceLink.textContent = entry.status === 'community'
+                ? 'Open Discord source ↗'
+                : 'Open full Eldamo entry ↗';
+            verbSearchElements.card.appendChild(sourceLink);
+        }
+
+        verbSearchElements.card.hidden = false;
+    }
+
+    function updateVerbUrl(value) {
+        try {
+            const url = new URL(window.location.href);
+            if (value) url.searchParams.set('verb', value);
+            else url.searchParams.delete('verb');
+            window.history.replaceState({}, '', url);
+        } catch (error) {
+            // URL state is optional; search and conjugation still work without it.
+        }
+    }
+
+    function selectVerb(entry, options = {}) {
+        verbSearchElements.input.value = entry.displayWord;
+        setConjugationEntry(entry);
+        renderVerbCard(entry);
+        hideSearchResults();
+        generateConjugationTable();
+        if (options.updateUrl !== false) updateVerbUrl(entry.word);
+        verbSearchElements.status.textContent =
+            `Showing ${entry.language} ${entry.displayWord} — ${entry.gloss || 'no gloss listed'}.`;
+    }
+
+    function runManualConjugation() {
+        const stem = toManualConjugationStem(verbSearchElements.input.value);
+        if (!stem) {
+            clearVerbSearch();
+            return;
+        }
+        clearConjugationEntry();
+        verbSearchElements.card.hidden = true;
+        generateConjugationTable();
+        hideSearchResults();
+        updateVerbUrl(stem);
+        verbSearchElements.status.textContent = `Showing a manually entered stem: ${stem}-.`;
+    }
+
+    function handleVerbInput() {
+        const query = verbSearchElements.input.value.trim();
+        clearConjugationEntry();
+        verbSearchElements.card.hidden = true;
+
+        if (!query) {
+            verbSearchElements.conjugations.innerHTML = '';
+            hideSearchResults();
+            verbSearchElements.status.textContent = verbSearchState.ready
+                ? readyStatusText()
+                : (verbSearchState.failed ? 'Verb database unavailable; manual entry still works.' : 'Loading verb database…');
+            return;
+        }
+
+        const matches = findVerbMatches(query);
+        renderSearchResults(matches);
+
+        const exact = findExactVerb(query, matches);
+        if (exact) {
+            setConjugationEntry(exact);
+            renderVerbCard(exact);
+            generateConjugationTable();
+        } else if ((!verbSearchState.ready || matches.length === 0) && !/\s/.test(query)) {
+            generateConjugationTable();
+        } else {
+            verbSearchElements.conjugations.innerHTML = '';
+        }
+
+        if (verbSearchState.ready) {
+            verbSearchElements.status.textContent = matches.length
+                ? `${matches.length} matching verb${matches.length === 1 ? '' : 's'}; showing the first ${Math.min(matches.length, 12)}.`
+                : `No database match. Showing ${toManualConjugationStem(query)}- as a manually entered stem.`;
+        }
+    }
+
+    function clearVerbSearch() {
+        verbSearchElements.input.value = '';
+        clearConjugationEntry();
+        verbSearchElements.card.hidden = true;
+        verbSearchElements.conjugations.innerHTML = '';
+        hideSearchResults();
+        updateVerbUrl('');
+        verbSearchElements.status.textContent = verbSearchState.ready
+            ? readyStatusText()
+            : (verbSearchState.failed ? 'Verb database unavailable; manual entry still works.' : 'Loading verb database…');
+        verbSearchElements.input.focus();
+    }
+
+    verbSearchElements.input.addEventListener('input', handleVerbInput);
+    verbSearchElements.input.addEventListener('focus', () => {
+        if (verbSearchElements.input.value.trim()) {
+            renderSearchResults(findVerbMatches(verbSearchElements.input.value));
+        }
+    });
+    verbSearchElements.input.addEventListener('keydown', event => {
+        if (event.key === 'ArrowDown' && verbSearchState.matches.length) {
+            event.preventDefault();
+            setActiveResult(
+                verbSearchState.activeIndex < 0 ? 0 : verbSearchState.activeIndex + 1
+            );
+        } else if (event.key === 'ArrowUp' && verbSearchState.matches.length) {
+            event.preventDefault();
+            setActiveResult(
+                verbSearchState.activeIndex < 0
+                    ? verbSearchState.matches.length - 1
+                    : verbSearchState.activeIndex - 1
+            );
+        } else if (event.key === 'Enter') {
+            event.preventDefault();
+            const selected = verbSearchState.matches[
+                verbSearchState.activeIndex < 0 ? 0 : verbSearchState.activeIndex
+            ];
+            if (selected) selectVerb(selected);
+            else runManualConjugation();
+        } else if (event.key === 'Escape') {
+            hideSearchResults();
+        }
+    });
+    verbSearchElements.clear.addEventListener('click', clearVerbSearch);
+    document.addEventListener('click', event => {
+        if (!verbSearchElements.root.contains(event.target)) hideSearchResults();
+    });
+
+    async function loadVerbDatabase() {
+        try {
+            const databaseUrl =
+                `eldamo-word-database.json?v=${encodeURIComponent(ELDAMO_DATABASE_BUILD)}`;
+            const response = await fetch(databaseUrl, { cache: 'reload' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const database = await response.json();
+            if (!Array.isArray(database.words)) throw new Error('Invalid database structure');
+
+            let externalCommunityVerbs = [];
+            let communityExternalLoaded = false;
+            const communityFilename =
+                `community-verbs.json?v=${encodeURIComponent(COMMUNITY_DATABASE_BUILD)}`;
+            const communityUrls = Array.from(new Set([
+                communityFilename,
+                `/${communityFilename}`
+            ]));
+            for (const communityUrl of communityUrls) {
+                try {
+                    const communityResponse = await fetch(communityUrl, { cache: 'reload' });
+                    if (!communityResponse.ok) continue;
+                    const communityDatabase = await communityResponse.json();
+                    if (Array.isArray(communityDatabase.verbs)) {
+                        externalCommunityVerbs = communityDatabase.verbs;
+                        communityExternalLoaded = true;
+                        break;
+                    }
+                } catch (communityError) {
+                    console.warn(`Community verb database unavailable at ${communityUrl}:`, communityError);
+                }
+            }
+
+            const communityById = new Map();
+            [...BUILTIN_COMMUNITY_VERBS, ...externalCommunityVerbs]
+                .forEach(entry => communityById.set(String(entry.id), entry));
+            const communityVerbs = Array.from(communityById.values());
+            const uniqueVerbs = new Map();
+            [...database.words, ...communityVerbs]
+                .filter(entry => entry.type === 'verb')
+                .forEach(entry => uniqueVerbs.set(String(entry.id), entry));
+            verbSearchState.verbs = Array.from(uniqueVerbs.values()).map(indexVerb);
+            verbSearchState.communityCount = communityVerbs.length;
+            verbSearchState.communityExternalLoaded = communityExternalLoaded;
+            verbSearchState.ready = true;
+            verbSearchElements.status.textContent = readyStatusText();
+
+            const initialVerb = new URLSearchParams(window.location.search).get('verb');
+            if (initialVerb) {
+                verbSearchElements.input.value = initialVerb;
+                const matches = findVerbMatches(initialVerb);
+                const exact = findExactVerb(initialVerb, matches);
+                if (exact) selectVerb(exact, { updateUrl: false });
+                else runManualConjugation();
+            } else if (verbSearchElements.input.value.trim()) {
+                handleVerbInput();
+            }
+        } catch (error) {
+            verbSearchState.failed = true;
+            verbSearchElements.status.textContent =
+                'Verb database could not be loaded. Manual stem entry still works.';
+            console.error('Unable to load verb database:', error);
+        }
+    }
+
+// Copy conjugated forms as plain text only
+const conjugationResults = document.getElementById('resultPresent');
+
+conjugationResults.addEventListener('copy', event => {
+    const copiedText = window.getSelection()?.toString();
+
+    if (!copiedText || !event.clipboardData) return;
+
+    event.preventDefault();
+    event.clipboardData.clearData();
+    event.clipboardData.setData('text/plain', copiedText);
+});
+
+    loadVerbDatabase();
+</script>
+
+</body>
+</html>

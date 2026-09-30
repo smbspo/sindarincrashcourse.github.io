@@ -1,0 +1,300 @@
+/* --- navbar.css --- */
+
+/* COLOR VARIABLES: adjust here for easy site-wide tweaks */
+:root {
+  --primary: #4C668C;
+  --primary-dark: #2C4870;
+  --accent: #AA6539;
+  --accent-dark: #803F15;
+  --text-light: #FFEEAA;
+  --text-dark: #2C2C2C;
+  --dropdown-bg: #fff;
+  --dropdown-link: #2C4870;
+}
+
+/* MAIN NAVBAR STYLES */
+nav.navbar {
+  background: var(--primary);
+  border-bottom: 2px solid var(--primary-dark);
+  color: var(--text-light);
+  font-family: 'Quicksand', 'EB Garamond', serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.6em 1.2em;
+  min-height: 60px;
+}
+
+/* LOGO/TITLE LINK */
+#bardh-text, .navbar #bardh-text {
+  color: var(--text-light);
+  font-family: 'Quicksand', 'EB Garamond', serif;
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  letter-spacing: 0.04em;
+  text-shadow: 1px 1px 4px #2C487099;
+  text-decoration: none;
+}
+
+/* NAV LINKS LAYOUT */
+.nav-links {
+  display: flex;
+  gap: 0.3em;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* NAV LINKS AND DROPDOWN LINK STYLES */
+.navbar a, .dropdown-content a {
+  color: var(--text-light);
+  padding: 9px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: inherit;
+  transition: background-color 0.2s, color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.navbar a:hover, .dropdown-content a:hover {
+  background: var(--primary-dark);
+  color: var(--text-light);
+}
+
+/* DROPDOWN BUTTON STYLES */
+.dropdown {
+  position: relative;
+  font-family: inherit;
+}
+
+.dropdown button {
+  background: var(--primary);
+  color: var(--text-light);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 9px 14px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.01em;
+}
+.dropdown button:hover, .dropdown button.active {
+  background: var(--primary-dark);
+  color: var(--text-light);
+}
+
+/* DROPDOWN CONTENT (DESKTOP) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: var(--dropdown-bg);
+  min-width: 220px;
+  box-shadow: 0px 4px 14px rgba(0,0,0,0.10);
+  border: 1px solid var(--primary-dark);
+  z-index: 200;
+  top: 100%;
+  left: 0;
+}
+.dropdown-content a {
+  display: block;
+  color: var(--dropdown-link);
+  background: none;
+  font-weight: normal;
+  padding: 10px 18px;
+  border-radius: 0;
+  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown-content a:hover {
+  background: #f3f5fa;
+  color: var(--primary);
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* HAMBURGER MENU ICON (MOBILE) */
+.menu-icon {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: var(--text-light);
+  margin-left: 1.2em;
+}
+
+/* HIDE THE TOGGLE CHECKBOX */
+#menu-toggle {
+  display: none;
+}
+
+/* BACK TO TOP BUTTON (OPTIONAL) */
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  z-index: 99;
+  background: var(--accent);
+  color: white;
+  padding: 11px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: inherit;
+}
+#myBtn:hover { background: var(--accent-dark); }
+
+/* RESPONSIVE LAYOUTS */
+@media (max-width: 900px) {
+  nav.navbar, .nav-links { font-size: 0.96em; }
+}
+@media (max-width: 700px) {
+  nav.navbar, .nav-links {
+    flex-direction: column;
+    gap: 0.1em;
+    padding: 0.7em 0.2em;
+  }
+  .dropdown-content {
+    position: static;
+    border: none;
+    box-shadow: none;
+    background: var(--primary);
+    color: var(--text-light);
+    min-width: unset;
+  }
+  .dropdown-content a {
+    background: var(--primary);
+    color: var(--text-light);
+    border-bottom: 1px solid var(--primary-dark);
+  }
+  .dropdown-content a:last-child { border-bottom: none; }
+  .menu-icon { display: block; }
+  .nav-links { display: none; width: 100%; flex-direction: column; }
+  #menu-toggle:checked + .menu-icon + .nav-links { display: flex; }
+}
+@media (max-width: 560px) {
+  nav.navbar { padding: 0.5em 0.1em; }
+}
+
+#bardh-logo img {
+  height: 54px;
+  width: 54px;
+  border-radius: 50%;
+  box-shadow: 0 1px 9px #2c487033;
+  display: block;
+}
+
+#bardh-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-right: 1.2em; /* space before menu */
+}
+/* === Desktop: center the menu, keep logo left === */
+@media (min-width: 701px){
+  nav.navbar{
+    display: grid;                    /* instead of flex */
+    grid-template-columns: 1fr auto 1fr; /* left spacer | menu | right spacer */
+    align-items: center;
+    gap: .5rem;
+  }
+
+  #bardh-logo{
+    grid-column: 1;
+    justify-self: start;
+    margin-right: 0; /* cancel previous margin if any */
+  }
+
+  .nav-links{
+    grid-column: 2;
+    justify-self: center;             /* center the whole group */
+    display: flex;                    /* keep your flex for items */
+    justify-content: center;          /* center items inside the group */
+    gap: .6em;
+  }
+
+  .menu-icon{                         /* hamburger hidden on desktop */
+    grid-column: 3;
+    justify-self: end;
+    display: none;
+  }
+}
+
+@media (max-width: 700px){
+  nav.navbar{
+    display: grid;
+    grid-template-columns: auto 1fr auto;   /* logo | spacer | hamburger */
+    grid-auto-rows: auto;
+    align-items: center;
+    gap: .4rem 0;
+    padding: .55rem .8rem;
+  }
+
+  /* hidden checkbox still works with the label */
+  #menu-toggle{ display:none; }
+
+  /* logo in column 1 */
+  #bardh-logo{
+    grid-column: 1; grid-row: 1;
+    margin-right: 0;                 /* override desktop margin */
+    justify-self: start;
+  }
+
+  /* hamburger in column 3 */
+  .menu-icon{
+    grid-column: 3; grid-row: 1;
+    display: block;                  /* show on mobile */
+    justify-self: end;
+    font-size: 28px;
+    line-height: 1;
+    padding: 6px 8px;
+    margin-left: 0;                  /* kill old left margin */
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  /* collapsed links panel spans full width on row 2 */
+  .nav-links{
+    grid-column: 1 / -1; grid-row: 2;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .15rem;
+    padding: .2rem 0 .4rem;
+  }
+
+  /* open the panel when the checkbox is checked */
+  #menu-toggle:checked + .menu-icon + .nav-links{ display: flex; }
+
+  /* dropdowns become simple lists on mobile */
+  .dropdown-content{
+    position: static;
+    display: none;
+    background: var(--primary);
+    color: var(--text-light);
+    border: 0; box-shadow: none; min-width: unset;
+  }
+  .dropdown:focus-within .dropdown-content{ display:block; }
+
+  .dropdown-content a{
+    background: var(--primary);
+    color: var(--text-light);
+    border-bottom: 1px solid var(--primary-dark);
+    padding: 10px 14px;
+  }
+  .dropdown-content a:last-child{ border-bottom: 0; }
+}
+/* --- END navbar.css --- */

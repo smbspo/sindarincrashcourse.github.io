@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My first Elvish book.</title>
+ 
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+  font-size: 12px;
+  text-align:left;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700;  }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 10px;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+.div-table {
+  border: 1px solid rgba(0,0,0,0.04);            /* lighter frame like your grid */
+  border-radius: 10px;                            /* match grid-table */
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);      /* match grid-table */
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  color: var(--text);
+  font-size: 14px;                                /* consistent with tbody td */
+}
+
+/* header + rows share the same grid */
+.div-table .row {
+  display: grid;
+  grid-template-columns: 55px 1.35fr 1.35fr 1.35fr; /* keep your original column layout */
+}
+
+/* cells */
+.div-table .cell {
+  padding: 10px;                                  /* slightly adjusted to match grid-table */
+  line-height: 1.2;
+  min-width: 0;
+}
+
+/* header styling — using the same gradient & foreground as thead th */
+.div-table .row.head {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* row / cell dividers use the subtle rgba border */
+.div-table .row:not(.head) {
+  background: transparent;
+}
+.div-table .row:not(:last-child) .cell {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.div-table .cell:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+/* optional: keep the # column visually compact */
+.div-table .cell.num {
+  white-space: nowrap;
+}
+
+/* hover — whole row subtle glow (from tbody tr:hover td) */
+.div-table .row:hover > .cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* active/hovered cell stronger focus (optional) */
+.div-table .cell:hover {
+  background: rgba(14,165,164,0.10);
+}
+
+/* responsive: stack into "cards" on narrow screens */
+@media (max-width: 720px) {
+  .div-table .row {
+    grid-template-columns: 1fr;
+  }
+
+  .div-table .row.head {
+    display: none; /* hide header row on mobile */
+  }
+
+  .div-table .cell {
+    border-right: none !important;
+  }
+
+  .div-table .row:not(:last-child) .cell:last-child {
+    border-bottom: none;
+  }
+
+  .div-table .row {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .div-table .row:last-child {
+    border-bottom: none;
+  }
+
+  /* labels for mobile */
+  .div-table .cell[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--accent);
+  }
+}
+.mtg-card{
+background:var(--card);
+border-radius:var(--radius);
+padding:18px;
+margin:18px 0;
+box-shadow:0 10px 24px rgba(2,6,23,0.06);
+}
+
+.mtg-card h3{
+margin:0 0 12px 0;
+color:var(--accent);
+font-size:1.3rem;
+}
+
+.translations{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:6px 16px;
+font-size:14px;
+margin-bottom:14px;
+}
+
+.lang{
+font-weight:700;
+color:var(--accent);
+margin-right:6px;
+}
+
+.tolkien{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+padding-top:10px;
+border-top:1px solid rgba(0,0,0,0.06);
+}
+
+.gloss{
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: -2px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+ruby{
+  ruby-position: under;
+}
+
+rt{
+  font-size: 12px;
+  opacity: .75;
+  display: block;
+  text-align: center;
+}
+
+.page-break-dash{
+  text-align: center;
+  margin: 28px 0;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.page-break-dash::before{
+  content: "✦ ✧ ✦ ✧ ✦";
+  letter-spacing: 6px;
+}
+/* Mobile */
+@media (max-width:600px){
+  .top-row,
+  .bottom-row{
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text-block{
+    text-align: center;
+  }
+}
+/* ===== NEW READER LAYOUT ===== */
+
+.reader{
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.reader-section{
+  margin-top: 32px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+}
+
+/* Header */
+.reader-header{
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.reader-header .title{
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+/* Layout rows */
+.reader-body{
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reader-body.reverse{
+  grid-template-columns: 1fr 220px;
+}
+
+/* Image */
+.reader-image img{
+  width: 100%;
+  max-width: 200px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Text */
+.reader-text{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.reader-image figure{
+  margin: 0;
+  text-align: center;
+}
+
+.reader-image figcaption{
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.2;
+}
+/* Sentence blocks */
+.sentence{
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(14,165,164,0.04);
+  border: 1px solid rgba(14,165,164,0.08);
+}
+
+.sindarin{
+  font-family: "EB Garamond", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.translation{
+  font-size: 0.9rem;
+}
+
+/* Mobile */
+@media (max-width:700px){
+  .reader-body,
+  .reader-body.reverse{
+    grid-template-columns: 1fr;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course — by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Present Continuous</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Future, Past</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.5">1.2.2.5 Section Summary</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">Object &amp; Independent</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">Section Summary</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives &amp; Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Directional and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunction
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.5">1.2.5.5 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html#chart">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+
+<main class="main-center" role="main">
+
+  
+<section class="reader">
+
+<div>The following text was taken from “<a herf="https://www.read.gov/books/german.html">My very first little German Book.</a>”. The year of this book is unknown, but I have adapted this book for Elvish purposes, and the sentences will be broken down by Sindarin translation, literal translation, and original text.</div>
+
+  <h1 style="text-align:center;">e·Barf Edhellen vinui nín.</h1>
+  <div class="gloss" style="text-align:center;">The book Elvish first.</div>
+  <div class="subtitle" style="text-align:center;">“My first Elvish Book.”</div>
+  
+  <div class="sindarin">Hi e·berf bîn allen, ias<sup class="fn">1</sup> ñgeliathol hennad Edhellen. Bedhin mevil den, eithro, Naw, î!</div>
+  <div class="gloss">Here the book little for you (polite), where learn-will-you (polite) to read Elvish. Judge-I like-you (polite) it, also, Yes, indeed!</div>
+  <div class="translation">Here is a little book for you, where you may learn to read German. I’m sure you’ll like it, too, Yes, very much indeed!</div>
+  
+  <div class="sindarin">Añ gaeth i na vinui ú-iston i·phith egelrin, rong istathol din il dhae vael, a gelio din o rened.</div>
+  <div class="gloss">For reason that at first not-have knowledge-I the words different, yet have knowldge-you (polite) them all very well, and learn them from remembering.</div>
+  <div class="translation">For though at first you cannot tell the different words apart, yet soon you’ll know them all quite well and get them off by heart.</div>
+  
+  <div class="sindarin">Ah eithro, pi diril, em vain dhae vi den. Te e·barf bîn rovell. Tolo, davo amben iestad!</div>
+  <div class="gloss">And also, if look-you (polite), He the book little most-dear. Come, allow for us to begin! </div>
+  <div class="translation">And there are also, if you look, such pretty pictures in it. It is the dearest little book—come on, then, let’s begin!</div>
+  
+         <ul>
+          <li><strong><a href="#1">Sath vinui</a></strong> “First part”</li>
+          <li><strong><a href="#2">Sath dadui</a></strong> “Second part”</li>
+          <li><strong><a href="#3">Sath nelui</a></strong> “Third part”</li>
+          <li><strong><a href="#4">Sath gannui</a></strong> “Fourth part”</li>
+          <li><strong><a href="#5">Sath levnui</a></strong> “Fifth part”</li>
+          <li><strong><a href="#6">Sath engui</a></strong> “Sixth part”</li>
+          <li><strong><a href="#7">Sath othui</a></strong> “Seventh part”</li>
+          <li><strong><a href="#8">Sath dollui</a></strong> “Eight part”</li>
+          <li><strong><a href="#9">Sath nedrui</a></strong> “Ninth part”</li>
+          <li><strong><a href="#10">Sath baenu</a></strong> “Tenth part”</li>
+          <li><strong><a href="#11">Sath vinibui</a></strong> “Eleventh part”</li>
+          <li><strong><a href="#12">Sath ýnegui</a></strong> “Twelfth part”</li>
+          <li><strong><a href="#13">Sath baenelui</a></strong> “Thirteenth part”</li>
+          <li><strong><a href="#14">Sath baeganui</a></strong> “Fourteenth part”</li>
+          <li><strong><a href="#15">Sath baelebenui</a></strong> “Fifteenth part”</li>
+          <li><strong><a href="#16">Sath baenegui</a></strong> “Sixteenth part”</li>
+          <li><strong><a href="#17">Sath baenodogui</a></strong> “Seventeenth part”</li>
+          <li><strong><a href="#18">Sath baedolodhui</a></strong> “Eighteenth part”</li>
+          <li><strong><a href="#19">Sath baenederui</a></strong> “Nineteenth part”</li>
+          <li><strong><a href="#20">Sath daphaenui</a></strong> “Twentieth part”</li>
+        </ul>
+
+  <!-- ================= PART 1 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="1">Sath vinui</h3>
+      <div class="gloss">Part first</div>
+      <div class="sindarin">e·Vuig nín</div>
+      <div class="gloss">“My Cat”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/cat.png">
+        <figcaption>e·Vuig nín <br> “My cat”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Mas<sup class="fn">2</sup> e·vuig nín?</div>
+          <div class="gloss">Where the cat my?</div>
+          <div class="translation">“Where is my cat?”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Ú-iston.</div>
+          <div class="gloss">Not-have knowledge-I</div>
+          <div class="translation">“I do not know.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/girlcat.png">
+        <figcaption>e·Thim <br> “The milk”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Gerin thim anden.</div>
+          <div class="gloss">Possess-I milk for-her.</div>
+          <div class="translation">“I have some milk for her.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Mâf thim.</div>
+          <div class="gloss">Likes-(she) milk.</div>
+          <div class="translation">“She is very fond of milk.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PART 2 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="2">Sath dadui</h3>
+      <div class="gloss">Part second</div>
+      <div class="sindarin">Ithil</div>
+      <div class="gloss">“The Moon”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/girlsmoon.png">
+        <figcaption>Ithil <br> “The moon”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Cenin Ithil</div>
+          <div class="gloss">See-I the moon.</div>
+          <div class="translation">“I see the moon.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Dae gail Ithil.</div>
+          <div class="gloss">Very bright the moon.</div>
+          <div class="translation">“It is very bright.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/girlstar.png">
+        <figcaption>i·Ñgîl <br> “The stars”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Eithro dhae bain i·ñgîl.</div>
+          <div class="gloss">Also very beautiful the stars.</div>
+          <div class="translation">“The stars are also very beautiful”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Ithil ah i·ñgîl geliar ben.</div>
+          <div class="gloss">The moon and the stars illuminate us (inclusive).</div>
+          <div class="translation">“The moon and the stars light us.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PART 3 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="3">Sath nelui</h3>
+      <div class="gloss">Part third</div>
+      <div class="sindarin">e·Hant</div>
+      <div class="gloss">“The Garden”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/flower.png">
+      <figcaption>Min hant <br> “In the garden”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Mas<sup class="fn">2</sup> gin?</div>
+          <div class="gloss">Where you (familiar)?</div>
+          <div class="translation">“Where have you been?”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Min hant/Mi e·hant.</div>
+          <div class="gloss">In the garden.</div>
+          <div class="translation">“In the garden.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/bee.png">
+      <figcaption>i·Nîw <br> “The bees”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Egínen i·lyth vain.</div>
+          <div class="gloss">Saw-I the flowers beautiful.</div>
+          <div class="translation">“I have seen the pretty flowers.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Ah egínen i·nîw i ñgwerir ‘lî.</div>
+          <div class="gloss">And saw-I the bees that yield honey.</div>
+          <div class="translation">“And I have seen the bees, which make honey.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PART 4 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="4">Sath ganthui</h3>
+      <div class="gloss">Part fourth</div>
+       <div class="sindarin">e·Chaust</div>
+      <div class="gloss">“The Bed”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/bed1.png">
+      <figcaption>e·Chaust <br> “The bed”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">A! Melin e·chaust bîn nín io ni lom.</div>
+          <div class="gloss">Oh! Love-I the bed little my when I tired.</div>
+          <div class="translation">“Oh! how I love my little bed when I am tired.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Te nim, liss, elvain.</div>
+          <div class="gloss">It white, soft, wonderful.</div>
+          <div class="translation">“It is so white, and so soft, and so nice.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+        <img src="book/bed2.png">
+      <figcaption>Dû vaer <br> “Good night”</figcaption>
+      </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Sevin uil elvain viñ chaust bîn nín.</div>
+          <div class="gloss">Have-I dreams wonderful in the bed little my.</div>
+          <div class="translation">“l have the sweetest dreams in my little bed.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Merin i hevil dhû vaer, emel.</div>
+          <div class="gloss">I wish that you (polite) have night good, mother.</div>
+          <div class="translation">“Good night, Mamma.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PART 5 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="5">Sath levnui</h3>
+      <div class="gloss">Part fifth</div>
+      <div class="sindarin">Amorvad</div>
+      <div class="gloss">“Breakfast”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+    <img src="book/tea.png" alt="girl drinking tea">
+    <figcaption>en·Yllas nín <br> “My tea”</figcaption>
+      </figure>
+</div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Brassen en·Yllas nín</div>
+          <div class="gloss">Very hot the tea my.</div>
+          <div class="translation">“My tea is too hot.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Ú-belin soged den.</div>
+          <div class="gloss">Not-(physically) able-I to drink it.</div>
+          <div class="translation">“I cannot drink it.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+       <figure>
+        <img src="book/bread.png">
+        <figcaption>e·Vast ah e·vang <br> “The bread and the butter”</figcaption>
+       </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Gritho i ú-fedig<sup class="fn">3</sup> den.</div>
+          <div class="gloss">Mind that not-spill-you (familiar) it.</div>
+          <div class="translation">“Mind that you do not spill it.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Savo níth<sup class="fn">4</sup> bast a mang bîn.</div>
+          <div class="gloss">Have bread and butter.</div>
+          <div class="translation">“Take some bread and a little butter.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ================= PART 6 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="6">Sath enchui</h3>
+      <div class="gloss">Part sixth</div>
+      <div class="sindarin">e·Barf</div>
+      <div class="gloss">“The book”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+    <img src="book/girl2.png">
+    <figcaption>Neth vaelengas<sup class="fn">5</sup> <br> “Well-mannered little girl”</figcaption>
+      </figure>
+</div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Medig Amorvad?</div>
+          <div class="gloss">Eat-you (familiar) Breakfast?</div>
+          <div class="translation">“Have you had breakfast?”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Naw, emel.</div>
+          <div class="gloss">Yes, mother.</div>
+          <div class="translation">“Yes, mother.”</div>
+        </div>
+        
+        <div class="sentence">
+          <div class="sindarin">To<sup class="fn">6</sup> dogo annin e·barf.</div>
+          <div class="gloss">Then bring to me the book.</div>
+          <div class="translation">“Then bring me your book.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+       <figure>
+        <img src="book/book.png">
+        <figcaption>e·Barf <br> “The book”</figcaption>
+       </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Hennog dhae vael.</div>
+          <div class="gloss">Read-you (familiar) very well</div>
+          <div class="translation">“You read very well.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Ci neth vaer.</div>
+          <div class="gloss">You little girl good.</div>
+          <div class="translation">“You are a good little girl.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ================= PART 7 ================= -->
+  <div class="reader-section">
+    <div class="reader-header">
+      <h3 id="7">Sath othui</h3>
+      <div class="gloss">Part seventh</div>
+      <div class="sindarin">e·‘Winig.</div>
+      <div class="gloss">“The baby.”</div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+      <figure>
+    <img src="book/baby1.png">
+    <figcaption>e·Chen bîn <br> “The little child”</figcaption>
+      </figure>
+</div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">e·Chanar nín lôr.</div>
+          <div class="gloss">The brother my sleeps.</div>
+          <div class="translation">“My little brother is going to sleep.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Te vîw.</div>
+          <div class="gloss">He small.</div>
+          <div class="translation">“He is quite small.”</div>
+        </div>
+        
+        <div class="sentence">
+          <div class="sindarin">Gâr chausteg<sup class="fn">7</sup> ‘u dobas nim.</div>
+          <div class="gloss">Has-(he) crib (together) with covering white.</div>
+          <div class="translation">“He has a cradle with white curtains.”</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reader-body">
+      <div class="reader-image">
+       <figure>
+        <img src="book/baby2.png">
+        <figcaption>Lôr <br> “He sleeps”</figcaption>
+       </figure>
+      </div>
+
+      <div class="reader-text">
+        <div class="sentence">
+          <div class="sindarin">Te vain ah ú-bêd.</div>
+          <div class="gloss">He beautiful and not-speak-(he).</div>
+          <div class="translation">“He is very pretty; but he cannot speak.”</div>
+        </div>
+
+        <div class="sentence">
+          <div class="sindarin">Mevin tired den lo lôr!</div>
+          <div class="gloss">Like-I to watch him while sleeps-(he)!</div>
+          <div class="translation">“I do like watching him when he is asleep!”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   <!-- ================= PART 8 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="8">Sath dollui</h3>
+    <div class="gloss">Part eighth</div>
+    <div class="sindarin">i·Lebyth.</div>
+    <div class="gloss">“The rabbits.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/rabbits.png">
+        <figcaption>i·Lebyth <br> “The rabbits”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Cenig i·lebyth vín?</div>
+        <div class="gloss">See-you the rabbits our (exclusive)?</div>
+        <div class="translation">“Have you seen our rabbits?”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Tolo a cheno din!</div>
+        <div class="gloss">Come and see them!</div>
+        <div class="translation">“Come and see them.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Nim ‘ui pheg vyrn er laboth.</div>
+        <div class="gloss">White (together) with spots black one rabbit.</div>
+        <div class="translation">“One is white with black spots.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/lettuce.png">
+        <figcaption>Bloss a lhaegas<br> “Bran and lettuce”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Ah il vithren en·egel.</div>
+        <div class="gloss">And all grey the other.</div>
+        <div class="translation">“And the other is all grey.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Medir vloss a lhaegas.</div>
+        <div class="gloss">Eat-they wheat and greenness.</div>
+        <div class="translation">“They eat bran and lettuces.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Tiro i·chend hílol dín ah i·lhewig end dín.</div>
+        <div class="gloss">Look at the eyes shining their and the ears long their!</div>
+        <div class="translation">“Look at their shining eyes and long ears.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- ================= PART 9 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="9">Sath nedrui</h3>
+    <div class="gloss">Part ninth</div>
+    <div class="sindarin">e·Dhant.</div>
+    <div class="gloss">“The Fall.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/fall.png">
+        <figcaption>e·Dhant <br> “The fall”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">A! Dannassen ah im harnassen.</div>
+        <div class="gloss">Oh! I fell and myslef wounded-I.</div>
+        <div class="translation">“Oh! I have fallen down and I have hurt myself.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Felin naeras angin ionn bîn! Grestathon gin am.</div>
+        <div class="gloss">Feel-I sorrow for you boy little! I will help you up.</div>
+        <div class="translation">“Poor little boy! I will pick you up.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Harnannen e·dhol, e·vâb, e·deleg, en·amoth nín.</div>
+        <div class="gloss">Wounded-I the head, the hand, the leg, the shoulder my.</div>
+        <div class="translation">“I have hurt my head, my hand, my leg, and my shoulder.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/table.png">
+        <figcaption>Poe hardh/Po e·hardh<br> “On the table”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">A! Felin lhaew dhae.</div>
+        <div class="gloss">Oh! Feel-I sick very.</div>
+        <div class="translation">“Oh! I feel very ill.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">To<sup class="fn">5</sup>, am man gaeth emredig boe hardh/bo e·hardh bi ú-verig dannad?</div>
+        <div class="gloss">Then, for what reason climb-you (familiar) on the table if not-want-you (familiar) to fall?</div>
+        <div class="translation">“But then, why did you climb on the table if you did not want to fall?”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 10 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="10">Sath baenui</h3>
+    <div class="gloss">Part tenth</div>
+    <div class="sindarin">e·Duil<sup class="fn">8</sup>.</div>
+    <div class="gloss">“The Doll.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/doll.png">
+        <figcaption>e·Duil<sup class="fn">8</sup> <br> “The doll”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">e·Duil<sup class="fn">8</sup> nín chora nethail en·aduial hen.</div>
+        <div class="gloss">The doll my expects guests the evening this.</div>
+        <div class="translation">“My doll expects visitors this evening.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Boe ammen feriad i·sem.</div>
+        <div class="gloss">It needs for us (exclusive) to prepare the rooms.</div>
+        <div class="translation">“We must get the rooms ready.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Panno i·chedhy, a sesto e·lann boe hardh/bo e·hardh.</div>
+        <div class="gloss">Arrange the chairs, and put the cloth on the table.</div>
+        <div class="translation">“Arrange the chairs, and put the cloth on the table.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Togo i·phelf ah i·thelphig.</div>
+        <div class="gloss">Bring the books and the spoons. </div>
+        <div class="translation">“Bring; the plates and the spoons.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/table2.png">
+        <figcaption>Tobon e·hardh<br> “I cover the table”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Savathof vast laich nan il choest.</div>
+        <div class="gloss">Have-will-we (exclusive) bread sweet of all flavors.</div>
+        <div class="translation">“We shall have cakes of all sorts.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ah eithro vast, pibingim<sup class="fn">9</sup>, cream.</div>
+        <div class="gloss">And also bread, jams, cream.</div>
+        <div class="translation">“And also bread, jams and cream.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Ah che balf<sup class="fn">10</sup> bast a mang.</div>
+        <div class="gloss">And perhaps plate bread and butter.</div>
+        <div class="translation">“And perhaps a plate of bread-and-butter”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 11 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="11">Sath vinibui</h3>
+    <div class="gloss">Part eleventh</div>
+    <div class="sindarin">en·Aew bîn.</div>
+    <div class="gloss">“The little bird.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/girlbird.png">
+        <figcaption>en·Aew bîn <br> “The little bird”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Hirin aew bîn úvael.</div>
+        <div class="gloss">Found-I bird little not-well.</div>
+        <div class="translation">“I have found a poor little bird.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Te bergorth vedhin.</div>
+        <div class="gloss">He half-dead judge-I.</div>
+        <div class="translation">“I believe it is half dead.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Caedast boe loss/bo e·loss. Ú-obul mened idh·roe dín egor ú-obul linnad.</div>
+        <div class="gloss">Lay-(it) on the snow. Not-(physically) able to go the-wings its or not-(physically) able to sing.</div>
+        <div class="translation">“It lay on the snow. It could neither move its wings nor sing.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Ah e·vuig egin den. Odul ha den, ah evir maded den.</div>
+        <div class="gloss">And the cat saw it. Came-(she) beside it, and wanted-(she) to eat it.</div>
+        <div class="translation">“And the cat saw it. She came near it, and wanted to eat it.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/birdfire.png">
+        <figcaption>Hoe naur/Ho e·naur<br> “Infront of a fire”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Ach ‘ruithannen den gwahae, ah onúren lim a lheuthannen en·aew bîn úvael.</div>
+        <div class="gloss">But frightend-I her away, and run-I quick and picked up-I the bird littl not-well.</div>
+        <div class="translation">“But I frightened her away, and I ran quickly and picked up the poor little bird.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Orathon den h’ e·naur.</div>
+        <div class="gloss">Heat up-I it beside the fire.</div>
+        <div class="translation">“I will warm it by the fire.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">A tho<sup class="fn">6</sup> annathon den níth<sup class="fn">4</sup> bîn na vast, a davathon den gwiled gwa.</div>
+        <div class="gloss">And then give-will-I it pieces little of bread, allow-will-I it to fly away.</div>
+        <div class="translation">“And then I will give it some crumbs of bread, and let it fly away”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 12 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="12">Sath ýnegui</h3>
+    <div class="gloss">Part twelfth</div>
+    <div class="sindarin">Min eryn/M’ in·eryn.</div>
+    <div class="gloss">“In the woods.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/forest.png">
+        <figcaption>Min eryn/M’ in·eryn <br> “In the woods”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Tolo ‘u nin vin eryn/v’ in·eryn.</div>
+        <div class="gloss">Come (together) with me in the woods.</div>
+        <div class="translation">“Come with me into the wood.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Daer dae i·Ñgelaid.</div>
+        <div class="gloss">Big very the trees.</div>
+        <div class="translation">“The trees are so big”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Lasto, dúlin linna vig i·lais.</div>
+        <div class="gloss">Listen, nightingale sings among the leaves.</div>
+        <div class="translation">“Listen, a nightingale is singing amid the leaves.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/squirrel.png">
+        <figcaption>e·bechof<br> “The squirrel”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">A phechof dha cabol o golf na ‘olf.</div>
+        <div class="gloss">And squirrel there is jumping from branch to branch.</div>
+        <div class="translation">“And there is a squirrel jumping from bough to bough.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">A gwí egínen laboth vig i·thuis.</div>
+        <div class="gloss">And just now saw-I rabbit among the bushes.</div>
+        <div class="translation">“And I have just seen a hare running among the bushes.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 13 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="13">Sath baenelui</h3>
+    <div class="gloss">Part thirteenth</div>
+    <div class="sindarin">Min eryn/M’ in·eryn.</div>
+    <div class="gloss">“In the woods.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/children.png">
+        <figcaption>Min eryn/M’ in·eryn <br> “In the woods”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Lhassog bent i·chîn bîn dâd, i líthennin vin eryn/v’ in·eryn.</div>
+        <div class="gloss">Hear-you (familiar) story the children little two, who lost in the woods?</div>
+        <div class="translation">“Have you heard the story of the two little children, who were lost in the woods?”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Avanner in·iaif rhoef.</div>
+        <div class="gloss">Ate-they the fruits wild.</div>
+        <div class="translation">“They ate wild fruits.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">A na vedui chodar nu ‘aladh.</div>
+        <div class="gloss">And at last lay down-they under tree.</div>
+        <div class="translation">“And at last they lay down under a tree.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Ah in·emesgern odúnger lais.</div>
+        <div class="gloss">And the robins brought leaves.</div>
+        <div class="translation">“And the red-breasts brought leaves.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/children2.png">
+        <figcaption>i·chîn nírol<br> “The sad children”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">A thobanner i·chîn bîn nírol.</div>
+        <div class="gloss">And covered-they the children little sad.</div>
+        <div class="translation">“And coveredup the poor little ones.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Merin allu olathon líthannen.</div>
+        <div class="gloss">Hope-I never become-will-I lost.</div>
+        <div class="translation">“I hope I shall never get lost.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Tolo, dammínef na mbâr hi!</div>
+        <div class="gloss">Come, go back-we (exclusive) to home now!</div>
+        <div class="translation">“Let us go back home at once!”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 14 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="14">Sath baeganui</h3>
+    <div class="gloss">Part forteenth</div>
+    <div class="sindarin">i·Theliennaid<sup class="fn">11</sup> ú-eliennin.</div>
+    <div class="gloss">“The toys not-blessed.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/horse.png">
+        <figcaption>e·Roch bîn nín dhannast <br> “My small horse falls”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Rengin il i·theliennaid nín. Se naer!</div>
+        <div class="gloss">Broken all the toys my. This dreadful!</div>
+        <div class="translation">“My toys are all broken. It is dreadful!”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ú-geiriannen hen.</div>
+        <div class="gloss">Not-caused-I this.</div>
+        <div class="translation">“It is not my fault.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Aphon e·roch nín, a dannast.</div>
+        <div class="gloss">Touch-I the horse my, and falls-(he).</div>
+        <div class="translation">“I touch my horse, and he falls.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Tirin e·duil nín a dannast laew, a rhâg e·dholl dín.</div>
+        <div class="gloss">Look-I the doll my and falls-(she) frequent, and breaks the head her.</div>
+        <div class="translation">“I look at my doll and very often she falls too, and breaks her head.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/blocks.png">
+        <figcaption>in·Edaib nín dhannar ui<br> “My buildings always fall”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">e·‘Wilbog<sup class="fn">12</sup> nín ‘wîl gwa a chinia vi ‘aladh.</div>
+        <div class="gloss">The ballon my flies away and sticks in tree.</div>
+        <div class="translation">“My balloon flies away and sticks in a tree.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ah in·edaib nín dhannar ui.</div>
+        <div class="gloss">And the buildings my fall ever.</div>
+        <div class="translation">“And my buildings always tumble down.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Se ú-alwed dhae.</div>
+        <div class="gloss">This not-fortunate very.</div>
+        <div class="translation">“It really is most unfortunate.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 15 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="15">Sath baelebenui</h3>
+    <div class="gloss">Part fifteenth</div>
+    <div class="sindarin">idh·Raith.</div>
+    <div class="gloss">“The streets.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/nanny.png">
+        <figcaption>e·‘Rithwen<sup class="fn">13</sup> <br> “The nanny”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">e·‘Rithwen<sup class="fn">13</sup> nín odunc nin n’ idh·raith.</div>
+        <div class="gloss">The nanny my brought me to the streets.</div>
+        <div class="translation">“My nurse took me this morning into the streets.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">i·Lhoe velig ú-adhórer.</div>
+        <div class="gloss">The sounds great not-stopped they.</div>
+        <div class="translation">“There was a great noise all the time.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Egínen dhregyl, resg, neryd<sup class="fn">14</sup>.</div>
+        <div class="gloss">Saw-I carts, wagons, cars.</div>
+        <div class="translation">“I saw carts, carriages, and cabs.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/doll2.png">
+        <figcaption>e·Duil vain nín<br> “The doll beautiful my”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Bain dae i·mbengaith.</div>
+        <div class="gloss">Beautiful very the markets.</div>
+        <div class="translation">“The shops are very pretty.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ach mbangath Teliennaid<sup class="fn">11</sup>, sa rovaer athar il i·mbengaith!</div>
+        <div class="gloss">But market of toys, that most-good beyond all the shops!</div>
+        <div class="translation">“But the toy-shop, that is the best of all!”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">Ah e·‘rithwen<sup class="fn">13</sup> nín mbachón<sup class="fn">15</sup> nin e·duil<sup class="fn">8</sup> rovain echir ui.</div>
+        <div class="gloss">And the nanny my bought me the doll most-beautiful found ever.</div>
+        <div class="translation">“And my nurse bought me one of the most beautiful dolls to be found.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 16 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="16">Sath baenegui</h3>
+    <div class="gloss">Part sixteenth</div>
+    <div class="sindarin">e·Helf.</div>
+    <div class="gloss">“The shells.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/beach.png">
+        <figcaption>e·‘Aear <br> “The sea”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">A! Daer e·‘aear!</div>
+        <div class="gloss">Oh! Big the sea!</div>
+        <div class="translation">“How big the sea is!”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Mi lui laew luin e·‘aear, egor chalen, egor chithren.</div>
+        <div class="gloss">In occasions many blue the sea, or green, or grey.</div>
+        <div class="translation">“It is sometimes blue, sometimes green, and sometimes grey.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Merin olad girion.</div>
+        <div class="gloss">Like-I to become sailor.</div>
+        <div class="translation">“I should very much like to be a sailor.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/beach2.png">
+        <figcaption>e·Duil vain nín<br> “The doll beautiful my”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Ach ú-verin e·gair nín olad rangen boe falas/bo e·falas.</div>
+        <div class="gloss">But not-like-I the ship my to become broken on the shore.</div>
+        <div class="translation">“But I should not like to be shipwrecked.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ce dharthathof aen si boe falas/bo e·falas.</div>
+        <div class="gloss">Maybe stay-will-we (exclusive) should here on the beach.</div>
+        <div class="translation">“Perhaps it would be better to stay here on the beach.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">A lheutho helf vain, helf nimgerain<sup class="fn">16</sup>, helf gyrn.</div>
+        <div class="gloss">And pick shells beautiful, shells pink, shells round.</div>
+        <div class="translation">“And pick up pretty shells, pink and round shells.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PART 17 ================= -->
+ <div class="reader-section">
+  <div class="reader-header">
+    <h3 id="17">Sath baenodogui</h3>
+    <div class="gloss">Part seventeenth</div>
+    <div class="sindarin">in·Yrf.</div>
+    <div class="gloss">“The apples.”</div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/apple1.png">
+        <figcaption>e·Chîn vedir in·yrf.<br> “The children eat the apples.”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Il chîn vevir yrf.</div>
+        <div class="gloss">All children like apples.</div>
+        <div class="translation">“All children like apples.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Galthon dhae ‘aladh yrf vin hant/vi e·hant vín.</div>
+        <div class="gloss">Be glad-I there is tree apple in the tree ours (exclusive).</div>
+        <div class="translation">“I am very glad there is an apple tree in our garden.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Bain e·‘aladh vin ethuil/vi en·ethuil.</div>
+        <div class="gloss">Beautiful the tree in the spring.</div>
+        <div class="translation">“The tree is so pretty in the spring.”</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reader-body">
+    <div class="reader-image">
+      <figure>
+        <img src="book/apple2.png">
+        <figcaption>Leuthof in·ylf<br> “Pick-we (exclusive) the apples”</figcaption>
+      </figure>
+    </div>
+
+    <div class="reader-text">
+      <div class="sentence">
+        <div class="sindarin">Caran a nim i·lyth dín.</div>
+        <div class="gloss">Red and white the flowers its.</div>
+        <div class="translation">“Its flowers are red and white.”</div>
+      </div>
+
+      <div class="sentence">
+        <div class="sindarin">Ab lû, vi laer, gâr lais gelain.</div>
+        <div class="gloss">After time, in summer, it has leaves green.</div>
+        <div class="translation">“Afterwards, in Summer, it has green leaves.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">A m’ iavas degif redraith<sup class="fn">17</sup>.</div>
+        <div class="gloss">And in autumn bring-we (exclusive) ladders.</div>
+        <div class="translation">“And in Autumn we bring ladders.”</div>
+      </div>
+      
+      <div class="sentence">
+        <div class="sindarin">A sestof in·yrf vi ‘wirchylch<sup class="fn">18</sup>.</div>
+        <div class="gloss">And set-we (exclusive) the apples in baskets.</div>
+        <div class="translation">“And we put the apples into baskets.”</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>ias</b>, <i>conj.</i> “where [relative], in which place” ⪤ Q. <a href="https://eldamo.org/content/words/word-725909779.html?neo">yassë</a>, <i>conj.</i> “where [relative], in which place” [author: unknown]<br>
+    <sup class="fn">2</sup> <b>mas</b>, <i>adv.</i> “where” ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-4164950807.html?neo">massë¹</a>, <i>adv.</i> “where” [author: unknown]<br>
+    <sup class="fn">3</sup> <b>fad-</b>, <i>v.</i> “to spill” ⪤ ᴺQ. <a href="https://eldamo.org/content/words/word-1022389009.html?neo">hwat-</a>, <i>v.</i> “to spill” [author: Elaran]<br>
+    <sup class="fn">4</sup> <b>níth</b>, <i>n.</i> “piece, bit (of indeterminate size)” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1022389009.html?neo">nihta</a>, <i>n.</i> “piece, bit, small part” [author: Rínor]<br>
+    <sup class="fn">5</sup> <b>maelengas</b>, <i>adj.</i> “well-mannered” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1274295809.html">mailengaitë</a>, <i>adj.</i> “well-mannered” [author: Rínor]<br>
+    <sup class="fn">6</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+    <sup class="fn">7</sup> <b>hausteg</b>, <i>n.</i> “crib, cradle” [author: Rínor]<br>
+    <sup class="fn">8</sup> <b>tuil</b>, <i>n.</i> “doll” ⪤ ᴺQ. [ᴱQ.] <a href="https://eldamo.org/content/words/word-1974214529.html?neo">toli</a> n. “doll, puppet” [author: Vyacheslav Stepanov]<br>
+    <sup class="fn">9</sup> <b>pibingim</b>, <i>n.</i> “jam, (lit.) berry-sticky-substance” ⪤ “ᴺQ. !<a href="https://eldamo.org/content/words/word-897198773.html?neo">piohimma</a>, n. “jam, (lit.) berry-sticky-substance” [author: Rínor]<br>
+    <sup class="fn">10</sup> <b>palf</b>, <i>n.</i> “plate” from √PAL+mā [author: Rínor]<br>
+    <sup class="fn">11</sup> <b>teliennad</b>, <i>n.</i> “toy (lit.) play-thing” [author: Rínor]<br>
+    <sup class="fn">12</sup> <b>gwilbog</b>, <i>n.</i> “balloon (lit.) float in air bag” [author: Rínor]<br>
+    <sup class="fn">13</sup> <b>grithwen</b>, <i>n.</i> “nanny, nurse-maid (lit.) care-maiden” [author: Rínor]<br>
+    <sup class="fn">14</sup> <b>noriod</b>, <i>n.</i> “car (lit.) run-machine” from nor-gautā [author: Luinyelle]<br>
+    <sup class="fn">15</sup> <b>bachanna-</b>, <i>v.</i> “to pay, to give in exchange” from <i>bach</i> + <i>anna-</i> [author: Ellanto]<br>
+    <sup class="fn">16</sup> <b>nimgaran</b>, <i>n.</i> “ladder” from <i>nimp</i> + <i>garan</i> [author: Rínor]<br>
+    <sup class="fn">17</sup> <b>redrath</b>, <i>n.</i> “pink (lit.) pale-red” from <i>√RET</i> + <i>rath</i> [author: Paul Strack]<br>
+    <sup class="fn">17</sup> <b>gwircholch</b>, <i>n.</i> “basket” ⪤ ᴺQ. !<a href="https://eldamo.org/content/search/search.html?neo">vircolca</a> n. “basket, (lit.) woven-box” [author: Eleran]
+  </div>
+
+
+
+
+ 
+  <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+</main>
+  <script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

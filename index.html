@@ -1,0 +1,1180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sindarin Crash Course</title>
+  <meta name="description" content="A beginner's Sindarin course with pronunciation, grammar lessons, mutation guidance, exercises, and tools." />
+
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  gap: .35em 2.2em;
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:100%; border-collapse:separate; border-spacing:0; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+/* Round the header itself so captions do not leave square top corners. */
+thead tr:first-child th:first-child { border-top-left-radius:10px; }
+thead tr:first-child th:last-child { border-top-right-radius:10px; }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+/* Introductory guides use the existing course typography and colors. */
+main h2 { font-size:1.35rem; margin:24px 0 10px; }
+main h3 { line-height:1.4; }
+main h4 { font-size:1.05rem; margin:22px 0 8px; }
+.lesson-contents ul { padding-left:1.3rem; }
+.lesson-contents li { margin:6px 0; }
+.course-note { font-size:0.95rem; }
+.source-note { font-size:0.9rem; color:var(--muted); }
+.notation-list { margin:12px 0; }
+.notation-list dt { font-weight:700; margin-top:12px; }
+.notation-list dd { margin:3px 0 12px; }
+table caption { text-align:left; color:var(--muted); padding:0 0 8px; font-size:0.9rem; }
+.pronunciation-table th:first-child { width:26%; }
+.pronunciation-table tbody th { padding:10px; text-align:left; vertical-align:top; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+.pronunciation-table td { vertical-align:top; }
+.responsive-table .mutation-summary { min-width:620px; table-layout:auto; }
+.mutation-summary th, .mutation-summary td { white-space:nowrap; }
+.h3-nav { flex-wrap:wrap; max-width:100%; }
+
+:root[data-theme="dark"] table { background:var(--card); }
+:root[data-theme="dark"] tbody td,
+:root[data-theme="dark"] .pronunciation-table tbody th { border-bottom-color:rgba(255,255,255,0.1); }
+
+@media print {
+  .responsive-table { overflow:visible; }
+  .responsive-table .mutation-summary { min-width:0; }
+}
+
+
+/* Tighten header on small screens */
+@media (max-width:700px){
+
+  /* smaller text */
+  .responsive-table table{
+    font-size:12px;
+  }
+
+  /* tighter padding */
+  .responsive-table th,
+  .responsive-table td{
+    padding:6px 6px;
+  }
+
+  /* allow columns to shrink instead of overflow */
+  .responsive-table table{
+    table-layout: fixed;
+  }
+
+  /* allow long mutation forms to wrap */
+  .responsive-table th,
+  .responsive-table td{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+}
+
+/* Very small screens: stack narrow columns into readable density (optional fallback) */
+@media (max-width: 420px) {
+  .responsive-table thead th { font-size: 12px; padding:6px 6px; }
+  .responsive-table tbody td { font-size: 12px; padding:6px 6px; }
+}
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+
+@media (max-width:820px) {
+  .dropdown-panel {
+    position: static;
+    transform: none !important;
+    opacity:1 !important;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    border: none;
+    display: none; 
+  }
+  .dropdown.open > .dropdown-panel { display:block; padding:8px 0 16px 0; }
+  .panel-grid nav { grid-template-columns: 1fr; gap:6px; }
+  .dropdown-panel nav a { padding:10px 6px; border-radius:6px; }
+  /* mobile override: keep font-size readable/tappable, still 12px but with larger hit area */
+  .dropdown-panel nav a { font-size: 12px; line-height:1.3; padding:12px 8px; }
+}
+.responsive-grid {
+  width: 100%;
+  margin: 12px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  font-family: var(--font-ui);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Desktop layout: CSS Grid with 5 equal columns */
+.responsive-grid .rg-row {
+  display: grid;
+  grid-template-columns: 1.9fr 3fr 0.3fr; /* first column wider */
+  align-items: center;
+  gap: 0;
+}
+
+/* header band */
+.responsive-grid .rg-header { 
+  background: linear-gradient(180deg,var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight:700;
+  font-size:14px;
+}
+
+.responsive-grid .rg-head {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* body rows */
+.responsive-grid .rg-row:not(.rg-header) {
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell { /* subtle banding */
+  background: rgba(14,165,164,0.01);
+}
+.responsive-grid .rg-cell {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* hover highlight of row (like your table behavior) */
+.responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* Small screens: keep the exact same grid/table layout but scale down to fit */
+@media (max-width: 720px) {
+  .responsive-grid {
+    font-size: clamp(12px, 2.2vw, 14px);
+  }
+
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header {
+    display: grid;
+    align-items: center;
+    gap: 0;
+    grid-template-columns: 1.9fr 3fr 0.3fr;
+  }
+
+  .responsive-grid .rg-head {
+    padding: 8px 8px;
+    font-size: 0.95em;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-cell {
+    padding: 7px 8px;
+    font-size: inherit;
+    line-height: 1.15;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell {
+    background: rgba(14,165,164,0.01);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+    background: rgba(14,165,164,0.03);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-row:last-child .rg-cell {
+    border-bottom: none;
+  }
+}
+
+/* print-friendly tweaks */
+@media print{
+  .responsive-grid .rg-row { page-break-inside: avoid; }
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell::before { content: ""; } /* remove labels for print */
+}
+
+/* Very small devices: tighten further */
+@media (max-width:420px){
+  .responsive-grid{
+    font-size: clamp(11px, 3.0vw, 13px);
+  }
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header{
+    grid-template-columns: 1.15fr 0.95fr 0.85fr 0.8fr 0.8fr;
+  }
+  .responsive-grid .rg-cell{
+    padding:6px 6px;
+  }
+}
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+
+.responsive-grid.rg-3col .rg-row,
+.responsive-grid.rg-3col .rg-header {
+  grid-template-columns: 1fr 1fr 1fr; /* Person | Forms | Dative / Possessive */
+  align-items: start;
+}
+
+/* tighten spacing for dense content */
+.responsive-grid.rg-3col .rg-cell { padding: 10px 12px; }
+
+/* allow this grid to be a bit narrower when side-by-side */
+.responsive-grid.rg-3col { max-width: 720px; }
+
+/* stack into single column on small screens (keeps data-label semantics) */
+@media (max-width: 640px) {
+  .responsive-grid.rg-3col .rg-row,
+  .responsive-grid.rg-3col .rg-header {
+    grid-template-columns: 1fr;
+  }
+  .responsive-grid.rg-3col { max-width: none; }
+}
+  </style>
+
+</head>
+<body>
+
+
+  <div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+          <a href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+          <a href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+          <a href="/mutations.html">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop.html">Aesop Stories</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1a">1.2.2.1a Verb Meanings and Objects</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#participles">1.2.2.3b Participles: Voice, Time, and Agreement</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3c">1.2.2.3c Passive and Impersonal Constructions</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3d">1.2.3.3d Possessives and Adjectives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1a">1.2.4.1a Lists of Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1b">1.2.4.1b Adjectives Before Nouns</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2a">1.2.4.2a Existence and Location</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2b">1.2.4.2b Adjectives After Predicate Verbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3c">1.2.4.3c Names and Historical Usage</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5c">1.2.5c The Meanings of By and Through</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2b">1.2.5.2b Longer Genitive Chains</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3b">1.2.5.3b What Does the Phrase Describe?</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1b">1.2.6.1b Conditional Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2d">1.2.6.2d Demonstratives with Relative Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+
+  <div class="site">
+    <main class="main-center" role="main" aria-labelledby="page-title">
+      <h1 id="page-title">Sindarin Crash Course</h1>
+      <div class="byline">Lessons, exercises, tools, and deep dives into Tolkien’s linguistic craft.</div>
+
+      <div class="hero" role="region" aria-label="Course hero">
+        <div>
+          <div style="font-size:1.07em;margin-bottom:0.4em;">by Rínor</div>
+          <div style="margin-bottom:0.6em;">
+            Illustration by <a href="https://www.instagram.com/lucille_gianna_art/" target="_blank" rel="noopener noreferrer">@lucille_gianna_art</a>.
+          </div>
+          <a href="/celebrinor" style="display:inline-block; text-decoration:none;">
+            <img src="Celebrinor.png" alt="Six-pointed star emblem">
+          </a>
+        </div>
+
+        <div style="flex:1; min-width:220px;">
+          <ul class="intro-list" aria-live="polite">
+            <li><strong>What is Sindarin?</strong> Tolkien’s “Common Elven” language of Middle-earth.</li>
+            <li><strong>Who is this course for?</strong> Beginners and enthusiasts; no prior Elvish experience needed.</li>
+            <li><strong>What makes Sindarin tricky?</strong> It’s incomplete, irregular, and full of mutations unlike English.</li>
+            <li><strong>What do you get?</strong> Lessons, exercises, tools, and deep dives into Tolkien’s linguistic craft.</li>
+            <li><strong>Inspired by</strong> <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Introductory Quenya</a> and other resources.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" role="status">
+        <strong>Disclaimer:</strong> I am not an expert in Sindarin, nor do I claim to be. This site is a learning project and may have errors or omissions; please let me know if you spot any! If a topic is unclear or needs more research, I can bring it up with others on <a href="https://discord.com/invite/elvish" target="_blank"><b>Vinyë Lambengolmor</b></a>. Remember: Sindarin is not a fully developed language, there’s always more to learn.
+      </div>
+
+      <section>
+      <h2 id="1.1">1.1 Introduction to the Lessons</h2>
+      <nav class="lesson-contents" aria-label="Introduction contents">
+      <ul>
+          <li><strong><a href="#1.1.1">1.1.1 History of Sindarin</a></strong></li>
+          <li><strong><a href="#pronunciation">1.1.1a Pronunciation and Spelling</a></strong></li>
+          <li><strong><a href="#further-reading">1.1.1b Further Reading</a></strong></li>
+          <li><strong><a href="#1.1.2">1.1.2 Mutations of Sindarin</a></strong></li>
+        </ul>
+      </nav>
+      <p>
+        This course explores Sindarin, an Elvish language created by J.R.R. Tolkien, prominently featured in his Middle-earth saga. Sindarin, often termed “<b>Common Elven</b>,” contrasts with the “<b>High Elven</b>” tongue Quenya. Originating with the Elves of Beleriand, Sindarin evolved in Middle-earth, distinct from the Quenya spoken across the Sea. Its rich history includes adoption by the Dúnedain and influence on placenames like Minas Tirith. This course requires no prior knowledge of Elvish languages, but learning its grammar takes practice.
+      </p>
+      <p>
+        The lessons introduce grammar, sound mutations, and the patterns behind Tolkien’s linguistic design. Because the surviving material is incomplete, learning Sindarin also means understanding where the evidence ends and interpretation begins.
+      </p>
+      <p>
+        If you want a quick overview of what Sindarin is like, check out the <a href="https://eldamo.org/content/words/word-1765108261.html" target="_blank"><b>basic grammar</b></a> entry in the Eldamo lexicon. Also check out Celephinnel's <a href="https://sindarin.elvish.nz">site</a>.
+      </p>
+      <p>
+        Please note that there are many outdated and inaccurate resources out there. For those considering tattoos, remember: the language is incomplete and new discoveries can change things. Most recommend writing English in Tengwar script instead. If you want a Sindarin name, learn the basics first, or ask on one of the linked sites.
+      </p>
+    </section>
+
+    <section>
+      <h3 id="1.1.1">1.1.1 History of Sindarin</h3>
+      <p>
+        Sindarin, the language of the Grey Elves of Middle-earth, has its roots in the <em><b>Common Quenderin</b></em> language, first spoken by the Elves at <a href="https://eldamo.org/content/words/word-3051814975.html" target="_blank"><em><b>Cuiviénen</b></em></a> (S. <a href="https://eldamo.org/content/words/word-2157324901.html" target="_blank"><em><b>Nen Echui</b></em></a>). It evolved from the dialect of the <a href="https://eldamo.org/content/words/word-933169263.html" target="_blank"><em><b>Teleri</b></em></a>, the third tribe of Elves. The language's development reflects the Elves' complex history, including the division of the Teleri and the emergence of the Sindar in Beleriand.
+      </p>
+      <p>
+        During the ancient Telerin period, the language began diverging, especially when a faction led by <a href="https://eldamo.org/content/words/word-3592046417.html" target="_blank"><em><b>Elwë</b></em></a> (<a href="https://eldamo.org/content/words/word-3589954001.html" target="_blank"><em><b>Thingol</b></em></a>) remained in Middle-earth. This group, the Sindar, saw their language evolve independently. Despite later influence from Noldorin exiles and wars with Morgoth, Sindarin remained the dominant Elvish tongue in western Middle-earth.
+      </p>
+      <p>
+        Sindarin’s linguistic journey is marked by several periods: <strong>Common Quenderin</strong>, <strong>Common Eldarin</strong>, <strong>Ancient Telerin</strong>, and <strong>Old Sindarin</strong>. The <strong>Late Sindarin</strong> period, spanning the Second and Third Ages, is notable for stability, possibly influenced by the Elven Rings.
+      </p>
+      <p>
+        Tolkien’s notes highlight Sindarin’s gradual dominance and rich evolution. This course offers a guided tour of its history and significance in Tolkien’s world.
+      </p>
+    </section>
+
+    <section aria-labelledby="pronunciation">
+      <h3 id="pronunciation">1.1.1a Pronunciation and Spelling</h3>
+      <p>
+        The course uses Roman letters. Acute accents and circumflexes mark vowel length; keep them when copying a word. Stress is governed by the syllable pattern, so an accent is not simply a stress mark.
+      </p>
+      <div class="responsive-table">
+        <table class="pronunciation-table">
+          <caption>A few sounds to learn before the first lesson</caption>
+          <thead>
+            <tr><th scope="col">Spelling</th><th scope="col">Sound</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">a, e, i, o, u</th><td>Steady vowels: roughly ah, eh, ee, oh, oo.</td></tr>
+            <tr><th scope="row">y</th><td>A vowel like French u or German ü: say ee with rounded lips.</td></tr>
+            <tr><th scope="row">c, g</th><td>Hard sounds, as in English cat and get.</td></tr>
+            <tr><th scope="row">ch</th><td>The sound in Scottish loch, represented by IPA [x].</td></tr>
+            <tr><th scope="row">th, dh</th><td>Respectively the consonant sounds in thin and this.</td></tr>
+            <tr><th scope="row">Final f; ph</th><td>Final f sounds like v. The spelling ph represents an f sound.</td></tr>
+            <tr><th scope="row">Initial i before a vowel</th><td>The consonant sound at the beginning of yes, IPA [j].</td></tr>
+            <tr><th scope="row">ñ / ng</th><td>ñ represents [ŋ], the final sound in sing. The spelling ng can be ambiguous; check its historical form and context.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="source-note">
+        For vowel lengths, diphthongs, and further spelling details, see <a href="https://eldamo.org/content/words/word-4127298049.html" target="_blank" rel="noopener noreferrer">Eldamo’s pronunciation and transcription guide</a>, which discusses Tolkien’s Appendix E.
+      </p>
+      <h4>Finding the stressed syllable</h4>
+      <p>
+        In a two-syllable word, stress the first syllable. With three or more syllables, stress the second-to-last if it has a long vowel, a diphthong, or a vowel followed by two or more consonants; otherwise stress the third-to-last. Count sounds: <b>th</b>, <b>dh</b>, and <b>ch</b> each represent one consonant. Medial <b>m</b> and <b>ph</b> need special attention because of their historical length.
+      </p>
+      <p class="source-note">
+        Read the <a href="https://eldamo.org/content/words/word-2360883551.html" target="_blank" rel="noopener noreferrer">full stress explanation</a>, or explore a form with the <a href="/stress">Sindarin Stress Analyzer</a>.
+      </p>
+    </section>
+
+    <section aria-labelledby="further-reading">
+      <h3 id="further-reading">1.1.1b Further Reading</h3>
+      <p>The lessons introduce a consistent set of course choices. For the evidence and historical questions behind them, explore the <a href="https://wiki.nolmar.org/books/sindarin/chapter/essays">Sindarin essays at Nolmar</a>.</p>
+      <ul>
+        <li><b>Names and grammar:</b> the lesson on <a href="/1.2.4.html#1.2.4.3c">Names and Historical Usage</a> explains how to approach established names alongside the course patterns.</li>
+        <li><b>Advanced sound history:</b> Paul Strack's <a href="https://wiki.nolmar.org/books/sindarin/page/vocalization-of-spirants-in-sindarin-and-noldorin">Vocalization of Spirants in Sindarin and Noldorin</a> investigates how certain consonants developed into vowel sounds. Its historical proposals distinguish stages of Tolkien's languages; they are not additional sentence-level rules for the mutation chart below.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3 id="1.1.2">1.1.2 Mutations of Sindarin</h3>
+      <p>
+        <strong>Vowel changes</strong> help form many noun plurals. In English, “man” becomes “men”; Sindarin also uses vowel changes in plural formation. For example, <b><i>adan</i></b> (man) becomes <b><i>edain</i></b> (men). Some plurals are unchanged, irregular, or affected by the word’s history. Class plurals have their own formations. The noun lesson explains these patterns in more detail.
+      </p>
+      <p>
+        <strong>Initial-consonant mutation</strong> is a separate process: a word’s beginning changes because of its grammatical environment. For instance, adjectives after nouns may change their initial consonant: “the great man” is <b><i>i adan veleg</i></b>; “the great men” is <b><i>in edain velig</i></b>.
+      </p>
+      <p class="course-note">
+        <strong>Vocalic mutation</strong> is another name for <strong>soft consonant mutation</strong>; it is distinct from the vowel changes used in forming plurals.
+      </p>
+      <p>
+        <b>Prestennith Gelyf “Mutations of Consonants”:</b> Soft and nasal mutations are the best starting points. This introductory chart also includes mixed mutation. Stop, liquid, and sibilant mutation are covered by the <a href="/mutations.html">full chart and tool</a>.
+      </p>
+      <div class="responsive-table" role="region" aria-label="Introductory consonant mutation chart" tabindex="0">
+        <table class="mutation-summary" aria-describedby="mutation-notes">
+        <caption>Read this summary with the spelling and historical notes below.</caption>
+        <thead>
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Base</th>
+          <th scope="col">Soft / vocalic</th>
+          <th scope="col">Nasal</th>
+          <th scope="col">Mixed</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><b>Voiceless </b></td>
+          <td><i>p-, t-, c-</i></td>
+          <td><i>b-, d-, g-</i></td>
+          <td><i>ph-, th-, ch-</i></td>
+          <td><i>b-, d-, g-</i></td>
+        </tr>
+        <tr>
+          <td><b>Voiced </b></td>
+          <td><i>b-, d-, g-</i></td>
+          <td><i>v-, dh-, ’-</i></td>
+          <td><i>m-, n-, ñ-</i> (or <i>ng-</i>)</td>
+          <td><i>b-, d-, g-</i></td>
+        </tr>
+        <tr>
+          <td><b>Nasalized </b></td>
+          <td><i>[m]b-, [n]d-, [n]g-</i></td>
+          <td><i>m(b)-, n(d)-, ñ(g)-</i></td>
+          <td><i>mb-, nd-, ng-</i></td>
+          <td><i>mb-, nd-, ng-</i></td>
+        </tr>
+        <tr>
+          <td><b>Spirants</b></td>
+          <td><i>s-, h-</i></td>
+          <td><i>h-, ch-</i></td>
+          <td><i>s-</i> (no change), <i>ch-</i></td>
+          <td><i>h-, ch-</i></td>
+        </tr>
+        <tr>
+          <td><b>Voiceless †</b></td>
+          <td><i>lh-, rh-</i></td>
+          <td><i>thl-, thr-</i></td>
+          <td><i>thl-, thr-</i></td>
+          <td><i>thl-, thr-</i></td>
+        </tr>
+        <tr>
+          <td><b>Nasals</b></td>
+          <td><i>m-</i></td>
+          <td><i>v-</i></td>
+          <td><i>m-</i> (no change)</td>
+          <td><i>m-</i> (no change)</td>
+        </tr>
+      </tbody>
+</table>
+      </div>
+
+      <div id="mutation-notes">
+        <h4>Reading the chart</h4>
+        <dl class="notation-list">
+          <dt>Historical initials: [m]b-, [n]d-, [n]g-</dt>
+          <dd>The brackets identify an older nasal-plus-stop beginning. Even when a dictionary form begins with b-, d-, or g-, its mutation may follow this historical series.</dd>
+          <dt>Parentheses and restored spellings</dt>
+          <dd>Forms such as m(b)-, n(d)-, and ñ(g)- show reduced or restored spellings. Retaining mb-, nd-, and ñg- makes the historical initial visible. These are spelling alternatives within a mutation class.</dd>
+          <dt>The apostrophe ’</dt>
+          <dd>In this chart it marks the loss of an initial consonant. It does not tell you to add another consonant sound.</dd>
+          <dt>The dagger † and later usage</dt>
+          <dd>The thl-/thr- outcomes shown for lh-/rh- are archaic. Later Sindarin generally retains lh-/rh- without mutation. The change m- to v- may also be optional or absent in later usage, particularly with adjectives.</dd>
+        </dl>
+        <p class="course-note">
+          The <a href="/mutations.html">full mutation chart and tool</a> includes further historical notes and instructions for entering historical initials.
+        </p>
+      </div>
+
+      <p>Next, the noun lesson explains ordinary plurals, class plurals, irregular forms, and definite articles.</p>
+      
+      <div class="cta-row"> <a href="/1.2.1.html" class="primary">1.2.1 Emith (Nouns) →</a> <div style="flex:1"></div> </div>
+    
+
+    </section>
+
+    <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+  </main>
+  </div>
+
+  <script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            // On mobile, treat as accordion; on desktop allow open/close
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Make sure the panel doesn't overflow off the right edge of the viewport
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    // (This replaces per-dropdown identical listeners to avoid N duplicate handlers.)
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+
+    /* FALLBACK: intercept anchors if browser doesn't support scroll-margin/scroll-padding */
+    (function anchorOffsetFallback(){
+      const testEl = document.createElement('div');
+      const supportsScrollMargin = ('scrollMarginTop' in testEl.style) || ('scrollMargin' in testEl.style);
+      if (supportsScrollMargin) return;
+
+      const anchors = Array.from(document.querySelectorAll('a[href^="#"]')).filter(a => a.hash && a.hash.length > 1);
+      if (!anchors.length) return;
+
+      function getNavHeight() {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-height').trim();
+        const n = parseFloat(raw);
+        return isNaN(n) ? 72 : n;
+      }
+
+      anchors.forEach(a => {
+        a.addEventListener('click', function(ev) {
+          if (!this.hash) return;
+          const id = this.hash.slice(1);
+          const target = document.getElementById(id);
+          if (!target) return;
+          ev.preventDefault();
+          const navH = getNavHeight() + 12;
+          const top = target.getBoundingClientRect().top + window.scrollY - navH;
+          window.scrollTo({ top, behavior: 'smooth' });
+          try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = '#' + id; }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

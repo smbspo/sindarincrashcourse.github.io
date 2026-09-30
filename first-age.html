@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Timeline/First Age</title>
+ 
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+  font-size: 11px;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 0.72em;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+.div-table {
+  border: 1px solid rgba(0,0,0,0.04);            /* lighter frame like your grid */
+  border-radius: 10px;                            /* match grid-table */
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);      /* match grid-table */
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  color: var(--text);
+  font-size: 14px;                                /* consistent with tbody td */
+}
+
+/* header + rows share the same grid */
+.div-table .row {
+  display: grid;
+  grid-template-columns: 55px 1.35fr 1.35fr 1.35fr; /* keep your original column layout */
+}
+
+/* cells */
+.div-table .cell {
+  padding: 10px;                                  /* slightly adjusted to match grid-table */
+  line-height: 1.2;
+  min-width: 0;
+}
+
+/* header styling — using the same gradient & foreground as thead th */
+.div-table .row.head {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* row / cell dividers use the subtle rgba border */
+.div-table .row:not(.head) {
+  background: transparent;
+}
+.div-table .row:not(:last-child) .cell {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.div-table .cell:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+/* optional: keep the # column visually compact */
+.div-table .cell.num {
+  white-space: nowrap;
+}
+
+/* hover — whole row subtle glow (from tbody tr:hover td) */
+.div-table .row:hover > .cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* active/hovered cell stronger focus (optional) */
+.div-table .cell:hover {
+  background: rgba(14,165,164,0.10);
+}
+
+/* responsive: stack into "cards" on narrow screens */
+@media (max-width: 720px) {
+  .div-table .row {
+    grid-template-columns: 1fr;
+  }
+
+  .div-table .row.head {
+    display: none; /* hide header row on mobile */
+  }
+
+  .div-table .cell {
+    border-right: none !important;
+  }
+
+  .div-table .row:not(:last-child) .cell:last-child {
+    border-bottom: none;
+  }
+
+  .div-table .row {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .div-table .row:last-child {
+    border-bottom: none;
+  }
+
+  /* labels for mobile */
+  .div-table .cell[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--accent);
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course — by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Present Continuous</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Future, Past</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.5">1.2.2.5 Section Summary</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">Object &amp; Independent</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">Section Summary</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives &amp; Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Directional and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunction
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.5">1.2.5.5 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html#chart">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+  
+  <main class="main-center" role="main">
+  
+    <h3 id="1">Ior Lû/Andrann Vinui</h3>
+     <div>en·<a href="https://tolkiengateway.net/wiki/First_Age">Andrann Vinui</a> iesta vo <a href="https://tolkiengateway.net/wiki/Awakening_of_the_Elves">Echui in·Edhelrim</a> v’ <a href="https://tolkiengateway.net/wiki/Years_of_the_Trees">În i·Ñgaladhad</a> <a href="https://tolkiengateway.net/wiki/Year_of_the_Trees_1050">1050</a>, ach in·În hain delir vi <a href="https://tolkiengateway.net/wiki/Year_of_the_Trees_1500">1500</a> <a href="https://tolkiengateway.net/wiki/Years_of_the_Trees">(În i·Ñgaladhad)</a> vo echaded <a href="https://tolkiengateway.net/wiki/Moon">Ithil</a> ah <a href="https://tolkiengateway.net/wiki/Sun">Anor</a> vi had nan <a href="https://tolkiengateway.net/wiki/Years_of_the_Sun">În Anor</a>. To hath rodhaer nan en·Andrann Vinui bilebra 4,312 coranor fo eriad Anor vinui.
+    <br>
+  <i>The First Age begins with the Awakening of the Elves in the Years of the Trees 1050, but those years end in 1500 (The year of the Trees) with the forming of the Moon and Sun in place of the Year of the Sun. Thus the most part of the First Age equals 4,312 solar years before the first rising of the Sun.</i>
+  </div> 
+  
+<br>
+
+  <h3 id="1.1">În i·Ñgaladhad</h3>
+  <ul>
+  <li><strong>Back Translation: Years of the Trees</strong></li>
+  <li><strong><a href="https://tolkiengateway.net/wiki/Years_of_the_Trees">Original: Years of the Trees</a></strong></li>
+   </ul>
+
+ <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> I have taken liberties with names; some are not attested and are my attempts at bringing them into the Sindarin Language. I make all names that end in the Quenya -wë, into the Sindarin equivalent -w.
+  </div>
+
+   <div class="div-table">
+
+  <!-- Header -->
+  <div class="row head">
+    <div class="cell num nowrap">Year</div>
+    <div class="cell">Sindarin</div>
+    <div class="cell">Back Translation</div>
+    <div class="cell">Original</div>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="row" id="s1-1">
+    <div class="cell num nowrap"><strong>1050</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Varda">Gilbrennil</a> echant <a href="https://tolkiengateway.net/wiki/Valacirca">Cerch idh·Rodyn</a>. 144 in·<a href="https://tolkiengateway.net/wiki/Elves">Edhelrim</a> vinui (<a href="https://tolkiengateway.net/wiki/Minyar">Minyar</a> “Mínil”, <a href="https://tolkiengateway.net/wiki/Tatyar">Tatyar</a> “Golodhrim”, <a href="https://tolkiengateway.net/wiki/Nelyar">Nelyar</a> “Telerrim”) echuiar vi <a href="https://tolkiengateway.net/wiki/Cuivi%C3%A9nen">Nen Echui</a>. en·<a href="https://tolkiengateway.net/wiki/First_Age">Andrann Vinui</a> iesta. <a href="https://tolkiengateway.net/wiki/Melian">Melian</a> ‘lenna na <a href="https://tolkiengateway.net/wiki/Beleriand">Veleriand</a> ab amrad <a href="https://tolkiengateway.net/wiki/Taniquetil">Ras-Arphain</a> añ gened i·ñgîl.</div>
+    <div class="cell" data-label="Back Translation">Varda forms [the] Valacirca. 144 of the First Elves (Minyar, Tatyar, and Nelyar) awaken in Cuiviénen. The First Age begins. Melian travels to Beleriand after she climbs Taniquetil to see the stars.</div>
+    <div class="cell" data-label="Original">Varda forms the Valacirca. The first 144 Elves (Minyar, Tatyar, and Nelyar) awake in Cuiviénen. The First Age begins. Melian travels to Beleriand after ascending Taniquetil to see the stars.</div>
+  </div>
+
+  <!-- 1.2 -->
+  <div class="row" id="s1-2">
+    <div class="cell num nowrap"><strong>1080</strong></div>
+    <div class="cell" data-label="Sindarin">Ethir Belegûr hirir in·Edhelrim a bauliar din. Te garui dri mbaul Belegûr i edonnant in·<a href="https://tolkiengateway.net/wiki/Orcs">Yrch</a> vinui.</div>
+    <div class="cell" data-label="Back Translation">Spies [of] Melkor found the Elves and torment them. It [is] possible through [the] torment [of] Melkor that born [were] the first Orcs.</div>
+    <div class="cell" data-label="Original">Spies of Melkor discover the Elves and afflict them. It is possible through the torture of Melkor that Orcs are first created.</div>
+  </div>
+
+  <!-- 1.3 -->
+  <div class="row" id="s1-3">
+    <div class="cell num nowrap"><strong>1085</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Orom%C3%AB">Araw</a> chîr in·<a href="https://tolkiengateway.net/wiki/Elves">Edhelrim</a>, ah esta din <a href="https://tolkiengateway.net/wiki/Eldar">“Eldar”</a> Thossui Araw in·Edhelrim a rhubedir den an dass <a href="https://tolkiengateway.net/wiki/Morgoth">Belegûr</a>.</div>
+    <div class="cell" data-label="Back Translation">Orome finds the Elves, and he calls them [the] Eldar. Afraid [of] Orome [are] the Elves and they blame him for [the] work [of] Melkor.</div>
+    <div class="cell" data-label="Original">Oromë discovers the Elves, and calls them the Eldar. The Eldar are afraid of Oromë and blame him for Melkor's work.</div>
+  </div>
+
+  <!-- 1.4 -->
+  <div class="row" id="s1-4">
+    <div class="cell num nowrap"><strong>1086</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Orom%C3%AB">Araw</a> râdh na <a href="https://tolkiengateway.net/wiki/Valinor">Ndor-Rodyn</a> a phêd n’ i·mbilbin<sup class="fn">1</sup> dín oh Eruchîn, faw<sup class="fn">2</sup> râdh n’  in·<a href="https://tolkiengateway.net/wiki/Elves">Edhelrim</a> lo idh·Rodyn geriar e·vent dín.</div>
+    <div class="cell" data-label="Back Translation">Orome returns to Valinor and speaks to his peers about [the] Children of Ilúvatar, before he returns to the Elves while the Valar ponder his message.</div>
+    <div class="cell" data-label="Original">Oromë returns to Valinor and witnesses to his peers about the Children of Ilúvatar, then returns to the Elves while the Valar consider his message.</div>
+  </div>
+
+  <!-- 1.5a -->
+  <div class="row" id="s1-5a">
+    <div class="cell num nowrap"><strong>1090</strong></div>
+    <div class="cell" data-label="Sindarin"> idh·<a href="https://tolkiengateway.net/wiki/Valar">Rodyn</a> ndagrar <a href="https://tolkiengateway.net/wiki/Morgoth">Mbelegûr</a> vi <a href="https://tolkiengateway.net/wiki/Battle_of_the_Powers">Ndagor idh·Rodyn</a>. Felais Beleriand echanner a chuif echanner vi Forod. Tr’ in·în ebir, orthúrer Mbelegûr ah arodh n’ <a href="https://tolkiengateway.net/wiki/Utumno">Udûn</a>.</div>
+    <div class="cell" data-label="Back Translation">The Valar battle Melkor in Battle [of] the Valar. [The] shores [of] Beleriand formed and bays formed in [the] North. Through the following years, they conqured Melkor and he retreted to Utumno.</div>
+    <div class="cell" data-label="Original">The Valar make war on Melkor in the Battle of the Powers. The shores of Beleriand are formed and bays are created on the North. Over the next two years, Melkor is defeated and retreats into Utumno.</div>
+  </div>
+
+  <!-- 1.5b -->
+  <div class="row" id="s1-5b">
+    <div class="cell num nowrap"><strong>1092</strong></div>
+    <div class="cell" data-label="Sindarin">Aethas Udûn iesta. Gobammen Amar; aliavren Forod a lhannen ‘aear.</div>
+    <div class="cell" data-label="Back Translation">[The] siege of Utumno begins. Shaken [is the] Earth; barren [is the] North and extended [is the] sea.</div>
+    <div class="cell" data-label="Original">The siege of Utumno begins. The earth is shaken; the North is desolated and the Sea widened.</div>
+  </div>
+
+  <!-- 1.6 -->
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1099</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Battle_of_the_Powers">Dagor idh·Rodyn</a> dêl lo idh·Rodyn ennerir bernais<sup class="fn">3</sup> <a href="https://tolkiengateway.net/wiki/Utumno">Udûn</a>. <a href="https://tolkiengateway.net/wiki/Tulkas">Tolchas</a> ‘âd <a href="https://tolkiengateway.net/wiki/Morgoth">Mbelegûr</a> a gwêdh den vo <a href="https://tolkiengateway.net/wiki/Angainor">“Angainor”</a>. Ú-‘edir <a href="https://tolkiengateway.net/wiki/Sauron">Thauron.</a></div>
+    <div class="cell" data-label="Back Translation">[The] Battle [of] the Valar ends while the Valar attack [the] defences [of] Utumno. Tulkas catches Melkor and binds him with Angainor. They do not catch Sauron.</div>
+    <div class="cell" data-label="Original">The Battle of the Powers ends as the Valar storm the final defences of Utumno. Tulkas captures Melkor and binds him with Angainor. Sauron evades capture.</div>
+  </div>
+
+<div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1100</strong></div>
+    <div class="cell" data-label="Sindarin">idh·Rodyn redhiar <a href="https://tolkiengateway.net/wiki/Morgoth">Mbelegûr</a> na Ndor-Rodyn, bedhir den a chedir den vi <a href="https://tolkiengateway.net/wiki/Halls_of_Mandos">Them Bannos</a> an Endrain idh·Rodyn neledh (300 ennin).</div>
+    <div class="cell" data-label="Back Translation">The Valar return Melkor to Valinor, they judge him and throw him in [the] Halls of Mandos for three Ages of the Valar (300 Valian Years).</div>
+    <div class="cell" data-label="Original">Melkor is brought back to Valinor, judged and cast into the Halls of Mandos for three Ages of the Valar (300 Valian Years).</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1101</strong></div>
+    <div class="cell" data-label="Sindarin">idh·<a href="https://tolkiengateway.net/wiki/Valar">Rodyn</a> hevir chûd o beriad <a href="https://tolkiengateway.net/wiki/Children_of_Il%C3%BAvatar">Eruchîn</a> a thannar toged din na Ndor-Rodyn. Araw geda<sup class="fn">4</sup> e·nachof<sup class="fn">5</sup> hen n’ in·Edhelrim.</div>
+    <div class="cell" data-label="Back Translation">The Valar have [an] assembly about [the] protecting [of the] Children of Ilúvatar and they decide to bring them to Valinor. Orome offers this summons to the Elves.</div>
+    <div class="cell" data-label="Original">The Valar make council about the protection of the Children of Ilúvatar and decide to bring them to Valinor. Oromë extends this invitation to the Elves.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1102</strong></div>
+    <div class="cell" data-label="Sindarin">in·Edhelrim u-‘wathar <a href="https://tolkiengateway.net/wiki/Cuivi%C3%A9nen">Nen Echui</a>. Araw nachaf enphin<sup class="fn">6</sup> neledh, <a href="https://tolkiengateway.net/wiki/Ingw%C3%AB">Ingw</a>, <a href="https://tolkiengateway.net/wiki/Finw%C3%AB">Finw</a> and <a href="https://tolkiengateway.net/wiki/Elw%C3%AB" class="mw-redirect">Elw</a> toled na Ndor-Rodyn vo en·estel i pelir sothad<sup class="fn">7</sup> i·ñgwaith dín toled eithro.</div>
+    <div class="cell" data-label="Back Translation">The Elves will not leave Cuiviénen. Orome summons three ambassadors, Ingwe, Finwe and Elwe to come to Valinor with the hope that they can convice their people to come also.</div>
+    <div class="cell" data-label="Original">The Elves are unwilling to leave Cuiviénen. Oromë invites three Elven ambassadors, Ingwë, Finwë and Elwë to come to Valinor with the hope that they can convince their people to come as well.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1104</strong></div>
+    <div class="cell" data-label="Sindarin">in·Enphin redhir na <a href="https://tolkiengateway.net/wiki/Cuivi%C3%A9nen">Nen Echui</a> a mebedir in·Edhelrim radhed ‘u din na Ndor-Rodyn.</div>
+    <div class="cell" data-label="Back Translation">The ambassadors return to Cuiviénen and ask the Elves to retun together with them to Valinor.</div>
+    <div class="cell" data-label="Original">The ambassadors return to Cuiviénen and invite the Elves to return with them to Valinor.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1105</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Sundering_of_the_Elves">Echui in·Edhelrim</a> vinui na <a href="https://tolkiengateway.net/wiki/Cuivi%C3%A9nen">Nen Echui</a>. i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> ephedir Ingw, i·<a href="https://tolkiengateway.net/wiki/Noldor">Ñgolodhrim</a> ephedir <a href="https://tolkiengateway.net/wiki/Finw%C3%AB">Finw</a> a i·<a href="https://tolkiengateway.net/wiki/Teleri">Thelerrim</a> ephedir Elw a <a href="https://tolkiengateway.net/wiki/Olw%C3%AB">Olw</a> gwaer. in·<a href="https://tolkiengateway.net/wiki/Avari">Evair</a> ephedir <a href="https://tolkiengateway.net/wiki/Morw%C3%AB">Morw</a> a <a href="https://tolkiengateway.net/wiki/Nurw%C3%AB">Nurw</a>, a rhethir vi Nen Echui. in·<a href="https://tolkiengateway.net/wiki/Eldar">Edhelrim</a> ‘lennar bela <a href="https://tolkiengateway.net//wiki/Sea_of_Helcar">Gaear Helchar</a> a phernar na rhûn. Edhelrim nodui ‘ostanner ysp oeth ah aródher na Nen Echui.</div>
+    <div class="cell" data-label="Back Translation">First Awakening [of] the Elves at Cuiviénen. The Vanyar follow Ingwe, the Noldor follow Finwe and the Teleri follow Elwe and Olwe depart. The Avari follow Morwe and Nurwe, and stay in Cuiviénen. The Elves travel along [the] Sea of Helcar and turn to [the] west. Some Elves fear [the] smokes [of] war and return to Cuiviénen.</div>
+    <div class="cell" data-label="Original">First Sundering of the Elves at Cuiviénen. The Vanyar led by Ingwë, the Noldor led by Finwë and the Teleri led by Elwë and Olwë depart. The Avari, led by Morwë and Nurwë, stay in Cuiviénen. The Eldar pass Sea of Helcar and turn west. Some are terrified by the smokes of war and go back.</div>
+  </div>
+  
+    <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1115</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Sundering_of_the_Elves">Echui in·Edhelrim</a> dadui: in·<a href="https://tolkiengateway.net/wiki/Eldar">Edhelrim</a> athradar <a href="https://tolkiengateway.net/wiki/Mirkwood">Eryn Galen</a> a thelir n’ <a href="https://tolkiengateway.net/wiki/Anduin">Anduin</a>. i·Thelerrim verir darthad ennas, añ gostanner <a href="https://tolkiengateway.net/wiki/Misty_Mountains">Hithaeglir</a>. <a href="https://tolkiengateway.net/wiki/Nandor">Sath i·Thelerrim</a> (i·Ndanathrim) glennar na charad i aphanner <a href="https://tolkiengateway.net/wiki/Lenw%C3%AB">Lenu</a>.</div>
+    <div class="cell" data-label="Back Translation">Second Awakening [of] the Elves: The Elves cross Greenwood the Great and come to [the] River Anduin. The Teleri wish to stay there, for they fear [the] Hithaeglir. Part [of] the Teleri (the Nandor) travel to [the] south who followed Lenwe.</div>
+    <div class="cell" data-label="Original">Second Sundering of the Elves: The Eldar host passes Greenwood the Great and comes to the River Anduin. The Teleri wish to stay there, terrified by the Hithaeglir. A part of them go south led by Lenwë.</div>
+  </div>
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1125</strong></div>
+    <div class="cell" data-label="Sindarin">i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> a <a href="https://tolkiengateway.net/wiki/Noldor">Golodhrim</a> minnar <a href="https://tolkiengateway.net/wiki/Beleriand">Veleriand</a>; sai cho<sup class="fn">8</sup> din athradar <a href="https://tolkiengateway.net/wiki/Sirion">Sirion</a> a thelir n’ i·felais. Araw ‘lenna n’ Avon añ goras.</div>
+    <div class="cell" data-label="Back Translation">The Vanyar and Noldor enter Beleriand; those in front of them cross Sirion a come to the shores. Orome goes to Aman for advise.</div>
+    <div class="cell" data-label="Original">The Vanyar and Noldor enter Beleriand; the foremost of them pass Sirion and reach the shores. Oromë goes to Aman for counsel.</div>
+  </div>
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1128</strong></div>
+    <div class="cell" data-label="Sindarin">i·Thelerrim avol eithro telir na Veleriand a dorthar na rhun <a href="https://tolkiengateway.net/wiki/Gelion">Gelion</a>. Elu gên lae lui Finu vi nduir i·Ñgolodhrim ias<sup class="fn">10</sup> ad estar din <a href="https://tolkiengateway.net/wiki/Neldoreth" class="mw-redirect">Neldoreth</a> a <a href="https://tolkiengateway.net/wiki/Region" class="mw-redirect">Gardh</a>.</div>
+    <div class="cell" data-label="Back Translation">The unwilling Teleri come also to Beleriand and dwell to [the] east [of] Gelion. Elwe sees a great number [of] times Finu in [the] lands of the Noldor where after they call it Neldoreth.</div>
+    <div class="cell" data-label="Original">The unwilling Teleri also come to Beleriand and dwell east of Gelion. Elwë often visits Finwë in the lands of the Noldor where later will be the forests of Neldoreth and Region.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1130</strong></div>
+    <div class="cell" data-label="Sindarin">Elw ‘ova Velian vi <a href="https://tolkiengateway.net/wiki/Nan_Elmoth">Nan Elmoth</a> ad arodh o chûd ‘u Finw. Duiar vi ôl.</div>
+    <div class="cell" data-label="Back Translation">Elwe meets Melian in Nan Elmoth after he returned from [a] gathering with Finwe.</div>
+    <div class="cell" data-label="Original">Elwë, returning from a meeting with Finwë, meets Melian in Nan Elmoth. They fall into a trance.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1132</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Ulmo">Núron</a> dôg <a href="https://tolkiengateway.net/wiki/Tol_Eress%C3%ABa">doll</a> na <a href="https://tolkiengateway.net/wiki/Bay_of_Balar">Gôf Balar</a>. i·Mínil a Golodhrim líthar e·thoss dín añ Gaear a belthar den lo i·Thelerrim rethir vi Veleriand cestad Elw. Lo gwaer e·doll râg ah air <a href="https://tolkiengateway.net/wiki/Isle_of_Balar">Dol Balar</a> levia<sup class="fn">9</sup>.
+     <br>
+      Ab Olw lhassa o lhedhu i·Mínil a Golodhrim, lae i·Thelerrim ephedir Olw n’ <a href="https://tolkiengateway.net/wiki/Mouths_of_Sirion">Ethir Sirion</a> ias<sup class="fn">10</sup> ‘ovar  <a href="https://tolkiengateway.net/wiki/Oss%C3%AB">‘Aerys</a> ah<a href="https://tolkiengateway.net/wiki/Uinen">Uinen</a>.</div>
+    <div class="cell" data-label="Back Translation">Ulmo brings [an] island to [the] Bay of Balar. The Vanyar and Noldor forget their fear for [the] Sea and sail upon it while the Teleri stay in Beleriand to search for Elwe. While they departed the island breaks and only [the] Island of Balar remains.<br>After Olwe hears about [the] departure of the Vanyar and Noldor, [a] great number of Teleri follow Olwe to [the] Mouths of Sirion where they meet Osse and Uinen.</div>
+    <div class="cell" data-label="Original">Ulmo brings an island to the Bay of Balar. The Vanyar and Noldor forget their fear for the Sea and embark upon it while the Teleri stay in Beleriand to look for Elwë. While departing, the island breaks and leaves the Isle of Balar behind.<br>
+After learning of the departure of the Vanyar and Noldor, Olwë leads some Teleri to the Mouths of Sirion where they meet Ossë and Uinen.</div>
+</div>
+
+ <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1133</strong></div>
+    <div class="cell" data-label="Sindarin">i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> a <a href="https://tolkiengateway.net/wiki/Noldor">Golodhrim</a> minnar <a href="https://tolkiengateway.net/wiki/Aman">Avon</a> a <a href="https://tolkiengateway.net/wiki/Valinor">Dor-Rodyn</a> a gerir <a href="https://tolkiengateway.net/wiki/Eldamar">Edhelvar</a>. idh·Rodyn lediar <a href="https://tolkiengateway.net/wiki/Calacirya">Cerch idh·Rodyn</a> vi Beluir añ <a href="https://tolkiengateway.net/wiki/Light_of_Valinor">Gelad idh·Rodyn</a> laded na Edhelvar ias<sup class="fn">10</sup> in·Edhelrim pelir cened i·ñgîl. in·Eldhelrim iestar adabad Amon <a href="https://tolkiengateway.net/wiki/T%C3%BAna">Tûn</a> a <a href="https://tolkiengateway.net/wiki/Tirion">Thirion</a> bo den ivil Cerch idh·Rodyn.</div>
+    <div class="cell" data-label="Back Translation">The Vanyar and Noldor enter Aman and Valinor and posses Eldamar. The Valar open Calacirya in [the] Pelóri for [the] Light of Valinor to extend to Eldamar. The Elves begin to build [the] Hill [of] Túna and Tirion on it inside [of] Calacirya.</div>
+    <div class="cell" data-label="Original">The Vanyar and Noldor enter Aman and Valinor and possess Eldamar. The Valar open the rift Calacirya in the Pelóri so that the Light of Valinor reaches Eldamar where the Elves may still see the stars. The Elves begin the building of the hill Túna and Tirion upon it inside Calacirya.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1140</strong></div>
+    <div class="cell" data-label="Sindarin">i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> and <a href="https://tolkiengateway.net/wiki/Noldor">Golodhrim</a> echírer <a href="https://tolkiengateway.net/wiki/Tirion">Dirion</a> a <a href="https://tolkiengateway.net/wiki/Mindon_Eldali%C3%A9va">Minas in·Edhelrim</a>. Lae i·Mínil anírar i·Ñgelaidh a menir na Ndor-Rodyn.</div>
+    <div class="cell" data-label="Back Translation">The Vanyar and Noldor found Tirion and Mindon Eldaliéva. [A] great number of Vanyar long for the Trees and go to Valinor.</div>
+    <div class="cell" data-label="Original">The Vanyar and Noldor found Tirion and Mindon Eldaliéva. Some Vanyar yearn for the Trees and move to Valinor.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1142</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Yavanna">Ivann</a> anna <a href="https://tolkiengateway.net/wiki/Galathilion">‘Alathilion</a> n’ i·<a href="https://tolkiengateway.net/wiki/Noldor">Ngolodhrim</a>.</div>
+    <div class="cell" data-label="Back Translation">Yavanna gives Galathilion to the Noldor.</div>
+    <div class="cell" data-label="Original">Yavanna gives the Noldor the White Tree.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1149</strong></div>
+    <div class="cell" data-label="Sindarin">Núron nachaf i·Thelerrim n’ Avon vi ndangweth añ cheved Finu. Ach ‘Aerys naena al líthad i·Thelerrim a sotha<sup class="fn">7</sup> lae din rethed ‘u den vi Veleriand. Si estar i·Falathrim, i abadar venel <a href="https://tolkiengateway.net/wiki/Brithombar">Brithombar</a> ah <a href="https://tolkiengateway.net/wiki/Eglarest">Eglarest</a>, cad, ah e·chîr dín <a href="https://tolkiengateway.net/wiki/C%C3%ADrdan">Círdan</a>. <a href="https://tolkiengateway.net/wiki/Oss%C3%AB">Gaerys</a> ñgoltha andin vaenas nan echaded i·chîr.</div>
+    <div class="cell" data-label="Back Translation">Ulmo summons the Teleri to Aman in answer to [the] praying [of] Finwe, But, Osse lements for [the] losing [of] the Teleri and persuade [a] great number [of] them to remain with him in Beleriand. These they call the Falathrim, who built [the] heavans [of] Brithombar and Eglarest after, and their lord Círdan. Osse teaches to them [the] craft of the making [of] ships.</div>
+    <div class="cell" data-label="Original">Ulmo summons the Teleri to Aman in answer to the prayers of Finwë. However, Ossë is grieved to lose the Teleri and persuades some to stay with him in Beleriand. These are called the Falathrim, who afterwards establish the havens of Brithombar and Eglarest, and whose lord is Círdan. Ossë teaches them shipcraft.</div>
+  </div>
+
+ <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1150</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Olw%C3%AB">Olw</a> a lhae i·Telerrim gwaer Veleriand bo <a href="https://tolkiengateway.net/wiki/Tol_Eress%C3%ABa">Eressai</a>. i·Thelerrim egil rethir cestad Elw ah estar din in·<a href="https://tolkiengateway.net/wiki/Eglath">Eglath</a>.</div>
+    <div class="cell" data-label="Back Translation">Olwe and [a] great number of Teleri leave Beleriand on Tol Eressea. The other Teleri remain to search for Elu and they call them the Eglath.</div>
+    <div class="cell" data-label="Original">Olwë and the most part of the Teleri leave Beleriand on Tol Eressëa. The rest of the Teleri remain to search for Elwë and are named the Eglath.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1151</strong></div>
+    <div class="cell" data-label="Sindarin">N’ ibed<sup class="fn">11</sup> i·<a href="https://tolkiengateway.net/wiki/Teleri">Thelerrim</a> i lhassanner nellain <a href="https://tolkiengateway.net/wiki/Oss%C3%AB">Gaerys</a>, <a href="https://tolkiengateway.net/wiki/Ulmo">Núron</a> dhâr Eressai eth <a href="https://tolkiengateway.net/wiki/Bay_of_Eldamar">Gôf Edhelvar</a>.</div>
+    <div class="cell" data-label="Back Translation">At [the] begging [of] the Teleri who heard [the] calls [of] Osse, Ulmo stops Tol Eressai outside [the] Bay [of] Eldamor.</div>
+    <div class="cell" data-label="Original">At the begging of the Teleri who heard the calls of Ossë, Ulmo halts Tol Eressëa outside the Bay of Eldamar.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1152</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Elw%C3%AB" class="mw-redirect">Elw</a> a <a href="https://tolkiengateway.net/wiki/Melian">Melian</a> echuiar o en·ôl dín. <a href="https://tolkiengateway.net/wiki/Elw%C3%AB" class="mw-redirect">Elw</a> ola Aran in·Edhelrim vi <a href="https://tolkiengateway.net/wiki/Beleriand">Veleriand</a>.</div>
+    <div class="cell" data-label="Back Translation">Elwe and Melian awaken from their dream. Elu becomes King of the Elves in Beleriand.</div>
+    <div class="cell" data-label="Original">Elwë and Melian awaken from their trance. Elwë becomes the King of the Elves in Beleriand.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1161</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Oss%C3%AB">Gaerys</a> ñgoltha i·<a href="https://tolkiengateway.net/wiki/Teleri">Thelerrim</a> adabad gîr; gwaer Eressai a thelir na Ndor-Rodyn. i·Thelerrim i thelir na Ndor-Rodyn ab estar i·<a href="https://tolkiengateway.net/wiki/Falmari">Falathrim</a>.</div>
+    <div class="cell" data-label="Back Translation">Osse teaches the Teleri to build ships; they depart Tol Eressea and come to Valinor. The Teleri who come to Valinor after they call the Falmari.</div>
+    <div class="cell" data-label="Original">Ossë teaches the Teleri how to build ships; they leave Tol Eressëa and come to Valinor. The Teleri who reach Valinor are afterwards named the Falmari.</div>
+  </div>
+
+<div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1162</strong></div>
+    <div class="cell" data-label="Sindarin">i·<a href="https://tolkiengateway.net/wiki/Teleri">Thelerrim</a> iestar adabad <a href="https://tolkiengateway.net/wiki/Alqualond%C3%AB">Alflon</a> ‘u ‘rest <a href="https://tolkiengateway.net/wiki/Finw%C3%AB">Finu</a>.</div>
+    <div class="cell" data-label="Back Translation">The Teleri begin to build Alqualonde with [the] aid [of] Finwe.</div>
+    <div class="cell" data-label="Original">The Teleri begin building Alqualondë with the help of Finwë.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1165</strong></div>
+    <div class="cell" data-label="Sindarin">i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> vedui ‘waer o <a href="https://tolkiengateway.net/wiki/Tirion">Dirion</a> dorthad vi <a href="https://tolkiengateway.net/wiki/Taniquetil">Ras-Arphain</a> ndúnen ‘u idh·Rodyn. i·<a href="https://tolkiengateway.net/wiki/Noldor">Ñgolodhrim</a> rethir vi Dirion a cherir ‘wind doeg n’ i·<a href="https://tolkiengateway.net/wiki/Teleri">Telerrim</a>.</div>
+    <div class="cell" data-label="Back Translation">The last Vanyar depart from Tirion to dwell in western Taniquetil with the Valar. The Noldor remain in Tirion and make strong bonds together with the Teleri.</div>
+    <div class="cell" data-label="Original">The last Vanyar depart from Tirion to live on western Taniquetil with the Valar. The Noldor remain in Tirion and develop stronger ties to the Teleri.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1169</strong></div>
+    <div class="cell" data-label="Sindarin">Onnad <a href="https://tolkiengateway.net/wiki/F%C3%ABanor">Faenor</a>, ion <a href="https://tolkiengateway.net/wiki/Finw%C3%AB">Finu</a> a <a href="https://tolkiengateway.net/wiki/M%C3%ADriel">Míriel</a>.
+    <br>Gyndain<sup class="fn">12</sup> na Nos Finu hirir vîr lo feleithasser.<br>
+   <a href="https://tolkiengateway.net/wiki/R%C3%BAmil_(elf_of_Tirion)">Rúmil o Dirion</a> câr i·thiw vinui (ce <a href="https://tolkiengateway.net/wiki/Sarati">“Sarati”</a>) a theitha lind a golw (ce <a href="https://tolkiengateway.net/wiki/Ainulindal%C3%AB_(R%C3%BAmil%27s_work)">Linnas in·Aeny</a>).</div>
+    <div class="cell" data-label="Back Translation">Birth [of] Faenor, son [of] Finwe a Míriel.<br>
+    Masons of [the] House [of] Finwe find gems while they minded.<br>
+    Rúmil of Tirion make the first letters (maybe [the] “Sarati”) and writes songs and wisdom (maybe [the] Ainulindale).</div>
+    <div class="cell" data-label="Original">Birth of Fëanor, son of Finwë and Míriel.
+    <br>Masons of the House of Finwë discover gems while quarrying.<br>
+    Rúmil of Tirion makes the first letters (possibly the Sarati) and records songs and wisdom (possibly the Ainulindalë).</div>
+  </div>
+  
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1170</strong></div>
+    <div class="cell" data-label="Sindarin">Gurth <a href="https://tolkiengateway.net/wiki/M%C3%ADriel">Míriel Therdis</a>.</div>
+    <div class="cell" data-label="Back Translation">Death [of] Míriel Serindë</div>
+    <div class="cell" data-label="Original">Death of Míriel Serindë.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1172</strong></div>
+    <div class="cell" data-label="Sindarin">Echannen<sup class="fn">13</sup><a href="https://tolkiengateway.net/wiki/Statute_of_Finw%C3%AB_and_M%C3%ADriel">Amarth Manu</a>.</div>
+    <div class="cell" data-label="Back Translation">Proclaimed [is the] Doom of Manwe.</div>
+    <div class="cell" data-label="Original">The Doom of Manwë is proclaimed.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1182</strong></div>
+    <div class="cell" data-label="Sindarin">Devir Finw dam bestad.</div>
+    <div class="cell" data-label="Back Translation">They allow Finwe again to marry.</div>
+    <div class="cell" data-label="Original">Finwë is allowed to marry again.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1185</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Finw%C3%AB">Finw</a> vesta <a href="https://tolkiengateway.net/wiki/Indis">Indis</a>.</div>
+    <div class="cell" data-label="Back Translation">Finwe weds Indis.</div>
+    <div class="cell" data-label="Original">Finwë weds Indis.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1190</strong></div>
+    <div class="cell" data-label="Sindarin">Onnad <a href="https://tolkiengateway.net/wiki/Fingolfin">Fingolfin</a> vi Avon.</div>
+    <div class="cell" data-label="Back Translation">Birth [of] Fingolfin in Aman.</div>
+    <div class="cell" data-label="Original">Birth of Fingolfin in Aman.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1200</strong></div>
+    <div class="cell" data-label="Sindarin">Andrann Dadui na Ñgwedhed Belegûr.
+    <br>Gonoded thain nan onnad <a href="https://tolkiengateway.net/wiki/L%C3%BAthien">Lúthien</a> vi <a href="https://tolkiengateway.net/wiki/Neldoreth" class="mw-redirect">Neldoreth</a>.</div>
+    <div class="cell" data-label="Back Translation">Second Age of [the] binding [of] Melkor.
+    <br>Normal counting of [the] birth [of] Lúthien in Neldoreth.</div>
+    <div class="cell" data-label="Original">Second Age of the Chaining of Melkor.
+    <br>Traditional dating of the birth of Lúthien in Neldoreth.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1230</strong></div>
+    <div class="cell" data-label="Sindarin">Onnad <a href="https://tolkiengateway.net/wiki/Finarfin">Finarfin</a> vi Avon.</div>
+    <div class="cell" data-label="Back Translation">Birth [of] Finarfin in Aman.</div>
+    <div class="cell" data-label="Original">Birth of Finarfin in Aman.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1250</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/F%C3%ABanor">Faenor</a> gâr i·<a href="https://tolkiengateway.net/wiki/Tengwar">Thiw</a>.
+    <br><a href="https://tolkiengateway.net/wiki/Dwarves">Hadhodrim</a>, i eithro estar Naugrim, minnar <a href="https://tolkiengateway.net/wiki/Beleriand">Veleriand</a> a govar in·Edhelrim.</div>
+    <div class="cell" data-label="Back Translation">Feanor makes the Letters.<br>Dwarves, who [are] also they call “Naugrim”, enter Beleriand and meet the Elves.</div>
+    <div class="cell" data-label="Original">Fëanor creates the Tengwar.<br>
+    Dwarves, also known as Naugrim, enter Beleriand and meet the Elves.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1260</strong></div>
+    <div class="cell" data-label="Sindarin">Onnad <a href="https://tolkiengateway.net/wiki/Fingon">Fingon</a> vi Avon. Meth i·<a href="https://tolkiengateway.net/wiki/Vanyar">Mínil</a> gwaer <a href="https://tolkiengateway.net/wiki/Tirion">Dirion</a>.</div>
+    <div class="cell" data-label="Back Translation">Birth [of] Fingon in Aman. Last [of] the Vanyar depart Tirion.</div>
+    <div class="cell" data-label="Original">Birth of Fingon in Aman. Last of the Vanyar leave Tirion.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1280</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/Finarfin">Finarfin</a> vesta <a href="https://tolkiengateway.net/wiki/E%C3%A4rwen">‘Aerwen</a>.</div>
+    <div class="cell" data-label="Back Translation">Finarfin weds Earwen.</div>
+    <div class="cell" data-label="Original">Finarfin weds Eärwen.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1300</strong></div>
+    <div class="cell" data-label="Sindarin">Andrann Nelui na Ñgwedhed Belegûr.
+    <br>Onnad <a href="https://tolkiengateway.net/wiki/Turgon">Turgon</a> a <a href="https://tolkiengateway.net/wiki/Finrod">Finrod</a> vi Avon.
+    <br><a href="https://tolkiengateway.net/wiki/Dwarves_of_Belegost">Hadhodrim Belegost</a> ah i·<a href="https://tolkiengateway.net/wiki/Sindar">Thindrim</a> iestar adabad <a href="https://tolkiengateway.net/wiki/Menegroth">Menegroth</a> vi <a href="https://tolkiengateway.net/wiki/Doriath">Ndoriath</a>. Melian bachanna<sup class="fn">14</sup> vo ist a gaessern, iodhol <a href="https://tolkiengateway.net/wiki/Nimphelos">Nimphelos</a> na Chadhodrim. 
+    <br><a href="https://tolkiengateway.net/wiki/Daeron">Daeron</a> gâr <a href="https://tolkiengateway.net/wiki/Cirth">Gerthas Daeron</a>.</div>
+    <div class="cell" data-label="Back Translation">Third Age [of the] Binding [of] Melkor.
+    <br>Birth [of] Turgon and Finrod in Aman.
+    <br>[The] Dwarves [of] Belegost and the Sindar start to build Menegroth vi Doriath. Melian pays with knowledge and many pearls, including Nimphelos.
+    <br>Daeron makes Certhas Daeron.</div>
+    <div class="cell" data-label="Original">Third Age of the Chaining of Melkor.
+    <br>The births of Turgon and Finrod in Aman. The Dwarves of Belegost and the Sindar begin the building of Menegroth in Doriath. 
+    <br>The Dwarves are paid with knowledge from Melian and with many pearls, including Nimphelos. 
+    <br>Daeron creates the Certhas Daeron.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1330</strong></div>
+    <div class="cell" data-label="Sindarin">Cennin vinui in·<a href="https://tolkiengateway.net/wiki/Orcs">Yrch</a> vi <a href="https://tolkiengateway.net/wiki/Beleriand">Veleriand</a>. i·Chadhodrim echedir esgair an i·Thindrim.</div>
+    <div class="cell" data-label="Back Translation">Seen first [are] the Orcs in Beleriand. The Dwarves make weapons for the Sindar.</div>
+    <div class="cell" data-label="Original">Orcs are first seen in Beleriand. The Dwarves make weapons for the Sindar.</div>
+  </div>
+  
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1350</strong></div>
+    <div class="cell" data-label="Sindarin">Lae i·<a href="https://tolkiengateway.net/wiki/Nandor">Ndanathrim</a> ephedir <a href="https://tolkiengateway.net/wiki/Denethor_(Nando)" class="mw-redirect">Dhenethor</a> Dhenethor na ndun vi Veleriand ah olar vellyn ‘u <a href="https://tolkiengateway.net/wiki/Thingol">Thingol</a>. Dorthar vi <a href="https://tolkiengateway.net/wiki/Ossiriand">Ossiriand</a>.
+      <br>Daeron câr i·Girth rovaer, a chuithennin vo i·Chadhodrim a thi balan-hinnen vi rhûn <a href="https://tolkiengateway.net/wiki/Blue_Mountains">Ered Luin</a>.</div>
+    <div class="cell" data-label="Back Translation">[A] great number [of] Nandor follow Denethor to [the] west in Beleriand and become friends with Thingol. They dwell in Ossiriand.
+     <br>Daeron makes the Cirth most-best, and employed by the Dwarves and they [are] made known in [the] east [of] Ered Luin.</div>
+    <div class="cell" data-label="Original">Denethor leads some of the Nandor west into Beleriand and befriends Thingol. They settle in Ossiriand.
+    <br> Daeron betters the Cirth, which are adopted by the Dwarves and made known east of the Blue Mountains.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1362</strong></div>
+    <div class="cell" data-label="Sindarin">Onnad <a href="https://tolkiengateway.net/wiki/Galadriel">Galadriel</a> vi Edhelvar ah <a href="https://tolkiengateway.net/wiki/Aredhel">Aredhel</a> vi Dirion.</div>
+    <div class="cell" data-label="Back Translation">Birth [of] Galadriel in Eldamar and Aredhel in Dirion.</div>
+    <div class="cell" data-label="Original">Births of Galadriel in Eldamar and Aredhel in Tirion.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1400</strong></div>
+    <div class="cell" data-label="Sindarin">Leithiar <a href="https://tolkiengateway.net/wiki/Morgoth">Mbelegûr</a> in·engwidh dín. Dortha vi Mbar-Rodyn ndi dirweg<sup class="fn">15</sup>.</div>
+    <div class="cell" data-label="Back Translation">They release Melkor from his bonds. He dwells in Valimar under vigilance.</div>
+    <div class="cell" data-label="Original">Melkor is released from bondage. He dwells in Valimar under vigilance.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1410</strong></div>
+    <div class="cell" data-label="Sindarin">Devir <a href="https://tolkiengateway.net/wiki/Morgoth">Mbelegûr</a> pedrad lain vi Ndor-Rodyn, davol din olad vellyn ‘u i·<a href="https://tolkiengateway.net/wiki/Noldor">Ñgolodhrim</a>.</div>
+    <div class="cell" data-label="Back Translation">They allow Melkor to walk free in Valinor, allowing him to become friends with the Noldor.</div>
+    <div class="cell" data-label="Original">Melkor is allowed to walk freely in Valinor, allowing him to befriend the Noldor.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1449</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/F%C3%ABanor">Faenor</a> iesta echaded i·<a href="https://tolkiengateway.net/wiki/Silmarils">Silevril</a>.</div>
+    <div class="cell" data-label="Back Translation">Faenor begins to make the Silmarils.</div>
+    <div class="cell" data-label="Original">Fëanor begins constructing the Silmarils.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1450</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="https://tolkiengateway.net/wiki/F%C3%ABanor">Faenor</a> dêl i·<a href="https://tolkiengateway.net/wiki/Silmarils">Silevril</a>. Sesta Galad i·Ñgaladhad vi din a Gilbrennil aeanar din.
+    <br>An in·în caphaenui ebir, Belegûr iesta peliad oeth a chuia e·mbaur an esgair. Faenor bêd oh e·vavras ophernad idh·Rodyn a rhâdh n’ Ennor.</div>
+    <div class="cell" data-label="Back Translation">Feanor finishes the Silmarils. He sets [the] Light of the Two Trees in them and the Valar.
+    <br>For the following forty years, Melkor begins to spread war and urges the need for weapons. Fëanor speaks about his desire to reject the Valar and return to Middle Earth.</div>
+    <div class="cell" data-label="Original">Fëanor completes the Silmarils. He puts the Light of the Trees in them and Varda hallows them.
+    <br>
+   For the next forty years, Melkor begins spreading strife and urging the need for weapons. Fëanor expresses his desire to reject the Valar and return to Middle Earth.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1479</strong></div>
+    <div class="cell" data-label="Sindarin"><i>Ce</i> onnad of <a href="https://tolkiengateway.net/wiki/Idril">Idril</a>.</div>
+    <div class="cell" data-label="Back Translation">Maybe [the] birth [of] Idril.</div>
+    <div class="cell" data-label="Original"><i>Possible</i> birth of Idril.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1490</strong></div>
+    <div class="cell" data-label="Sindarin">Finw nachaf Faenor na chûd, ias ‘ortha Fingolfin vo e·vegil dín. To idh·Rodyn edledhiar Faenor na <a href="https://tolkiengateway.net/wiki/Formenos">Forvenost</a> an în ýneg. Tôg in·ionnath odog a Finw aphad din eithro.</div>
+    <div class="cell" data-label="Back Translation">Finwe summons Feanor to [a] assembly, where he threatens Fingolfin with his sword. Then the Valar Feanor to Formenos for 12 years. He takes his seven sons and Finwe follows him aslo.</div>
+    <div class="cell" data-label="Original">Finwë summons Fëanor to a council meeting, where he threatens Fingolfin with his sword. The Valar then exile Fëanor to Formenos for 12 years. He takes his seven sons and Finwë follows him as well.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1492</strong></div>
+    <div class="cell" data-label="Sindarin">Belegûr gên Faenor vi Forvenost, ach opherna<sup class="fn">16</sup> din. To Finw ‘ôr idh·Rodyn, i rhuidar Mbelegûr. Belegûr dhrega a chîr <a href="https://tolkiengateway.net/wiki/Ungoliant">Ungoliant</a> vi <a href="https://tolkiengateway.net/wiki/Avathar">‘Wathar</a>.</div>
+    <div class="cell" data-label="Back Translation">Melkor sees Feanor in Formenos, but rejects him. So Finwe warns the Valar, who pursue Melkor. Melkor flees and finds Ungoliant in Avathar.</div>
+    <div class="cell" data-label="Original">Melkor visits Fëanor in Formenos, but he repels him. Finwë then warns the Valar, who pursue Melkor. Melkor flees and finds Ungoliant in Avathar.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1495</strong></div>
+    <div class="cell" data-label="Sindarin">Manw nachaf Faenor na Ras-Arphain ias de a Fingolfin aderthar. Ungoliant feitha i·Ñgaladhad. Belegûr ndâg Finw vi Forvenost a phîl i·Silevril. Faenor esta din Morgoth. Te ah in·ionnath gwestar <a href="https://tolkiengateway.net/wiki/Oath_of_F%C3%ABanor">‘West Faenor</a>. Iestar cŷl oeth nan i·Ñgolodhrim ad idh·Rodyn a menir n’ Alflon ias <a href="https://tolkiengateway.net/wiki/First_Kinslaying" class="mw-redirect">ndegir i·Thelerrim</a> a philir i·Chîr Eilphrin dín. Se ieasta <a href="https://tolkiengateway.net/wiki/Flight_of_the_Noldor" class="mw-redirect">Dhragad i·Ñgolodhrim</a>.
+    <br>Belegûr ah Ungoliant dregar na Veleriand ias Ungoliant gortha den. Belegûr nachaf Velroeg n’ e·‘rest dín a cheiriar Ungoliant gwaed. Belegûr, hinnen hui Vorgoth hi, dortha vi <a href="https://tolkiengateway.net/wiki/Angband">Angband</a> ah ortha aeglir <a href="https://tolkiengateway.net/wiki/Thangorodrim">Thangorodrim</a>.</div>
+    <div class="cell" data-label="Back Translation">Manwe summons Feanor to Taniquetil where he and Fingolfin reuinte. Ungoliant destroys the Two Trees. Melkor slays Finwe in Formenos and steals the Silmarils. Feanor names him Morgoth. He and his sons swear [the] Oath [of] Feanor. They begin [a] renewal [of] war of the Noldor against the Valar and go to Alqualonde where they slay the Teleri and steal their Swan Ships.
+    <br>Melkor and Ungoliant flee to Beleriand where Ungoliant threatens him. Melkor summons Balrogs to his aid and they cause Ungoliant to depart. Melkor, known as Morgoth now, dwells in Angband and raises the peaks [of] Thangorodrim.</div>
+    <div class="cell" data-label="Original">Fëanor is summoned by Manwë to Taniquetil where he and Fingolfin reconcile. Ungoliant destroys the Two Trees. Melkor kills Finwë in Formenos and steals the Silmarils. Fëanor names him Morgoth. He and his sons swear the Oath of Fëanor. They begin a rebellion of the Noldor against the Valar and go to Alqualondë where they slay the Teleri and steal their swanships. This begins the Flight of the Noldor.
+    <br>Melkor and Ungoliant flee to Beleriand where Ungoliant threatens him. Melkor calls Balrogs to his aid and they drive Ungoliant away. Melkor, now known as Morgoth, stays in Angband and raises the peaks of Thangorodrim.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1496</strong></div>
+    <div class="cell" data-label="Sindarin"><a href="/wiki/Mandos" title="Mandos">Bannos</a> dôl cho i·Ñgolodhrim a phêd oh <a href="/wiki/Doom_of_Mandos" title="Doom of Mandos">Amarth Bannos</a>. Finarfin a lhae e·‘waith dín ah conaenar<sup class="fn">17</sup> a rhedhir na Ndor-Rodyn. Finrod, ion Finarfin, ola gaun na ñgwaith en·adar rethol dín ah ephedir Faenor.</div>
+    <div class="cell" data-label="Back Translation">Mandos comes before the Noldor and speaks of [the] Doom [of] Mandos. Finarfin and [a] great number [of] his people repent and return to Valinor. Finrod, son [of] Finarfin, becomes [the] head of his father's remaining people and they follow Feanor.</div>
+     <div class="cell" data-label="Original">Mandos appears before the Noldor and speaks the Doom of Mandos. Finarfin and some of his people repent and return to Valinor. Finrod, son of Finarfin, becomes the leader of his father's remaining people and they follow Fëanor.</div>
+  </div>
+  
+  <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1497</strong></div>
+    <div class="cell" data-label="Sindarin">The <a href="https://tolkiengateway.net/wiki/First_Battle_of_Beleriand" class="mw-redirect">Dagor Beleriand Vin</a>. Gurth <a href="https://tolkiengateway.net/wiki/Denethor_(Nando)" class="mw-redirect">Denethor</a>. Aethas na <a href="https://tolkiengateway.net/wiki/Havens_of_the_Falas">Lynd e·Falas</a>. Thingol ndessegir i·ñgwaith dín a Melian panna <a href="https://tolkiengateway.net/wiki/Girdle_of_Melian">Lest Melian</a> o Doriath. i·<a href="https://tolkiengateway.net/wiki/Laiquendi" class="mw-redirect">Laegrim</a> doblar ah ú-hevir anar egel. 
+      <br>i·Ñgolodhrim delir na <a href="https://tolkiengateway.net/wiki/Helcarax%C3%AB">Chelcharaes</a>. Faenor ah i·Ñgwaith dín gweriar Fingolfin a chiriastar na Veleriand.
+      <br>Lonnar vi Dhrengist în odog ab Ndagor Beleriand Vin. Ornad i·chîr na <a href="https://tolkiengateway.net/wiki/Losgar">Losgar</a>.
+      <br>The <a href="https://tolkiengateway.net/wiki/Dagor-nuin-Giliath">Dagor-nuin-Giliath</a>. <a href="https://tolkiengateway.net/wiki/Gothmog_(balrog)">Gothmog</a> charna Faenor, i nathant vo in·ionnath dín fo efir ha <a href="https://tolkiengateway.net/wiki/Thangorodrim">Thangorodrim</a>.
+      <br><a href="https://tolkiengateway.net/wiki/Maedhros">Maedhros</a> gova Vorgoth nu dagbost<sup class="fn">18</sup> ú-naed a gâd din.</div>
+    <div class="cell" data-label="Back Translation">The First Battle [of] Beleriand. Death [of] Denethor. Seige of [the] Havens [of] the Falas. Thingol withdraws his people and Melian sets [the] Girdle [of] Melian around Doriath. The Laiquendi hide and do not have other king.
+    <br>The Noldor come to Helcaraxe. Feanor and his people betray Fingolfin and sail to Beleriand.
+    <br>They land in Drengist seven years after [the] First Battle of Beleriand. Burning [of] the ships at Losgar.
+    <br>[The] Battle-under-Stars. Gothmog wounds Fëanor, who is rescued by his sons before dying near Thangorodrim.
+    <br>Maedhros meets  Morgoth under a false truce and he captures him.</div>
+    <div class="cell" data-label="Original">The First Battle of Beleriand. Death of Denethor. Besiegement of the Havens of the Falas. Thingol withdraws his people and Melian sets the Girdle of Melian around Doriath. The Laiquendi become hidden and take no other king.
+    <br>The Noldor arrive at the Helcaraxë. Fëanor and his people betray Fingolfin and sail to Beleriand.
+    <br>They land in Drengist seven years after the First Battle of Beleriand. Burning of the ships at Losgar.
+    <br>The Dagor-nuin-Giliath ("Battle-under-Stars"). Gothmog mortally wounds Fëanor, who is rescued by his sons before dying near Thangorodrim.
+    <br>Maedhros meets with Morgoth under a false truce and is captured.
+</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1498</strong></div>
+    <div class="cell" data-label="Sindarin">Gwennen na <a href="https://tolkiengateway.net/wiki/Thangorodrim">Thangorodrim</a><a href="https://tolkiengateway.net/wiki/Maedhros">Maedhros</a>. i·Ñgolodhrim ostar echad veleg vi <a href="https://tolkiengateway.net/wiki/Hithlum">Chithlum</a>, carui<sup class="fn">19</sup> ha falas nan Ael Mithrim forn.</div>
+    <div class="cell" data-label="Back Translation">Bound to Thangorodrim [is] Maethros. The Noldor fortify [a] great camp in Hithlum, possibly near [the] north shore of Lake Mithrim.</div>
+     <div class="cell" data-label="Original">Maedhros is chained to the Thangorodrim. The Noldor fortify a great camp in Hithlum, likely near the north-shore of Lake Mithrim.</div>
+  </div>
+  
+   <div class="row" id="s1-6">
+    <div class="cell num nowrap"><strong>1500</strong></div>
+    <div class="cell" data-label="Sindarin">Echaded <a href="https://tolkiengateway.net/wiki/Moon">Ithil</a> ah <a href="https://tolkiengateway.net/wiki/Sun">Anor</a>. Hoth i·<a href="https://tolkiengateway.net/wiki/Noldor">Ñgolodhrim</a> i ephandir  <a href="https://tolkiengateway.net/wiki/Fingolfin">Fingolfin</a>telir athrad <a href="https://tolkiengateway.net/wiki/Helcarax%C3%AB">Chelcharaes</a> a minnar i·nduir forodren. <a href="https://tolkiengateway.net/wiki/Battle_of_the_Lammoth">Dagor Lammoth</a> a gurth <a href="https://tolkiengateway.net/wiki/Argon">Argon</a>. Ithil eria lui odog, ab i Anor aphant.  Andrann Vinui ú-dhâr.</div>
+    <div class="cell" data-label="Back Translation">Making [of the] Moon and [the] Sun. [The] host [of] the Noldor who followed Fingolfin finish [the] crossing [of] Helcaraxe and enter the Northern Lands. [The] Battle [of] the Lammoth and death [of] Argon. [The] Moon rises seven times, after that [the] Sun follows. The First Age does not stop.</div>
+     <div class="cell" data-label="Original">The Creation of the Moon and the Sun. The host of the Noldor, led by Fingolfin, finishes crossing the Helcaraxë and enters the Northern Lands. The Battle of the Lammoth and death of Argon. The Moon rises seven times, after which the Sun follows. The First Age continues.</div>
+  </div>
+
+  </div>
+
+
+    <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>bilben</b>, <i>n.</i> “peer, equal (lit.) one who is equal” [author: Rínor]<br>
+    <sup class="fn">2</sup> <b>faw</b>, <i>adv.</i> “beforehand” from PʰĀ·sē [author: Ellanto]<br>
+    <sup class="fn">3</sup> <b>barnas</b>, <i>n.</i> “defense; the action of defending or protecting from attack, danger, or injury.” [author: Rínor]<br>
+    <sup class="fn">4</sup> <b>ceda-</b>, <i>v.</i> “to offer, propose, suggest; (lit.) to make an opportunity” ⪤ ᴺQ. céta- “to offer, propose, suggest; (lit.) to make an opportunity” [author: Rínor]<br>
+    <sup class="fn">5</sup> <b>nachof</b> <i>n.</i> “summons, bidding” ⪤ ᴹQ. naháme n. “summons” [author: Rínor]<br>
+    <sup class="fn">6</sup> <b>anphen</b> <i>n.</i> “ambassador, representative" (from an “for” + pen “one, somebody”; cf.  ᴺQ. !ráquen, n. “representative, ambassador”) [author: Míthriel]<br>
+    <sup class="fn">7</sup> <b>sotha-</b>, <i>v.</i> “to convince, persuade” [author: Máyalótë | Maeloth]<br>
+    <sup class="fn">8</sup>  <b>ho</b>, <i>prep.</i> “before, in front” (spatial only) ✶KʰĀ [author: Ellanto]<br>
+    <sup class="fn">9</sup> <b>levia-</b> <i>v.</i> cognet ᴹQ. lemya- v. “to remain, tarry; *to be left over”<br>
+    <sup class="fn">10</sup> <b>ias</b>, <i>conj.</i> “where (relative)” ⪤ Q. yassë, <i>conj.</i> “where [relative], in which place”  [author: Unknown]<br>
+    <sup class="fn">11</sup> <b>ib-</b>, <i>v.</i> “to beg, 'pray' [ask earnestly]”  ⪤ ᴺQ. ^iqu-, v. “to beg, 'pray' [ask earnestly]”  [author: Mithriel]<br>
+    <sup class="fn">12</sup> <b>gondan</b> <i>n.</i> “mason, stone-smith” from gond + tân [author: Rínor]<br>
+    <sup class="fn">13</sup> <b>echan-</b>, <i>v.</i> “to proclaim, assert, (lit.) forth-call out” ⪤ ᴺQ. eccan- v. “to proclaim, assert, (lit.) forth-call out” [author: Rínor]<br>
+    <sup class="fn">14</sup> <b>bachanna-</b>, <i>v.</i> “to pay, to give in exchange” from bach + anna- [author: Ellanto]<br>
+    <sup class="fn">15</sup> <b>tirweg</b>, <i>n.</i> “watchful, vigilant” from tir- + -weg [author: Máyalótë | Maeloth]<br>
+    <sup class="fn">16</sup> <b>opherna-</b>, <i>v.</i> “to reject, (lit.) turn away” from ✶aw(d/t) + perna- cf. ᴺQ. !auquer- “to reject, (lit.) turn away”. [author: Rínor]<br>
+    <sup class="fn">17</sup> <b>conaena-</b>, <i>v.</i> “to regret, repent” from ✶kā·najna- [author: Rínor]<br>
+    <sup class="fn">18</sup> <b>dagbost</b>, <i>n.</i> “truce” from dagor + post based of welch cadoediad : cad (“battle”) +‎ oediad (“delay, respite”) [author: Rínor]<br>
+    <sup class="fn">19</sup> <b>carui</b>, <i>adj.</i> feasible, possible cf. Q. cárima [author: Rínor]
+  </div>
+  
+  
+                            
+                        
+
+      <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+    </main>
+
+<script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

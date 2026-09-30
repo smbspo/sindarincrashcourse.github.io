@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Old Sindarin Compound Tester</title>
+  <style>
+    :root{
+      --bg:#f6f8fa; --card:#fff; --text:#0f1724; --muted:#667085; --accent:#0ea5a4; --accent2:#ff7a59;
+      --border:rgba(15,23,36,.12);
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; background:var(--bg); color:var(--text); line-height:1.5;}
+    main{max-width:980px; margin:32px auto; padding:22px; background:var(--card); border-radius:14px; box-shadow:0 10px 28px rgba(2,6,23,.08)}
+    h1{margin:0 0 6px; color:var(--accent)}
+    .note{color:var(--muted); margin:0 0 18px}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0}
+    label{font-weight:750; color:var(--accent2); display:block; margin-bottom:6px}
+    input{width:100%; font-size:1.1rem; padding:10px 12px; border:1px solid var(--accent); border-radius:10px}
+    .result{font-size:1.35rem; font-weight:800; padding:14px; background:#eefafa; border:1px solid rgba(14,165,164,.28); border-radius:10px; margin:14px 0}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    button{border:0; background:var(--accent); color:white; font-weight:800; padding:10px 14px; border-radius:10px; cursor:pointer}
+    button.secondary{background:#e5e7eb; color:#111827}
+    code{background:rgba(0,0,0,.05); padding:2px 6px; border-radius:6px}
+    table{width:100%; border-collapse:collapse; margin-top:16px; overflow:hidden; border-radius:10px; font-size:14px}
+    th,td{border-bottom:1px solid var(--border); padding:9px; text-align:left; vertical-align:top}
+    th{background:var(--accent); color:white}
+    .pill{display:inline-block; border-radius:999px; padding:2px 8px; font-weight:800; font-size:12px; background:#e5e7eb}
+    .trip{background:#ecfdf3}
+    .custom{background:#fff7ed}
+    @media(max-width:700px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Old Sindarin Compound Tester</h1>
+  <p class="note">This version loads your friend’s Old Sindarin and Sindarin rule files, then adds the missing boundary-cluster cleanup after the boundary vowel rule.</p>
+
+  <div class="grid">
+    <div>
+      <label for="word1">Old Sindarin word 1</label>
+      <input id="word1" value="aŋga" autocomplete="off" />
+    </div>
+    <div>
+      <label for="word2">Old Sindarin word 2</label>
+      <input id="word2" value="kalata" autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="run">Run compound</button>
+    <button id="swap" class="secondary">Swap words</button>
+    <span>Boundary is handled internally as morphemes: <code>word1 + word2</code></span>
+  </div>
+
+  <div class="result" id="final">Final: —</div>
+  <div id="summary"></div>
+
+  <table>
+    <thead>
+      <tr><th>Stage</th><th>Rule</th><th>Description</th><th>Input → Output</th><th>Morphemes</th></tr>
+    </thead>
+    <tbody id="steps"></tbody>
+  </table>
+</main>
+
+<script type="module">
+import './utils.js';
+import { oldSindarinRules } from './old-sindarin.js';
+import { sindarinRules } from './sindarin.js';
+import { shouldSkipSandhi } from './sandhi.js';
+import { digraphsToSingle } from './utils.js';
+
+const COMPOUND_EXCLUDED_SINDARIN_RULES = [
+  "04600"
+];
+
+const $ = (id) => document.getElementById(id);
+
+function sortedRuleIds(rules) {
+  return Object.keys(rules).sort((a, b) =>
+    rules[a].orderId.localeCompare(rules[b].orderId)
+  );
+}
+
+function normalizeInput(value) {
+  return digraphsToSingle(String(value || '').trim().replace(/\s*\+\s*/g, ''));
+}
+
+function endsWithVowel(word) {
+  return /[aeiouyāēīōūăĕĭŏŭȳœǭę]$/i.test(word);
+}
+
+function runRuleSet(stage, rules, input, morphemes, config = {}) {
+  let current = input;
+  let currentMorphemes = morphemes || [input];
+  let sandhiAllowed = config.enableSandhi === true;
+  const steps = [];
+
+  for (const ruleId of sortedRuleIds(rules)) {
+    const rule = rules[ruleId];
+
+    if (
+      stage === 'Sindarin' &&
+      COMPOUND_EXCLUDED_SINDARIN_RULES.includes(rule.orderId || ruleId)
+    ) {
+      continue;
+    }
+
+    if (rule.skip === true && !(sandhiAllowed && rule.isSandhiMaster)) continue;
+    if (rule.isSandhi && !sandhiAllowed) continue;
+
+    const options = { morphemes: currentMorphemes };
+
+    if (rule.input) {
+      for (const inputDef of rule.input) {
+        options[inputDef.name] = inputDef.default;
+      }
+    }
+
+    let result;
+
+    if (rule.isSandhi) {
+      const sandhiCheck = shouldSkipSandhi(rule, current, options, true);
+      result = sandhiCheck.skip ? sandhiCheck.result : rule.mechanic(current, options);
+    } else {
+      result = rule.mechanic(current, options);
+    }
+
+    if (!result || typeof result.out !== 'string') continue;
+
+    if (result.out !== current) {
+      steps.push({
+        stage,
+        orderId: rule.orderId,
+        description: rule.description || rule.pattern || '',
+        input: current,
+        output: result.out,
+        morphemes: result.morphemes || currentMorphemes,
+        custom: false,
+      });
+    }
+
+    current = result.out;
+    currentMorphemes = result.morphemes || currentMorphemes;
+
+    if (stage === 'Sindarin' && rule.orderId === '03600') {
+      const cleaned = removeMiddleBoundaryConsonant(current, currentMorphemes);
+
+      if (cleaned.out !== current) {
+        steps.push({
+          stage: 'Sindarin',
+          orderId: '05800*',
+          description: 'middle consonant vanished in a three-consonant boundary cluster',
+          input: current,
+          output: cleaned.out,
+          morphemes: cleaned.morphemes,
+          custom: true,
+        });
+
+        current = cleaned.out;
+        currentMorphemes = cleaned.morphemes;
+        sandhiAllowed = false;
+      }
+    }
+
+    if (stage === 'Sindarin' && rule.orderId === '05800') {
+      sandhiAllowed = false;
+    }
+  }
+
+  return {
+    output: current,
+    morphemes: currentMorphemes,
+    steps
+  };
+}
+
+function removeMiddleBoundaryConsonant(input, morphemes) {
+  if (!morphemes || morphemes.length < 2) {
+    return { out: input, morphemes };
+  }
+
+  const newMorphemes = [...morphemes];
+  let changed = false;
+
+  for (let i = 0; i < newMorphemes.length - 1; i++) {
+    const left = newMorphemes[i];
+    const right = newMorphemes[i + 1];
+
+    if (!left || !right) continue;
+
+    const l1 = left.nth(-2);
+    const l2 = left.nth(-1);
+    const r1 = right.nth(0);
+
+    if (
+      l1?.isConsonant?.() &&
+      l2?.isConsonant?.() &&
+      r1?.isConsonant?.()
+    ) {
+      newMorphemes[i] = left.slice(0, -1);
+      changed = true;
+      continue;
+    }
+
+    const lLast = left.nth(-1);
+    const rFirst = right.nth(0);
+    const rSecond = right.nth(1);
+
+    if (
+      lLast?.isConsonant?.() &&
+      rFirst?.isConsonant?.() &&
+      rSecond?.isConsonant?.()
+    ) {
+      newMorphemes[i + 1] = right.slice(1);
+      changed = true;
+    }
+  }
+
+  return changed
+    ? { out: newMorphemes.join(''), morphemes: newMorphemes }
+    : { out: input, morphemes };
+}
+
+function runCompound() {
+  const word1 = normalizeInput($('word1').value);
+  const word2 = normalizeInput($('word2').value);
+
+  let sindarin;
+  let allSteps = [];
+
+  if (endsWithVowel(word1)) {
+    const old1 = runRuleSet('Old Sindarin word 1', oldSindarinRules, word1, [word1]);
+    const old2 = runRuleSet('Old Sindarin word 2', oldSindarinRules, word2, [word2]);
+
+    const combined = old1.output + old2.output;
+
+    sindarin = runRuleSet(
+      'Sindarin',
+      sindarinRules,
+      combined,
+      [old1.output, old2.output],
+      { enableSandhi: true }
+    );
+
+    allSteps = [
+      ...old1.steps,
+      ...old2.steps,
+      {
+        stage: 'Combine',
+        orderId: '+',
+        description: 'vowel-final first element; combine after Old Sindarin',
+        input: `${old1.output} + ${old2.output}`,
+        output: combined,
+        morphemes: [old1.output, old2.output],
+        custom: false,
+      },
+      ...sindarin.steps
+    ];
+
+    $('summary').innerHTML = `
+      <p><b>Old Sindarin:</b> 
+        <code>${escapeHtml(word1)}</code> → <code>${escapeHtml(old1.output)}</code>, 
+        <code>${escapeHtml(word2)}</code> → <code>${escapeHtml(old2.output)}</code>
+      </p>
+      <p><b>Combined for Sindarin:</b> 
+        <code>${escapeHtml(old1.output)} + ${escapeHtml(old2.output)}</code> 
+        → <code>${escapeHtml(combined)}</code>
+      </p>
+    `;
+  } else {
+    const combinedForOld = word1 + word2;
+
+    const oldCombined = runRuleSet(
+      'Old Sindarin compound',
+      oldSindarinRules,
+      combinedForOld,
+      [word1, word2]
+    );
+
+    sindarin = runRuleSet(
+      'Sindarin',
+      sindarinRules,
+      oldCombined.output,
+      oldCombined.morphemes,
+      { enableSandhi: true }
+    );
+
+    allSteps = [
+      {
+        stage: 'Combine before Old Sindarin',
+        orderId: '+',
+        description: 'consonant-final first element; Old Sindarin rules apply across boundary',
+        input: `${word1} + ${word2}`,
+        output: combinedForOld,
+        morphemes: [word1, word2],
+        custom: true,
+      },
+      ...oldCombined.steps,
+      ...sindarin.steps
+    ];
+
+    $('summary').innerHTML = `
+      <p><b>Combined before Old Sindarin:</b> 
+        <code>${escapeHtml(word1)} + ${escapeHtml(word2)}</code> 
+        → <code>${escapeHtml(combinedForOld)}</code>
+      </p>
+      <p><b>After Old Sindarin:</b> 
+        <code>${escapeHtml(combinedForOld)}</code> 
+        → <code>${escapeHtml(oldCombined.output)}</code>
+      </p>
+    `;
+  }
+
+  $('final').textContent = `Final: ${sindarin.output}`;
+
+  $('steps').innerHTML = allSteps.map(step => `
+    <tr class="${step.custom ? 'custom' : step.input !== step.output ? 'trip' : ''}">
+      <td>${escapeHtml(step.stage)}</td>
+      <td><span class="pill">${escapeHtml(step.orderId)}</span></td>
+      <td>${escapeHtml(step.description)}</td>
+      <td><code>${escapeHtml(step.input)}</code> → <code>${escapeHtml(step.output)}</code></td>
+      <td><code>${escapeHtml((step.morphemes || []).join(' + '))}</code></td>
+    </tr>
+  `).join('');
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>'"]/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[ch]));
+}
+
+$('run').addEventListener('click', runCompound);
+$('word1').addEventListener('input', runCompound);
+$('word2').addEventListener('input', runCompound);
+
+$('swap').addEventListener('click', () => {
+  const a = $('word1').value;
+  $('word1').value = $('word2').value;
+  $('word2').value = a;
+  runCompound();
+});
+
+runCompound();
+</script>
+</body>
+</html>

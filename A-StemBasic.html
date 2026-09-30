@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>A-Stem Verb Conjugator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<style>
+/* General Link Styles */
+a {
+    color: #2C4870; /* Dark blue color for readability on white */
+    font-weight: bold; /* Bold text */
+    text-decoration: none; /* Remove underline for a cleaner look */
+    transition: color 0.3s, background-color 0.3s; /* Smooth transition for color changes */
+}
+
+/* Hover and Active State for Links */
+a:hover, a:active {
+    color: #FFEEAA; /* Light yellow on hover for a warm contrast */
+    background-color: #4C668C; /* Medium blue background on hover */
+    padding: 2px 4px; /* Add slight padding on hover for emphasis */
+    border-radius: 4px; /* Rounded corners on hover for a subtle button effect */
+}
+
+/* Specific Highlight for Important Links (optional) */
+.highlight-link {
+    color: #AA6539; /* Orange from secondary color #2 */
+    font-weight: bold;
+}
+
+.highlight-link:hover {
+    color: #FFFFFF; /* White text for contrast on hover */
+    background-color: #803F15; /* Darker orange background on hover */
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+#bardh-text {
+    color: #FFEEAA;
+}
+
+/* Global styles */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    padding: 8px;
+    color: #333; /* Dark gray for primary text color */
+    background-color: #ffffff; /* White background */
+}
+
+/* Navigation bar */
+.navbar {
+    background-color: #4C668C; /* Primary color */
+    border-bottom: 1px solid #2C4870; /* Slightly darker for separation */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: inherit; /* Ensure consistent font */
+    position: relative; /* Added for positioning */
+}
+
+/* Hide the menu toggle checkbox */
+#menu-toggle {
+    display: none;
+}
+
+/* Style the hamburger menu icon */
+.menu-icon {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #FFEEAA; /* Light yellow color */
+}
+
+/* Navigation links container */
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.navbar a, .dropdown-content a {
+    color: #2C4870; /* Dark blue color */
+    padding: 8px 12px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: inherit; /* Consistent font */
+}
+
+.navbar a:hover, .dropdown-content a:hover {
+    background-color: #2C4870; /* Darker primary color on hover */
+    color: #FFFFFF; /* White text on hover for contrast */
+}
+
+/* Dropdown menu */
+.dropdown {
+    position: relative;
+    font-family: inherit;
+}
+
+.dropdown button {
+    background-color: #4C668C;
+    color: #FFEEAA;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: inherit;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.dropdown button:hover {
+    background-color: #2C4870; /* Darker primary color on hover */
+    color: #FFFFFF; /* White text on hover */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #FFFFFF; /* White dropdown background */
+    min-width: 200px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #2C4870; /* Border using a primary color */
+    z-index: 1;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+}
+
+/* Show dropdown content on hover (Desktop) */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Button styles */
+#myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    background-color: #AA6539; /* Orange from secondary color #2 */
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: inherit;
+}
+
+#myBtn:hover {
+    background-color: #803F15; /* Darker orange on hover */
+}
+
+/* Content lists */
+.vocab-list, .exercise-list {
+    column-width: 20em;
+}
+
+.exercise-list {
+    column-width: 30em;
+}
+
+/* List and table styling */
+ul {
+    padding-left: 1.5em;
+}
+
+li.c-bullet {
+    list-style-type: none;
+    text-indent: -1em;
+}
+
+table {
+    border: 1px solid #2C4870; /* Primary color for table border */
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: inherit;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #2C4870;
+    font-family: inherit;
+}
+
+th {
+    background-color: #4C668C; /* Primary color for header background */
+    color: #FFEEAA; /* Light yellow text for header */
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+    .vocab-list, .exercise-list {
+        column-width: 100%;
+    }
+}
+
+/* Responsive Styles for Navbar */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    /* Adjust navbar for small screens */
+    .navbar {
+        flex-wrap: wrap;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #4C668C;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+    }
+
+    /* Show the menu icon */
+    .menu-icon {
+        display: block;
+    }
+
+    /* Show menu when checkbox is checked */
+    #menu-toggle:checked + .menu-icon + .nav-links {
+        display: flex;
+    }
+
+    /* Dropdown adjustments for mobile */
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background-color: #4C668C;
+    }
+
+    .dropdown button {
+        width: 100%;
+        text-align: left;
+        padding: 15px;
+        background-color: #4C668C;
+        border-bottom: 1px solid #2C4870;
+        color: #FFEEAA;
+    }
+
+    .dropdown-content a {
+        padding: 15px;
+        background-color: #4C668C;
+        color: #FFEEAA;
+    }
+
+    /* Hide dropdown content by default on mobile */
+    .dropdown-content {
+        display: none;
+    }
+
+    /* Remove hover behavior */
+    .dropdown:hover .dropdown-content {
+        display: none;
+    }
+
+    /* Toggle dropdown content when button is active */
+    .dropdown button.active + .dropdown-content {
+        display: block;
+    }
+
+    /* Dropdown button icons */
+    .dropdown button:after {
+        content: '\25BC'; /* Down arrow */
+        float: right;
+        margin-right: 20px;
+    }
+
+    .dropdown button.active:after {
+        content: '\25B2'; /* Up arrow */
+    }
+}    
+    #verbInput {
+    width: 300px; /* Adjust width as needed */
+    height: 30px; /* Adjust height as needed */
+    font-size: 16px; /* Optional: Increase font size for readability */
+    padding: 5px; /* Optional: Add padding for better spacing */
+    border: 1px solid #2C4870; /* Optional: Add border color to match theme */
+    border-radius: 4px; /* Optional: Add rounded corners */
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+
+<nav class="navbar">
+  <a href="https://sindarincrashcourse.neocities.org"><span id="bardh-text">Bardh</span></a>
+  
+   <!-- Menu Toggle for Small Screens -->
+  <input type="checkbox" id="menu-toggle">
+  <label for="menu-toggle" class="menu-icon">&#9776;</label>
+    <div class="dropdown">
+      <button>Nouns</button>
+      <div class="dropdown-content">
+       <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.3">1.2.1.3 Class Plural</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.1.html#1.2.1.5">1.2.1.6 Direct Objects</a>
+      </div>
+    </div>
+     <div class="dropdown">
+      <button>Verbs</button>
+    <div class="dropdown-content">
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2" class="w3-bar-item w3-button">1.2.2 Verbs</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2.1" class="w3-bar-item w3-button">1.2.2.1 Aorist Tense</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2.2" class="w3-bar-item w3-button">1.2.2.2 Verb Suffixes</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2.3" class="w3-bar-item w3-button">1.2.2.3 Present Continuous</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2.4" class="w3-bar-item w3-button">1.2.2.4 Future, Past</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.2.2.5" class="w3-bar-item w3-button">1.2.2.5 Section Summary</a>
+        <a href="https://sindarincrashcourse.neocities.org/A-StemBasic" class="w3-bar-item w3-button">A-Stem Verb Conjugator</a>
+        <a href="https://sindarincrashcourse.neocities.org/I-StemBasic" class="w3-bar-item w3-button">I-Stem Verb Conjugator</a>
+        <a href="https://sindarincrashcourse.neocities.org/stress" class="w3-bar-item w3-button">Stress & IPA</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.2.html#1.1" class="w3-bar-item w3-button">Exercise 1.1</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button>Pronouns</button>
+    <div class="dropdown-content">
+       <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2.3" class="w3-bar-item w3-button">1.2.3 Pronouns</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2.3.1" class="w3-bar-item w3-button">1.2.3.1 Object “Accusative” & Independent “Nominative”</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2.3.2" class="w3-bar-item w3-button">1.2.3.2 Subject Suffixes</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2.3.3" class="w3-bar-item w3-button">1.2.3.3 Possessive</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2.3.4" class="w3-bar-item w3-button">1.2.3.4 Section Summary</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.3.html#1.2" class="w3-bar-item w3-button">Exercise 1.2</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button>Adjectives & Adverbs</button>
+    <div class="dropdown-content">
+       <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.2.4" class="w3-bar-item w3-button">1.2.4 Adjectives & Adverbs</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.2.4.1" class="w3-bar-item w3-button">1.2.4.1 Plural Adjectives</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.2.4.2" class="w3-bar-item w3-button">1.2.4.2 “To Be” Statements</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.2.4.3" class="w3-bar-item w3-button">1.2.4.3 Adverbs</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.2.4.4" class="w3-bar-item w3-button">1.2.4.4 Section Summary</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.4.html#1.3" class="w3-bar-item w3-button">Exercise 1.3</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button>Prepositions</button>
+    <div class="dropdown-content">
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5" class="w3-bar-item w3-button">1.2.5 Prepositions (prep.) and Noun Cases</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.1" class="w3-bar-item w3-button">1.2.5.1 Dative</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.1" class="w3-bar-item w3-button">1.2.5.1 Dative</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.2" class="w3-bar-item w3-button">1.2.5.2 Genitive</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.3" class="w3-bar-item w3-button">1.2.5.3 Directional and Location</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.4" class="w3-bar-item w3-button">1.2.5.4 Possessive Pronouns & Noun Cases</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.2.5.5" class="w3-bar-item w3-button">1.2.5.5 Section Summary</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.5#1.4" class="w3-bar-item w3-button">Exercise 1.4</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button>Conjunctions</button>
+    <div class="dropdown-content">
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.2.6" class="w3-bar-item w3-button">1.2.6 Conjunctions & Subordinate Clauses</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.2.6.1" class="w3-bar-item w3-button">1.2.6.1 Conjunctions</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.2.6.2" class="w3-bar-item w3-button">1.2.6.2 Subordinate Clauses</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.2.6.3" class="w3-bar-item w3-button">1.2.6.3 Distribution of Meaning Among Words</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.2.6.5" class="w3-bar-item w3-button">1.2.6.4 Section Summary</a>
+        <a href="https://sindarincrashcourse.neocities.org/1.2.6.html#1.5" class="w3-bar-item w3-button">Exercise 1.5</a>
+      </div>
+    </div>
+<div class="dropdown">
+      <button>Consonant Mutations</button>
+    <div class="dropdown-content">
+        <a href="https://sindarincrashcourse.neocities.org/mutations.html#chart" class="w3-bar-item w3-button">1.4 Mutation Chart</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button>Neologisms & Compounds</button>
+    <div class="dropdown-content">
+        <a href="https://sindarincrashcourse.neocities.org/neologisms.html" class="w3-bar-item w3-button">1.5 Neologisms</a>
+        <a href="https://sindarincrashcourse.neocities.org/compounds.html" class="w3-bar-item w3-button">1.6 Compounds</a>
+        <a href="https://sindarincrashcourse.neocities.org/consonants.html" class="w3-bar-item w3-button">1.7 Consonant Chart</a>
+      </div>
+    </div>
+</nav>
+
+<p>Enter a verb below to see its full conjugation paradigm:</p>
+<label for="verbInput">Verb:</label>
+<input type="text" id="verbInput" placeholder="Enter verb here" 
+       oninput="this.value = this.value.toLowerCase().replace(/-+$/,'')" 
+       onblur="clearResultsIfEmpty()">
+
+<div id="resultPresent"></div>
+
+<script>
+    document.getElementById('verbInput').addEventListener('input', generateConjugationTable);
+
+    function clearResultsIfEmpty() {
+        const inputField = document.getElementById('verbInput');
+        if (inputField.value.trim() === '') {
+            document.getElementById('resultPresent').innerHTML = '';
+        }
+    }
+
+    // Function to normalize verb for internal matching (strip accents)
+    function normalizeVerbForMatching(verb) {
+        return verb.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Strip diacritics
+    }
+
+    // Past Tense Transitive Conjugation Function
+    function conjugateAndDisplayPastT(verb, personNumber) {
+        let conjugatedVerb;
+
+        // Special exceptions for certain verbs
+    const specialConjugations = {
+        'bachanna': {
+            '1st Singular': 'bachónen',
+            '1st Plural Exclusive': 'bachónef',
+            '1st Plural Inclusive': 'bachóneb',
+            '2nd Singular Formal': 'bachónel',
+            '2nd Plural Formal': 'bachónedh',
+            '2nd Singular Familiar': 'bachóneg',
+            '3rd Singular': 'bachón',
+            '3rd Plural': 'bachóner'
+        },
+        'suilanna': {
+            '1st Singular': 'suilónen',
+            '1st Plural Exclusive': 'suilónef',
+            '1st Plural Inclusive': 'suilóneb',
+            '2nd Singular Formal': 'suilónel',
+            '2nd Plural Formal': 'suilónedh',
+            '2nd Singular Familiar': 'suilóneg',
+            '2nd Plural Familiar': 'suilónegir',
+            '3rd Singular': 'suilón',
+            '3rd Plural': 'suilóner'
+        },
+        'anna': {
+            '1st Singular': 'ónen',
+            '1st Plural Exclusive': 'ónef',
+            '1st Plural Inclusive': 'óneb',
+            '2nd Singular Formal': 'ónel',
+            '2nd Plural Formal': 'ónedh',
+            '2nd Singular Familiar': 'óneg',
+            '2nd Plural Familiar': 'ónegir',
+            '3rd Singular': 'ón',
+            '3rd Plural': 'óner'
+        }
+    };
+
+    // Check for specific pattern: Vowel + "nna"
+    const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
+    if (vowels.includes(verb[verb.length - 4]) && verb.endsWith('nna')) {
+        // Apply suffix rules directly
+        const suffixes = {
+            '1st Singular': 'nnen',
+            '1st Plural Exclusive': 'nnef',
+            '1st Plural Inclusive': 'nneb',
+            '2nd Singular Formal': 'nnel',
+            '2nd Plural Formal': 'nnedh',
+            '2nd Singular Familiar': 'nneg',
+            '2nd Plural Familiar': 'nnegir',
+            '3rd Singular': 'nt',
+            '3rd Plural': 'nner'
+        };
+        conjugatedVerb = verb + (suffixes[personNumber] || '');
+        return conjugatedVerb;
+    }
+
+    if (specialConjugations[verb]) {
+        conjugatedVerb = specialConjugations[verb][personNumber];
+    } else {
+        // General suffix rules
+        const suffixes = {
+            '1st Singular': 'nnen',
+            '1st Plural Exclusive': 'nnef',
+            '1st Plural Inclusive': 'nneb',
+            '2nd Singular Formal': 'nnel',
+            '2nd Plural Formal': 'nnedh',
+            '2nd Singular Familiar': 'nneg',
+            '2nd Plural Familiar': 'nnegir',
+            '3rd Singular': 'nt',
+            '3rd Plural': 'nner'
+        };
+
+        // Define special endings and their lengths
+        const specialEndings = ["na", "ada", "nnada", "ida"];
+        const endingLengths = {
+            'na': 2,
+            'ada': 2,
+            'nnada': 5,
+            'ida': 2
+        };
+
+        // Find the longest matching special ending
+        let longestEnding = "";
+        for (let ending of specialEndings) {
+            if (verb.endsWith(ending) && ending.length > longestEnding.length) {
+                longestEnding = ending;
+            }
+        }
+
+        // Remove the longest special ending if present
+        if (longestEnding) {
+            verb = verb.slice(0, -endingLengths[longestEnding]);
+        }
+
+        // Get the suffix for the selected person/number
+        const suffix = suffixes[personNumber] || '';
+
+        // Construct the conjugated verb
+        conjugatedVerb = verb + suffix;
+    }
+
+    return conjugatedVerb;
+}
+
+    function conjugateAstemPresent(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'on',
+            '2nd Singular Familiar': 'og',
+            '2nd Singular Formal': 'ol',
+            '3rd Singular': '',
+            '1st Plural Inclusive': 'ab',
+            '1st Plural Exclusive': 'of',
+            '2nd Plural Formal': 'odh',
+            '3rd Plural': 'ar'
+        };
+
+        if (verb.endsWith('a') && personNumber !== '3rd Singular') {
+            verb = verb.slice(0, -1);
+        }
+
+        return { conjugation: verb + suffixes[personNumber] };
+    }
+
+    function conjugateIntransitivePast(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'ssen',
+            '1st Plural Exclusive': 'ssef',
+            '1st Plural Inclusive': 'sseb',
+            '2nd Singular Formal': 'ssol',
+            '2nd Singular Familiar': 'ssog',
+            '2nd Plural Formal': 'ssodh',
+            '3rd Singular': 's(t)',
+            '3rd Plural': 'sser'
+        };
+
+        return { conjugation: verb + (suffixes[personNumber] || '') };
+    }
+
+    function conjugateAstemFuture(verb, personNumber) {
+        const suffixes = {
+            '1st Singular': 'thon',
+            '2nd Singular Familiar': 'thog',
+            '2nd Singular Formal': 'thol',
+            '3rd Singular': 'tha',
+            '1st Plural Inclusive': 'thab',
+            '1st Plural Exclusive': 'thof',
+            '2nd Plural Formal': 'thodh',
+            '3rd Plural': 'thar'
+        };
+
+        return { conjugation: verb + suffixes[personNumber] };
+    }
+
+    function conjugateVerb(baseVerb, form) {
+        let conjugatedVerb;
+
+        // Define consonant clusters that should be treated as single consonants
+        const singleConsonants = ["dh", "th", "ph", "lh", "rh", "ng"];
+
+        // Define vowel change and lengthen maps
+        const vowelChangeMap = { a: "e", e: "e", o: "e", u: "y" };
+        const vowelLengthenMap = { a: "ó", e: "í", o: "ú" };
+        const diphthongs = ["ae", "ai", "ui", "oe", "au", "ei", "eu"];
+
+        // Function to determine if a vowel is followed by a consonant cluster
+        function isFollowedByCluster(baseVerb, baseVowelIndex) {
+            let remaining = baseVerb.slice(baseVowelIndex + 1);
+            for (let cluster of singleConsonants) {
+                if (remaining.startsWith(cluster)) {
+                    remaining = remaining.slice(cluster.length);  // Skip the cluster
+                    break;
+                }
+            }
+            // Check if what's left starts with two consonants
+            return /^[^aeiou]{2}/.test(remaining);
+        }
+
+        // Function to apply vowel changes based on rules
+        function applyVowelChanges(verb) {
+            let vowels = verb.match(/[aeou]/g) || [];
+
+            if (vowels.length === 1 && isFollowedByCluster(verb, verb.indexOf(vowels[0]))) {
+                // Single vowel before two consonants: apply vowelChangeMap
+                return verb.replace(/[aeou]/, match => vowelChangeMap[match]);
+            } else if (vowels.length === 1) {
+                // Single vowel: apply vowel lengthening map
+                return verb.replace(/[aeou]/, match => vowelLengthenMap[match]);
+            } else if (vowels.length >= 2) {
+                // Multiple vowels: first vowel uses vowelChangeMap, second uses vowelLengthenMap
+                let firstVowelIndex = verb.indexOf(vowels[0]);
+                let lastVowelIndex = verb.lastIndexOf(vowels[1]);
+
+                return verb.replace(/[aeou]/g, (match, offset) => {
+                    if (offset === lastVowelIndex) {
+                        return isFollowedByCluster(verb, offset) ? vowelChangeMap[match] : vowelLengthenMap[match];
+                    } else if (offset === firstVowelIndex) {
+                        return vowelChangeMap[match];
+                    }
+                    return match;
+                });
+            }
+
+            return verb; // Return the verb unchanged if no rules apply
+        }
+
+        // Define special endings to remove for Passive Participle forms
+        const specialEndings = ["na", "nna", "ada", "nnada", "ida"];
+        const endingLengths = {
+            'na': 2,
+            'nna': 3,
+            'ada': 2,
+            'nnada': 5,
+            'ida': 2
+        };
+
+        // Function to remove special endings
+        function removeSpecialEnding(verb) {
+            let longestEnding = "";
+            for (let ending of specialEndings) {
+                if (verb.endsWith(ending) && ending.length > longestEnding.length) {
+                    longestEnding = ending;
+                }
+            }
+            if (longestEnding) {
+                verb = verb.slice(0, -endingLengths[longestEnding]);
+            }
+            return verb;
+        }
+
+        // Function to handle special rules for verbs ending in "ada"
+        function handleAdaEndings(baseVerb, form) {
+            const adaForms = ["Present", "Future", "Active Present Participle", "Active Past Participle", "Infinitive", "Gerund"];
+            if (!baseVerb.endsWith("ada") || !adaForms.includes(form)) return null;
+
+            switch (form) {
+                case "Present":
+                    return baseVerb.slice(0, -3) + "odan/ódan";
+                case "Future":
+                    return baseVerb.slice(0, -3) + "odathon/ódathon";
+                case "Active Present Participle":
+                    return baseVerb.slice(0, -3) + "ódal/ódel";
+                case "Active Past Participle":
+                    return applyVowelChanges(baseVerb.slice(0, -3)) + "ódiel";
+                case "Infinitive":
+                case "Gerund":
+                    return baseVerb.slice(0, -3) + "óded/ódad";
+            }
+        }
+
+        switch (form) {
+            case "Infinitive":
+            case "Gerund":
+                conjugatedVerb = handleAdaEndings(baseVerb, form) || (baseVerb + "d");
+                break;
+            case "Imperative":
+                conjugatedVerb = baseVerb.slice(0, -1) + "o";
+                break;
+            case "Active Present Participle":
+                conjugatedVerb = handleAdaEndings(baseVerb, form) || (baseVerb.slice(0, -1) + "ol");
+                break;
+            case "Active Past Participle":
+    // Remove the last character before applying changes
+    let modifiedBaseVerb = baseVerb.slice(0, -1);
+
+    // **New Rule: If the verb contains "aea", do not apply vowel changes**
+    if (modifiedBaseVerb.includes("aea")) {
+        // Do not apply vowel changes
+        conjugatedVerb = modifiedBaseVerb + "iel";
+    } else {
+        // Apply vowel changes, preserving diphthongs
+        modifiedBaseVerb = modifiedBaseVerb.replace(/a(?![eiu])|o(?!e)|u(?!i)/g, match => vowelChangeMap[match]);
+
+        // Append the suffix
+        conjugatedVerb = modifiedBaseVerb + "iel";
+    }
+    break;
+            case "Passive Participle Singular":
+                baseVerb = removeSpecialEnding(baseVerb);
+                conjugatedVerb = baseVerb + "nnen";
+                break;
+            case "Passive Participle Plural":
+                baseVerb = removeSpecialEnding(baseVerb);
+
+                // **New Rule: If the verb contains "aea", do not apply vowel changes**
+                if (baseVerb.includes("aea")) {
+                    // Do not apply vowel changes
+                    conjugatedVerb = baseVerb + "nnin";
+                } else {
+                    // Apply vowel changes for plurals, excluding diphthongs
+                    baseVerb = baseVerb.replace(/a(?![eiu])|o(?!e)|u(?!i)/g, match => vowelChangeMap[match]);
+
+                    // Append the plural suffix
+                    conjugatedVerb = baseVerb + "nnin";
+                }
+                break;
+            default:
+                conjugatedVerb = "Invalid form";
+        }
+        return { conjugation: conjugatedVerb };
+    }
+
+    function generateConjugationTable() {
+        const verb = document.getElementById('verbInput').value.trim();
+        const normalizedVerb = normalizeVerbForMatching(verb); // Normalize for internal logic
+
+        if (verb === '') {
+            clearResultsIfEmpty();
+            return;
+        }
+
+        const personNumbers = [
+            '1st Singular', '2nd Singular Familiar', '2nd Singular Formal', '3rd Singular',
+            '1st Plural Inclusive', '1st Plural Exclusive', '2nd Plural Formal', '3rd Plural'
+        ];
+
+        const presentConjugationMap = {};
+        const pastConjugationMap = {};
+        const intransitivePastConjugationMap = {};
+        const futureConjugationMap = {};
+
+        personNumbers.forEach(personNumber => {
+            // Use the normalizedVerb for internal logic but keep the original verb with accents for output
+            const presentResult = conjugateAstemPresent(verb, personNumber);  // Keep original verb in output
+            const pastResult = conjugateAndDisplayPastT(verb, personNumber);
+            const intransitivePastResult = conjugateIntransitivePast(verb, personNumber);
+            const futureResult = conjugateAstemFuture(verb, personNumber);
+
+            presentConjugationMap[personNumber] = presentResult.conjugation;
+            pastConjugationMap[personNumber] = pastResult;
+            intransitivePastConjugationMap[personNumber] = intransitivePastResult.conjugation;
+            futureConjugationMap[personNumber] = futureResult.conjugation;
+        });
+
+        let tableContent = `
+            <h2>Conjugation Paradigm for "${verb}"</h2>
+            <table>
+            <thead>
+              <tr>
+                <th></th><th>Pronoun</th>
+                <th>Present</th><th>Past (Transitive)</th><th>Past (Intransitive)</th><th>Future</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1st Sg.</td><td>I</td>
+              <td>${presentConjugationMap['1st Singular']}</td>
+              <td>${pastConjugationMap['1st Singular']}</td>
+              <td>${intransitivePastConjugationMap['1st Singular']}</td>
+              <td>${futureConjugationMap['1st Singular']}</td></tr>
+              <tr><td>2nd Sg. Fam.</td><td>You</td>
+              <td>${presentConjugationMap['2nd Singular Familiar']}</td>
+              <td>${pastConjugationMap['2nd Singular Familiar']}</td>
+              <td>${intransitivePastConjugationMap['2nd Singular Familiar']}</td>
+              <td>${futureConjugationMap['2nd Singular Familiar']}</td></tr>
+              <tr><td>2nd Sg. Form.</td><td>You</td>
+              <td>${presentConjugationMap['2nd Singular Formal']}</td>
+              <td>${pastConjugationMap['2nd Singular Formal']}</td>
+              <td>${intransitivePastConjugationMap['2nd Singular Formal']}</td>
+              <td>${futureConjugationMap['2nd Singular Formal']}</td></tr>
+              <tr><td>3rd Sg.</td><td>He/She/It</td>
+              <td>${presentConjugationMap['3rd Singular']}</td>
+              <td>${pastConjugationMap['3rd Singular']}</td>
+              <td>${intransitivePastConjugationMap['3rd Singular']}</td>
+              <td>${futureConjugationMap['3rd Singular']}</td></tr>
+              <tr><td>1st Pl. Inc.</td><td>We (and you)</td>
+              <td>${presentConjugationMap['1st Plural Inclusive']}</td>
+              <td>${pastConjugationMap['1st Plural Inclusive']}</td>
+              <td>${intransitivePastConjugationMap['1st Plural Inclusive']}</td>
+              <td>${futureConjugationMap['1st Plural Inclusive']}</td></tr>
+              <tr><td>1st Pl. Exc.</td><td>We (but not you)</td>
+              <td>${presentConjugationMap['1st Plural Exclusive']}</td>
+              <td>${pastConjugationMap['1st Plural Exclusive']}</td>
+              <td>${intransitivePastConjugationMap['1st Plural Exclusive']}</td>
+              <td>${futureConjugationMap['1st Plural Exclusive']}</td></tr>
+              <tr><td>2nd Pl. Form.</td><td>You</td>
+              <td>${presentConjugationMap['2nd Plural Formal']}</td>
+              <td>${pastConjugationMap['2nd Plural Formal']}</td>
+              <td>${intransitivePastConjugationMap['2nd Plural Formal']}</td>
+              <td>${futureConjugationMap['2nd Plural Formal']}</td></tr>
+              <tr><td>3rd Pl.</td><td>They</td>
+              <td>${presentConjugationMap['3rd Plural']}</td>
+              <td>${pastConjugationMap['3rd Plural']}</td>
+              <td>${intransitivePastConjugationMap['3rd Plural']}</td>
+              <td>${futureConjugationMap['3rd Plural']}</td></tr>
+            </tbody>
+            </table>`;
+
+        tableContent += `
+            <h2>Additional Forms</h2>
+            <table>
+            <thead>
+              <tr>
+                <th>Form</th><th>Conjugation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Present Active Participle</td><td>${conjugateVerb(verb, "Active Present Participle").conjugation}</td></tr>
+              <tr><td>Past Active Participle</td><td>${conjugateVerb(verb, "Active Past Participle").conjugation}</td></tr>
+              <tr><td>Passive Past Participle (Singular)</td><td>${conjugateVerb(verb, "Passive Participle Singular").conjugation}</td></tr>
+              <tr><td>Passive Past Participle (Plural)</td><td>${conjugateVerb(verb, "Passive Participle Plural").conjugation}</td></tr>
+              <tr><td>Imperative</td><td>${conjugateVerb(verb, "Imperative").conjugation}</td></tr>
+              <tr><td>Infinitive</td><td>${conjugateVerb(verb, "Infinitive").conjugation}</td></tr>
+              <tr><td>Gerund</td><td>${conjugateVerb(verb, "Gerund").conjugation}</td></tr>
+            </tbody>
+            </table>`;
+
+        document.getElementById('resultPresent').innerHTML = tableContent;
+    }
+</script>
+
+
+
+<div>
+    <h2>Disclaimer</h2>
+    <p>
+        This tool is designed to help conjugate A-Stem (Derived) Verbs in Sindarin. While it strives for accuracy, please be aware that:
+    </p>
+    <ul>
+        <li>
+            <strong>Complexity of Sindarin:</strong> Sindarin is a constructed language with intricate rules, including vowel changes, consonant mutations, and contextual variations. Additionally, some verbs are <b>transitive</b>, some are <b>intransitive</b>, and some can be <b>both</b>. Due to the limitations of the code, this conjugator shows both forms for all verbs, even if a verb is strictly one or the other.
+        </li>
+        <li>
+            <strong>Potential for Errors:</strong> Despite our best efforts, certain renditions may be incorrect. The complexity of the language and the limitations of algorithmic processing mean that not all rules or vowel changes can be perfectly represented.
+        </li>
+        <li>
+            <strong>User Responsibility:</strong> It is advisable to cross-reference the results with trusted Sindarin resources or consult with knowledgeable linguists to ensure accuracy, especially for scholarly or formal work.
+        </li>
+        <li>
+            <strong>Updates and Feedback:</strong> This tool is continuously evolving. If you encounter any errors or have suggestions for improvement, your feedback is highly valued and will contribute to enhancing the accuracy and functionality of this conjugator.
+        </li>
+    </ul>
+    <p>
+        I also want to give a big shout-out to <b>Faeleth</b>, who helped me refine my code for these. Without her help, I would still be pulling my hair out.
+    </p>
+</div>
+<button onclick="topFunction()" id="myBtn" title="Go to top">Am</button>
+<script>
+    // Existing code for "Back to Top" button
+
+    // Get the button
+    var mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {
+        scrollFunction();
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE, and Opera
+    }
+
+    // New code for responsive navbar dropdowns
+
+    // Get all dropdown buttons
+    var dropdownButtons = document.querySelectorAll('.dropdown button');
+
+    dropdownButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            // Prevent default action
+            event.preventDefault();
+
+            // Toggle active class on the button
+            this.classList.toggle('active');
+
+            // Get the associated dropdown content
+            var dropdownContent = this.nextElementSibling;
+
+            // Toggle the display of the dropdown content
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+            }
+
+            // Close other dropdowns
+            dropdownButtons.forEach(function(otherButton) {
+                if (otherButton !== button) {
+                    otherButton.classList.remove('active');
+                    var otherDropdownContent = otherButton.nextElementSibling;
+                    if (otherDropdownContent) {
+                        otherDropdownContent.style.display = "none";
+                    }
+                }
+            });
+        });
+    });
+</script>
+  </body>
+</html>

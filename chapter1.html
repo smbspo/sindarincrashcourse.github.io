@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pennas nan i·Silevri – Sath 1: Oh en·iest nan oer</title>
+  
+   <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+  font-size: 11px;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 0.72em;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+.div-table {
+  border: 1px solid rgba(0,0,0,0.04);            /* lighter frame like your grid */
+  border-radius: 10px;                            /* match grid-table */
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);      /* match grid-table */
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  color: var(--text);
+  font-size: 14px;                                /* consistent with tbody td */
+}
+
+/* header + rows share the same grid */
+.div-table .row {
+  display: grid;
+  grid-template-columns: 55px 1.35fr 1.35fr 1.35fr; /* keep your original column layout */
+}
+
+/* cells */
+.div-table .cell {
+  padding: 10px;                                  /* slightly adjusted to match grid-table */
+  line-height: 1.2;
+  min-width: 0;
+}
+
+/* header styling — using the same gradient & foreground as thead th */
+.div-table .row.head {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* row / cell dividers use the subtle rgba border */
+.div-table .row:not(.head) {
+  background: transparent;
+}
+.div-table .row:not(:last-child) .cell {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.div-table .cell:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+/* optional: keep the # column visually compact */
+.div-table .cell.num {
+  white-space: nowrap;
+}
+
+/* hover — whole row subtle glow (from tbody tr:hover td) */
+.div-table .row:hover > .cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* active/hovered cell stronger focus (optional) */
+.div-table .cell:hover {
+  background: rgba(14,165,164,0.10);
+}
+
+/* responsive: stack into "cards" on narrow screens */
+@media (max-width: 720px) {
+  .div-table .row {
+    grid-template-columns: 1fr;
+  }
+
+  .div-table .row.head {
+    display: none; /* hide header row on mobile */
+  }
+
+  .div-table .cell {
+    border-right: none !important;
+  }
+
+  .div-table .row:not(:last-child) .cell:last-child {
+    border-bottom: none;
+  }
+
+  .div-table .row {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .div-table .row:last-child {
+    border-bottom: none;
+  }
+
+  /* labels for mobile */
+  .div-table .cell[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--accent);
+  }
+}
+  </style>
+</head>
+<body>
+
+<div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+
+<main class="main-center" role="main">
+
+  <h1>Pennas i·Silevril (History [of] the Silmarils)</h1>
+  
+  <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> I am using definite prepositions and favoring the genitive <i>nan</i>. I have updated Mithriel’s translations to fit this writing style, but the translations are still hers.
+  </div>
+  <h2>Seth 1: oh en·iest<sup class="fn">1</sup> nan oer <span class="subtitle">(About [the] beginning of days)</span></h2>
+  <div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>iest</b>, <i>n.</i> “beginning” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1898335019.html?neo">yestië</a> n. “beginning” [author: Luinyelle]
+  </div>
+
+    <h3 id="1">Chaper 1</h3>
+  <ul>
+    <li><strong><a href="/chapter1#1.1">Paragraph 1: It is told … after. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.2">Paragraph 2: In that time … day. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.3">Paragraph 3: Then the seeds … content. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.4">Paragraph 4: Now it came … hate. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.5">Paragraph 5: Now therefore the … Almaren. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.6">Paragraph 6: Then Tulkas slept, … him. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.7">Paragraph 7: Now Melkor began … restored. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.8">Paragraph 8: In the confusion … Valar. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.9">Paragraph 9: Thus ended the … East. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.10">Paragraph 10: Behind the walls … hallowed. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.11">Paragraph 11: And when Valinor … watched. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.12">Paragraph 12: And as they … woven. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.13">Paragraph 13: The one had … beside. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.14">Paragraph 14: In seven hours … Time. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.15">Paragraph 15: But as the … charge. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.16">Paragraph 16: From the beauty … lost. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.17">Paragraph 17: But Manwë Súlimo, … lay. (Translation: Mithriel)</a></strong></li>
+    <li><strong><a href="/chapter1#1.18">Paragraph 18: Manwë has no … blessedness. (Translation: Mithriel)</a></strong></li>
+    <li><strong><a href="/chapter1#1.19">Paragraph 19: But Ulmo was … days. (Translation: Mithriel)</a></strong></li>
+    <li><strong><a href="/chapter1#1.20">Paragraph 20: And in that … deceit. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.21">Paragraph 21: Now all is … gifts. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.22">Paragraph 22: For it is … smallest. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.23">Paragraph 23: But Ilúvatar knew … him. (Translation: Rínor)</a></strong></li>
+    <li><strong><a href="/chapter1#1.24">Paragraph 24: It is one … it. (Translation: Mithriel)</a></strong></li>
+</ul>
+
+<h3 id="1.1">Ch. 1 Para. 1 (Rínor)</h3>
+
+  <div class="div-table" role="table" aria-label="Ch. 1 Para. 1">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.1</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      i·Ñgolodhrim bedir i en·Oeth Vinui iestast fo<sup class="fn">1</sup> bagadu<sup class="fn">2</sup> ‘Ardhon, a fo<sup class="fn">1</sup> naid angoler egor phadrasser bo geven; ah anann, Belegûr aw vaethas. Ach vi enedh en·oeth fae na mbellas veleg a rheth ethul añ grestad idh·Rodyn, lhassol, vi venel chaeron, oh oeth vi Arnad Bîn; a lhaw e·lalaith dín pannant ‘Ardhon. To<sup class="fn">3</sup> Tolchas Thalion ethul, en·oroth dín húdast ve ‘wae veleg, gwinnol<sup class="fn">4</sup> fain a môr cho<sup class="fn">5</sup> den; a Belegûr dhregast od rûth ah e·lalaith dín, awarthant ‘Ardhon, ah îdh vreniast an andrann. A Tholchas dharthast ah olast er nan idh·Rodyn nan Arnad Gardhon, ach Mbelegûr ‘eriast vim môr edren, ah ediw Dolchas anuir.
+    </div>
+    <div class="cell" role="cell" data-label="Back Translation">
+      The Noldor say that the War First began before Arda [was] full-shaped, and before things grew or walked on earth; and for long, Melkor had authority. But in middle [of] the war [a] spirit of mighty physical strength and endurance came forth for [the] aiding [of] the-Valar, hearing, in the heavens distant, about [a] war in [the] Kingdom Little; and [the] sound [of] his laughter filled Arda. Then Tulkas [the] Steadfast came forth, his anger blew like [a] mighty wind, scattering clouds and darkness before it; and Melkor fled from his wrath and laughter, he forsook Arda, and peace endured for [an] age. And Tulkas remained and became one of the Valar of [the] Kingdom [of] Arda, but Melkor pondered in the darkness outer, and he hated Tulkas forever.
+    </div>
+    <div class="cell" role="cell" data-label="Original">
+      It is told among the wise that the First War began before Arda was full-shaped, and ere yet there was anything that grew or walked upon earth; and for long Melkor had the upper hand. But in the midst of the war a spirit of great strength and hardihood came to the aid of the Valar, hearing in the far heaven that there was battle in the Little Kingdom; and Arda was filled with the sound of his laughter. So came Tulkas the Strong, whose anger passes like a mighty wind, scattering cloud and darkness before it; and Melkor fled before his wrath and his laughter, and forsook Arda, and there was peace for a long age. And Tulkas remained and became one of the Valar of the Kingdom of Arda; but Melkor brooded in the outer darkness, and his hate was given to Tulkas for ever after. 
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+    <sup class="fn">2</sup> <b>pagadu</b>, <i>adj.</i> “full-shaped” <a href="https://eldamo.org/content/words/word-2222809799.html?neo">√KWA</a> <i>root.</i> “complete, full, whole, all, every” + ᴺS. [N.] <a href="https://eldamo.org/content/words/word-3302274433.html?neo">cadu</a>, <i>adj.</i> “shaped, formed” [author: Rínor]<br>
+    <sup class="fn">3</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+    <sup class="fn">4</sup> <b>gwinna-</b>, <i>v.</i> “to scatter, blow about” ⪤ Q. <a href="https://eldamo.org/content/words/word-1243279043.html?neo">vinta-</a> [w] <i>v.</i> “to scatter, blow about” [author: Rínor]<br>
+<sup class="fn">5</sup>  <b>ho</b>, <i>prep.</i> “before, in front” (spatial only) ✶KʰĀ [author: Ellanto]
+  </div>
+
+<h3 id="1.2">Ch. 1 Para. 2 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 2">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.2</div>
+    <div class="cell" role="cell" data-label="Sindarin">   
+       Mil lû han idh·Rodyn geirianner banu na ‘aear, nuir, eryd, a Ivann eridh na vedui in·eridh i ‘audant anann. Ah añ gaeth i, io erthernin egor choedhennin i·noer nuin emyn ioer, a baurannen galad, Gaul na chaved<sup class="fn">1</sup> Ivann echant gelair velig dâd añ geliad Ennor i adabast vîg e·‘aear echor. To<sup class="fn">2</sup> Gilbrennil bannant in·chelair, a Manwe aeanant<sup class="fn">3</sup> din, ah idh·Rodyn hestanner din bo ‘ennyth daer, annaer athar ae<sup class="fn">4</sup> eryd uin oer ebir. Orthanner er chalar vi forn Ennor, ah estanner den Illuin; ah e·galar egel orthanner vi charad ah estanner den Ormal ah e·galad o gelair idh·Rodyn peliast or Amar, be illad celiannen vi aur beñ·gwist<sup class="fn">5</sup>.
+    </div>
+    <div class="cell" role="cell" data-label="Back Translation">
+      In that time the Valar brought about order to [the] sea, lands, mountains, and Yavanna sowed at last the seeds that she for long devised. And for reason that, when the fires [were] conquered or buried under the old hills, and light [was] needed, Aule at [the] praying [of] Yavanna made two mighty lamps for illuminating Middle-Earth that he built among the encircling sea. Then Varda filled the lamps, and Manwe hallowed them, and the Valar set them on lofty pillars, higher beyond any mountains from the following days. They raised one lamp in [the] north [of] Middle-Earth, and they called it Illuin; and the other lamp they raised in [the] south and they called it Ormal and the light from [the] lamps [of] the Valar spread over Earth, like everything [was] illuminated in [a] changeless day.
+    </div>
+    <div class="cell" role="cell" data-label="Original">
+       In that time the Valar brought order to the seas and the lands and the mountains, and Yavanna planted at last the seeds that she had long devised. And since, when the fires were subdued or buried beneath the primeval hills, there was need of light, Aulë at the prayer of Yavanna wrought two mighty lamps for the lighting of the Middle-earth which he had built amid the encircling seas. Then Varda filled the lamps and Manwë hallowed them, and the Valar set them upon high pillars, more lofty far than are any mountains of the later days. One lamp they raised near to the north of Middle-earth, and it was named Illuin; and the other was raised in the south, and it was named Ormal; and the light of the Lamps of the Valar flowed out over the Earth, so that all was lit as it were in a changeless day.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+    <strong>Notes:</strong><br>
+    <sup class="fn">1</sup> <b>chaved</b>, <i>n.</i> “prayer/praying” from ᴺS. !<a href="https://eldamo.org/content/words/word-3693152049.html?neo">hav-</a> <i>v.</i> “to pray” [author: Rínor]<br>
+    <sup class="fn">2</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+    <sup class="fn">3</sup> <b>aeana-</b>, <i>v.</i> “to hallow, bless, treat as holy” ⪤ Q. <a href="https://eldamo.org/content/words/word-1647781279.html?neo">aina-</a> <i>v.</i> “to hallow, bless, treat as holy” [author: Rínor]<br>
+<sup class="fn">4</sup>  <b>ae</b>, <i>adv.</i> “supposing, suppose, maybe; *any” ⪤ Q.<a href="https://eldamo.org/content/words/word-4053066113.html?neo">ai²</a>, adv. “supposing, suppose, maybe; *any” <br>
+<sup class="fn">5</sup> <b> beñ·gwist</b>, <i>adj.</i> “changless, without change” [author: Rínor]
+  </div>
+
+   <h3 id="1.3">Ch. 1 Para. 3 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 3">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.3</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      To<sup class="fn">1</sup> in·eridh i Ivann eridh, heriasser lim tuiad a theriad, ah lhae naid ‘alol velig a phîn eriasser, loew, glae, filib velig, gelaidh gui choe dín rîn vo fain, ve di eryd guinol, ach vraethennin i·sylch dín vo uial galen. A rhoef ethúler a chuiasser vi laid gelin, egor vi nduin ah in·aelin, egor phadrasser vi ‘waith in·eryn. Eno û loth lostast, egor û aew linnast, eni naid hin dharthast eno eni lû dín viñ gur Ivann, ach vaelig odul ui nuith dín, ah alhad ammaeligeb athar vi saith Gardhon enidh, ias<sup class="fn">2</sup> gelaid in·chelair dâd govasser a chwinnasser<sup class="fn">3</sup>. Ah ennas i·mbâr vinui nan idh·Rodyni bo Dol Alvaren vin Ael Veleg io ‘wain il naid, ah elvain e·laegas seingarn<sup class="fn">4</sup> vi chend i·cheredir eno; a thi ferthennin anann.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Then the seeds that Yavanna sowed, they swift[ly] began to sprout and flourish, and [a] great number [of] great and little growing things rose, moss, grass, great ferns, and trees together with their tops crowned by clouds, like they [were] living mountains, but their roots [were] wrapped by green twilight. And beasts came forth and lived in green plains, or in the rivers and in the lakes, or walked in [the] shadows [of] the woods. Still no flower bloomed, or no bird sang, for these things waited still for their time in the heart [of] Yavanna, but wealth came from her thoughts, and nowhere richer beyond the middle parts [of] Arda, where [the] lights [of] the two lamps gathered and blended. And there the first dwelling of the Valar on [the] Island [of] Almaren in the Great Lake when all things [were] young, and the new-made verdure [was] wonderful in [the] eyes [of] the makers still, and they [were] satisfied for long.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Then the seeds that Yavanna had sown began swiftly to sprout and to burgeon, and there arose a multitude of growing things great and small, mosses and grasses and great ferns, and trees whose tops were crowned with cloud as they were living mountains, but whose feet were wrapped in a green twilight. And beasts came forth and dwelt in the grassy plains, or in the rivers and the lakes, or walked in the shadows of the woods. As yet no flower had bloomed nor any bird had sung, for these things waited still their time in the bosom of Yavanna; but wealth there was of her imagining, and nowhere more rich than in the midmost parts of the Earth, where the light of both the Lamps met and blended. And there upon the Isle of Almaren in the Great Lake was the first dwelling of the Valar when all things were young, and new-made green was yet a marvel in the eyes of the makers; and they were long content.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+  <sup class="fn">2</sup> <b>ias</b>, <i>pron.</i> “where (relative)” ⪤ ᴹQ. <b>yassë</b>, <i>adv.</i> “there [remote, relative]” [author: Unknown]<br>
+  <sup class="fn">3</sup> <b>hwinna-</b>, <i>v.</i> “to blend, mix” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-764727765.html?neo">hwinta-</a>, <i>v.</i> “to mix, stir; to confuse” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>seingarn</b>, <i>adj.</i> “new-made; recently created” from ᴺS. [N.] ^<a href="https://eldamo.org/content/words/word-4158148799.html?neo">sain</a>, <i>adj.</i> “new” + ᴺS. [ᴱN.] <a href="https://eldamo.org/content/words/word-3301210037.html?neo">-garn</a>, <i>suf.</i> “-made” [author: Rínor]
+</div>
+
+
+<h3 id="1.4">Ch. 1 Para. 4 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 4">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.4</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Hi chídast i lo idh·Rodyn eidher ui thais dín, a thirianner e·‘alas a phannas<sup class="fn">1</sup> i·naid i ñgaudanner a chestanner, Manwe amarthant mbereth veleg; ah idh·Rodyn ah il idh·rim dín odúler eni nachaved dín. Ach lom Gaul a Tholchas; an iuithennin vaenas Gaul a bellas Tolchas añ grestad ilphen ben îdh drin oer ui dass dín vim bŷl n’ il phen bostad. A Belegûr istast oh il i agórer, am mil luig han aw ethir a mellyn thyrin vîg i·Moerim<sup class="fn">2</sup> i phernant eni gaeth dín; a chae vim môr de devas i bannant den, nast rhuchent<sup class="fn">3</sup> o das i·mbilbin<sup class="fn">4</sup> dín, i anírant toged ndim maethas dín. Eth<sup class="fn">5</sup> chostant enim fae o dem Eng<sup class="fn">6</sup> i erinc eni vŷl dín, ah avodh im thalion. A chi chenol e·lû dín odul ad<sup class="fn">7</sup> na ‘Ardhon, ah edir dad na den, a banath Gardhon vin ethuil dín pannant den vo devas am.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Now it came to pass that while the Valar rested from their labors, and they watched the growth and unfolding [of] the things that they devised and began, Manwe decreed [a] feast; and the Valar and all their hosts came at his summoning. But Aule and Tulkas [were] weary; for the craft of Aule and bodily strength of Tulkas [were] employed to aid everyone without rest through the days of their labor, in the service of all without stopping. And Melkor had knowledge about all that they did, for in that moment he had spies and secret friends among the Maiar that he turned to his cause, and far in the darkness it [was] hatred that filled him, being jealous of the work [of] his peers, that he desired to bring under his control. Therefore he gathered to himself spirits from the halls [of] Ea that he twisted for his service, and judged himself strong. And seeing his time came again to Arda, and he looked down to it, and [the] beauty [of] Arda in its spring filled them with more hate.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Now it came to pass that while the Valar rested from their labours, and watched the growth and unfolding of the things that they had devised and begun, Manwë ordained a great feast; and the Valar and all their host came at his bidding. But Aulë and Tulkas were weary; for the craft of Aulë and the strength of Tulkas had been at the service of all without ceasing in the days of their labour. And Melkor knew of all that was done, for even then he had secret friends and spies among the Maiar whom he had converted to his cause; and far off in the darkness he was filled with hatred, being jealous of the work of his peers, whom he desired to make subject to himself. Therefore he gathered to himself spirits out of the halls of Eä that he had perverted to his service, and he deemed himself strong. And seeing now his time he drew near again to Arda, and looked down upon it, and the beauty of the Earth in its Spring filled him the more with hate.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>pannas</b>, <i>n.</i> “unfolding, opening” ⪤ ᴺQ. [ᴱQ.] <a href="https://eldamo.org/content/words/word-1186651075.html?neo">pantië</a>, <i>n.</i> “unfolding, opening” [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>Moerim</b>, <i>pn.</i> “Maia (pl)” from <a href="https://eldamo.org/content/words/word-3041000311.html?neo">√MAY</a> <i>root.</i> “excellent, admirable, beautiful; make [art]” + S., N., G. <a href="https://eldamo.org/content/words/word-1899898197.html?neo">-rim</a> <i>suf.</i> “collective or group plural” [author: Echuidor Luinérion]<br>
+  <sup class="fn">3</sup> <b>rhuchent</b>, <i>n.</i> “envy, jealousy (lit) evil-sight” from S. <a href="https://eldamo.org/content/words/word-49119991.html?neo">rhu-</a> <i>pref.</i> “evil-” + ᴺS. [G.] <a href="https://eldamo.org/content/words/word-1016601419.html?neo">hent</a> <i>n.</i> “eyesight, *(sense of) sight” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>bilben</b>, <i>n.</i> “peer, equal” ᴺS. !<a href="https://eldamo.org/content/words/word-3215865955.html?neo">bîl</a> <i>n.</i> “likeness, similarity” + S., N. <a href="https://eldamo.org/content/words/word-2557917401.html?neo">pen²</a> <i>pron.</i> “one, somebody, anybody; ⚠️[N.] Elf” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>eth</b>, <i>conj.</i> “therefore” ⪤ Q. <a href="https://eldamo.org/content/words/word-1515458015.html?neo">etta</a>, <i>conj.</i> “*therefore, (lit.) out of that” [author: Elaran]<br>
+  <sup class="fn">6</sup> <b>Eng</b>, <i>pron.</i> “Creation, the (Material) Universe, Cosmos, †World; it is, let it be, [ᴹQ.] all that is” ⪤ Q. <a href="https://eldamo.org/content/words/word-1062987751.html?neo">Eä</a>, <i>n.</i> “Creation, the (Material) Universe, Cosmos, †World; it is, let it be, [ᴹQ.] all that is” [author: Parmandil]<br>
+  <sup class="fn">7</sup> <b>ad</b>, <i>adv.</i> “again” from <a href="https://eldamo.org/content/words/word-2176818521.html?neo">√AT</a> <i>root.</i> “two, double, bi-, di-; back, re-, [ᴹ√] again, twice” [author: unknown]
+</div>
+  
+ <h3 id="1.5">Ch. 1 Para. 5 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 5">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.5</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Hí, idh·Rodyn govasser bo Alvaren, gostol û rhû, ah añ gaeth i galad Illuin ú-egíner e·vorchant vi forod i beliast o chae vo Mbelegûr; an olast dûr ve Dhû e·Velegast. A the ‘lirnen i vi vereth Ethuil Gardhon han, Tolchas vestant Ndineth, nethel Araw, a lhilthast choedh<sup class="fn">1</sup> Rodyn boe ‘lae gelan nan Alvaren.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Now, the Valar gathered on Almaren, fearing no evil, and for reason that [the] light [of] Illuin they did not see the shadow in [the] north that spread from afar by Melkor; for he became dark like [the] Night [of] the Void. And it [is] sung that in that feast [of the] Spring [of] Arda, Tulkas wed Nessa, [the] sister of Oromë, and she danced before the Valar on the green grass of Almaren.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Now therefore the Valar were gathered upon Almaren, fearing no evil, and because of the light of Illuin they did not perceive the shadow in the north that was cast from afar by Melkor; for he was grown dark as the Night of the Void. And it is sung that in that feast of the Spring of Arda Tulkas espoused Nessa the sister of Oromë, and she danced before the Valar upon the green grass of Almaren.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>ho</b>, <i>prep.</i> “before, in front” (spatial only) ✶KʰĀ [author: Ellanto]
+</div>
+  
+ <h3 id="1.6">Ch. 1 Para. 6 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 6">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.6</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      To<sup class="fn">1</sup> Tolchas olur, an de lom a chûdh<sup class="fn">2</sup>, a Belegûr ammodh i e·lû dín odul. Ah eth<sup class="fn">3</sup> ‘lennast thar Rem e·Dhû ‘ui choth dín, ah odul n’ Ennor hae vi forod; ah idh·Rodyn ú-istasser o then.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Then Tulkas slept, for he [was] weary and content, and Melkor judged that his time came. And therefore he traveled over [the] Walls [of] the Night together with his host, and came to Middle-Earth far in [the] north; and the Valar did not have knowledge of him.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Then Tulkas slept, being weary and content, and Melkor deemed that his hour had come. And he passed therefore over the Walls of the Night with his host, and came to Middle-earth far in the north; and the Valar were not aware of him.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+  <sup class="fn">2</sup> <b>iûdh</b>, <i>n.</i> “content, (lit.) something contained, enclosed” from ᴺS. !<a href="https://eldamo.org/content/words/word-2669340865.html?neo">yosta</a> <i>n.</i> “content, (lit.) something contained, enclosed” [author: Rínor]<br>
+  <sup class="fn">3</sup> <b>eth</b>, <i>conj.</i> “therefore” ⪤ Q. <a href="https://eldamo.org/content/words/word-1515458015.html?neo">etta</a>, <i>conj.</i> “*therefore, (lit.) out of that” [author: Elaran]
+</div>
+
+ <h3 id="1.7">Ch. 1 Para. 7 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 7">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.7</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Hí Belegûr iestast sabed ah adabad ost iaun, nûr viñ geven nuin emyn nduir ias<sup class="fn">1</sup> ring a gwethrin eglain Illuin. Estanner en·Ost han Udûn. A lho idh·Rodyn ú-istanner o then sí, e·Rhû o Mbelegûr ah e·fuin ui devas dín ethiriasser, a feithannen Ethuil Gardhon. Naid gelin lhýdasser a thostasser; gelais rhydyl a madha pannanner i·sîr, ah echant mbyth i olasser thostol a lhoerib, ah onnanner vydhy; toer olasser duir a rhachui, olol haid gor; a rhoef ‘wistasser n’ ylynn i óver rais a gilesg<sup class="fn">2</sup>, gwathol geven vo hereg. idh·Rodyn istasser o Belegûr, i geiriant bress eno, a chestanner an had e·doblad dín. Ach Mbelegûr, esteliol vi bolodh Udûn a bellas i·Mbŷr dín, ethul an oeth a lheithiant e·dhram vinui dín foedh<sup class="fn">3</sup> Rodyn feriasser. Angamp gelaid Illuin ah Ormal, feithant i·ñgennyth dín ah aranc i·chelair dín. Mi dhannad i·ñgennyth mbelaith, rengin nduir, ah e·‘eaer eriast vi úbarthas<sup class="fn">4</sup>; a cho gelair afanner<sup class="fn">5</sup>, naur feithol ul thar Amar. Feithennen gant Gardhon vil lû han a thangant<sup class="fn">6</sup> nîn ah i·nduir dín, ah allu edwinnin<sup class="fn">7</sup> i·naid vinui nan idh·Rodyn.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Now Melkor began to dig and to build [a] vast fortress deep in the earth, beneath the dark mountains where [the] rays of light [of] Illuin [were] cold and shadowy. They called that fortress Utumno. And while the Valar did not have knowledge about it now, the evil from Melkor and the darkness from his hatred flowed out, and [the] Spring of Arda [was] destroyed. Green things sickened and stank; unwelcome plants and mud filled the rivers, and it formed fens that became stinking and poisonous, and gave birth to flies; forests became dark and dangerous, becoming places [of] fear; and beasts changed to monsters that had horns and ivory, staining [the] earth by blood. The Valar had knowledge about Melkor, who caused trouble still, and they searched for his place [of] his hiding. But Melkor, trusting in the power [of] Utumno and the physical strength [of] his followers, came forth for war and released his first heavy blow before the Valar made ready. He assailed [the] lights [of] Illuin and Ormal, destroyed their pillars and broke their lamps. In the falling [of] the mighty pillars, lands [were] broken, and the sea rose in chaos; and when the lamps spilled, destroying fire poured over [the] Earth. The shape of Arda [was] destroyed in that time and [the] symmetry [of] its waters and its lands, and the first things of the Valar [were] never restored.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Now Melkor began the delving and building of a vast fortress, deep under Earth, beneath dark mountains where the beams of Illuin were cold and dim. That stronghold was named Utumno. And though the Valar knew naught of it as yet, nonetheless the evil of Melkor and the blight of his hatred flowed out thence, and the Spring of Arda was marred. Green things fell sick and rotted, and rivers were choked with weeds and slime, and fens were made, rank and poisonous, the breeding place of flies; and forests grew dark and perilous, the haunts of fear; and beasts became monsters of horn and ivory and dyed the earth with blood. Then the Valar knew indeed that Melkor was at work again, and they sought for his hiding place. But Melkor, trusting in the strength of Utumno and the might of his servants, came forth suddenly to war, and struck the first blow, ere the Valar were prepared; and he assailed the lights of Illuin and Ormal, and cast down their pillars and broke their lamps. In the overthrow of the mighty pillars lands were broken and seas arose in tumult; and when the lamps were spilled destroying flame was poured out over the Earth. And the shape of Arda and the symmetry of its waters and its lands was marred in that time, so that the first designs of the Valar were never after restored.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>ias</b>, <i>pron.</i> “where (relative)” ⪤ ᴹQ. <b>yassë</b>, <i>adv.</i> “there [remote, relative]” [author: Unknown]<br>
+  <sup class="fn">2</sup> <b>gilasg</b> [ng], <i>n.</i> “ivory (lit.) gleam bone” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1784232167.html?neo">ilcaxo</a> <i>v.</i> “ivory (lit.) gleam bone” [author: Rínor]<br>
+  <sup class="fn">3</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+  <sup class="fn">4</sup> <b>úbarthas</b>, <i>n.</i> “disorder, chaos” ⪤ ᴺQ. !<b>úpartale</b> <i>n.</i> “unorder, *disorder” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>fad-</b>, <i>v.</i> “to spill” ⪤ ᴺQ. <b>hwat-</b> <i>v.</i> “to spill”<br>
+  <sup class="fn">6</sup> <b>thangant</b>, <i>n.</i> “symmetry, regular/fixed pattern” from ᴹ√<a href="https://eldamo.org/content/words/word-2528555169.html?neo">STAN</a> <i>root.</i> + √, ᴹ√<a href="https://eldamo.org/content/words/word-2218388755.html?neo">KAT</a> <i>root.</i> “shape, [ᴹ√] make” [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>adwinna-</b>, <i>v.</i> “to restore, renew” ⪤ Q. <a href="https://eldamo.org/content/words/word-2734281471.html?neo">envinyata-</a> <i>v.</i> “to renew, heal, *restore” [author: Rínor]
+</div>
+
+<h3 id="1.8">Ch. 1 Para. 8 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 8">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.8</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Belegûr othrast viñ gangas<sup class="fn">1</sup> a môr, naib<sup class="fn">2</sup> ‘rogast. Lhassant ‘lim Manwe or e·‘aear vrui ve ‘wae mbelaith, a cheven bothast nu dail Tholchas. Ach odul n’ Udûn fo<sup class="fn">3</sup> Dolchas ant den a thoblast ennas. Ah idh·Rodyn vil lû han ú-obúler orthored den, am bauranner i·hath annaer nan e·dûr dín a phillad<sup class="fn">4</sup> úbarthas<sup class="fn">5</sup> Amar ah am borthad<sup class="fn">6</sup> i obúler ui thais dín, añ gostanner narchad Amar ad<sup class="fn">7</sup> den istanner oh e·had i in·Eruchîn dorthasser, an dolen o dhin e·doled dín.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Melkor escaped in the confusion and darkness, although he felt terror. He heard [the] voice [of] Manwë above the noisy sea like [a] mighty wind, and [the] earth trembled under [the] feet [of] Tulkas. But he came to Utumno before Tulkas caught him and he hid there. And the Valar in that time could not conquer him, for they needed the greater part of their mastery for calming [the] disorder of [the] Earth and for preserving what they could from their labors, for they feared to rend [the] Earth again, until they had knowledge about the place that the Children of Ilúvatar dwelt, for their coming [was] hidden from them.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      In the confusion and the darkness Melkor escaped, though fear fell upon him; the seas he heard the voice of Manwë as a mighty wind, and the earth trembled beneath the feet of Tulkas. But he came to Utumno ere Tulkas could overtake him; and there he lay hid. And the Valar could not at that time overcome him, for the greater part of their strength was needed to restrain the tumults of the Earth, and to save from ruin all that could be saved of their labour; and afterwards they feared to rend the Earth again, until they knew where the Children of Ilúvatar were dwelling, who were yet to come in a time that was hidden from the Valar.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>cangas</b>, <i>n.</i> “confusion” [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>naib</b>, <i>conj.</i> “although, even though, (lit.) if it is in fact” ⪤ ᴺQ. !<b>naqui</b>, <i>conj.</i> “although, even though, (lit.) if it is in fact” nakʷi &gt; napi &gt; nabi &gt; nebi &gt; neib &gt; *naib [author: Elaran]<br>
+  <sup class="fn">3</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+  <sup class="fn">4</sup> <b>pilla-</b>, <i>v.</i> “to still, quiet, calm” ⪤ ᴺQ. [ᴱQ.] ^<a href="https://eldamo.org/content/words/word-2700506675.html?neo">quilda-</a> <i>v.</i> “to stay quiet, be quiet” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>úbarthas</b>, <i>n.</i> “disorder, chaos” ⪤ ᴺQ. !<b>úpartale</b> <i>n.</i> “unorder, *disorder” [author: Rínor]<br>
+  <sup class="fn">6</sup> <b>bortha-</b>, <i>v.</i> “to preserve, make lasting” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-738129377.html?neo">vorta-</a> <i>v.</i> “to preserve, make lasting” [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>ad</b>, <i>adv.</i> “again” from <a href="https://eldamo.org/content/words/word-2176818521.html?neo">√AT</a> <i>root.</i> “two, double, bi-, di-; back, re-, [ᴹ√] again, twice” [author: unknown]
+</div>
+  
+<h3 id="1.9">Ch. 1 Para. 9 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 9">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.9</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Mil leng<sup class="fn">1</sup> hen Ethuil Gardhon edil. Terthannen mbar idh·Rodyn bo Alvaren, ah ebíner had vronadui bo Amar. Eth<sup class="fn">2</sup>, haenasser od Ennor ah evíner n’ Ndor Avon, e·hath amdúnen nan il duir n’ edrain amar; an i·felais ndúnin dín edírer ‘Aear Edren, i Edhelrim estanner “Ekkaia,” thorol Arnad Gardhon. Alphen aw ist oh annas e·‘aear han eb idh·Rodyn, a thar de Rem e·Dhû. idh·Rodyn ostanner e·mbâr dín, an felais Avon rhúnin echanner na ‘lan Belegaer roedren<sup class="fn">3</sup>, “Gaear Dûn Veleg”; am Belegûr arodh n’ Ennor ah ú-obúler orthored den eno, idh·Rodyn orthanner Beluir<sup class="fn">4</sup>, “Eryd Avon”, rodynd bo Amar, pela felais e·‘aear. A Manwe hestant en·archadhu dín boe daen, or il eryd Peluir<sup class="fn">4</sup>. i·Ñgolodhrim estanner en·orod aer han “Taniquetil”, ah “Oiolosse,” ah “Elerrína,” ah enith laew egil; ach estab den “Amon Uilos” hí. Manwe a Gilbrennil obúler tírad thar Amar a na Rhûn chae o i·them dín bo Amon Uilos.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      In this manner [the] Spring of Arda ended. [The] dwelling [of] the Valar [was] destroyed on Almaren, and they had no lasting place on Earth. Therefore, they departed from Middle-earth and went to [the] Land [of] Aman, the westernmost part of all lands towards [the] outer border [of the] world; for its western shores looked toward [the] Outer Sea, that [the] Elves called Ekkaia, fencing [the] Kingdom [of] Arda. No one had knowledge about the length of that sea save the Valar, and [the] Walls [of] the Night [are] beyond it. The Valar fortified their dwelling, for [the] eastern shores [of] Aman formed the outermost boundary of Belegaer, “[the] Great Sea [of the] West”; for Melkor returned to Middle-earth and they could not conquer him still, the Valar raised [the] Pelóri, “[the] Mountains [of] Aman”, most-high on Earth, along [the] shores [of] the sea. And Manwë set his throne on the summit, above all [the] mountains of [the] Pelóri. The Noldor called that holy mountain ‘Taniquetil’, and ‘Oiolosse,’ and ‘Elerrína,’ and many other names; but we (inc.) call it ‘Amon Uilos’ now. Manwë and Varda could look across [the] Earth and towards [the] far East from their halls on Amon Uilos.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Thus ended the Spring of Arda. The dwelling of the Valar upon Almaren was utterly destroyed, and they had no abiding place upon the face of the Earth. Therefore they departed from Middle-earth and went to the Land of Aman, the westernmost of all lands upon the borders of the world; for its west shores looked upon the Outer Sea, that is called by the Elves Ekkaia, encircling the Kingdom of Arda. How wide is that sea none know but the Valar; and beyond it are the Walls of the Night. But the east shores of Aman were the uttermost end of Belegaer, the Great Sea of the West; and since Melkor was returned to Middle-earth and they could not yet overcome him, the Valar fortified their dwelling, and upon the shores of the sea they raised the Pelóri, the Mountains of Aman, highest upon Earth. And above all the mountains of the Pelóri was that height upon whose summit Manwë set his throne. Taniquetil the Elves name that holy mountain, and Oiolossë Everlasting Whiteness, and Elerrína Crowned with Stars, and many names beside; but the Sindar spoke of it in their later tongue as Amon Uilos. From their halls upon Taniquetil Manwë and Varda could look out across the Earth even into the furthest East.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>leng</b>, <i>n.</i> “method, way, manner” &gt; Q. <b>lé</b>¹, <i>n.</i> “way, method, manner” received x4 [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>eth</b>, <i>conj.</i> “therefore” ⪤ Q. <a href="https://eldamo.org/content/words/word-1515458015.html?neo">etta</a>, <i>conj.</i> “*therefore, (lit.) out of that” [author: Elaran]<br>
+  <sup class="fn">3</sup> <b>roedren</b>, <i>adj.</i> “outermost” from S. <a href="https://eldamo.org/content/words/word-3068996511.html?neo">ro-</a> <i>pref.</i> “*superlative” + ᴺS. !<a href="https://eldamo.org/content/words/word-2430924205.html?neo">edren</a> <i>adj.</i> “outer” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>Peluir</b>, <i>loc.</i> “Mountain Wall, Fencing Heights” ⪤ Q. <a href="https://eldamo.org/content/words/word-2661848693.html?neo">Pelóri</a>, <i>loc.</i> “Mountain Wall, Fencing Heights” [author: Rínor]
+</div>
+
+<h3 id="1.10">Ch. 1 Para. 10 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 10">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.10</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      idh·Rodyn adabanner en·arthor dín viñ gardh han estanner Dor-Rodyn, ah adel rem Peluir<sup class="fn">1</sup> adabanner i·mbair, i·sent, i·minais dín. idh·Rodyn chostanner vírad veleg na chalad vin dôr varn han, reithol il i·naid rovain o therthas a lhae naid egil rovain echanner gîw, a Dor-Rodyn olast rovain athar Ennor vi Ethuil Gardhon. Te eliannen, eni Phengyrth ndorthasser ennas, ah allad efir egor feithast, ah û ‘wass bo loth egor lass vin dôr han, egor û oglas egor lhîw v’ illad i guinast, an eliennin i·ñguin a nîn.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      The Valar established their realm in that region they called Valinor, and behind [the] walls [of the] Pelóri they built their houses, gardens, and towers. The Valar gathered [a] great hoard of light in that protected land, saving all the most beautiful things from ruin and [a] great number [of] other most-fair things they made new, and Valinor became most-beautiful beyond Middle-earth in [the] Spring [of] Arda. It [was] blessed, for the Deathless dwelt there, and nothing faded or spoiled, and no stain on flower or leaf in that land, or no wickedness or sickness in everything that lived, for the stones and waters [were] blessed.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Behind the walls of the Pelóri the Valar established their domain in that region which is called Valinor; and there were their houses, their gardens, and their towers. In that guarded land the Valar gathered great store of light and all the fairest things that were saved from the ruin; and many others yet fairer they made anew, and Valinor became more beautiful even than Middle-earth in the Spring of Arda; and it was blessed, for the Deathless dwelt there, and there naught faded nor withered, neither was there any stain upon flower or leaf in that land, nor any corruption or sickness in anything that lived; for the very stones and waters were hallowed.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Peluir</b>, <i>loc.</i> “Mountain Wall, Fencing Heights” ⪤ Q. <a href="https://eldamo.org/content/words/word-2661848693.html?neo">Pelóri</a>, <i>loc.</i> “Mountain Wall, Fencing Heights” [author: Rínor]
+</div>
+
+<h3 id="1.11">Ch. 1 Para. 11 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 11">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.11</div>
+    <div class="cell" role="cell" data-label="Sindarin">
+      Io badavnen<sup class="fn">2</sup> Ndor-Rodyn ah edebennin berthain idh·Rodyn, adabanner e·garas dín, Bar-Rodyn<sup class="fn">1</sup> “garas i·nil laew,” min enedh e·dalath athar in·eryd. Cerin galen aidh choe annon ndúnen dín, “Ezellohar”, eithro estanner “Corollaire”. Ivann aeanant<sup class="fn">3</sup> den, ah achodh ennas anann boe ‘lae galen, a lhinnant lind polodh, a phannant vi den il e·nûth dín oh naid i ñgalar vi geven. Ach Nínien<sup class="fn">4</sup> ‘eriast vi dhîn, ah ulthant<sup class="fn">5</sup> e·gerin voe nîn. idh·Rodyn govasser lastad lind Ivann, ah achódher vi dhîn bo erchedhy e·chûd dín vi “Máhanaxar”, Cor Amarth<sup class="fn">6</sup>, pelah in·ennyn ‘lórin na Mbar-Rodyn<sup class="fn">1</sup>. Ivann Cevedhrían<sup class="fn">7</sup> ador cho<sup class="fn">8</sup> din a lhinnast, a thiriasser.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      When Valinor [was] full-wrought and [the] mansions [of] the Valar [were] established, they built their city, Valmar, “the city [of] many bells,” in [the] middle [of] the plain beyond the mountains. [A] green mound rested in front of [the] western gate, Ezellohar, also called Corollaire. Yavanna hallowed it, and she sat there for long on the green grass, sang [a] song [of] power, and she placed in it her thought concerning things that grow in [the] earth. But Nienna pondered in silence, and she watered the mound with tears. The Valar gathered to hear [the] song [of] Yavanna, and they sat in silence on their thrones [of] assembly in [the] Máhanaxar, [the] Circle [of] Doom, along the golden gates of Valmar. Yavanna Kementári stood before them and sang, and they watched.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      And when Valinor was full-wrought and the mansions of the Valar were established, in the midst of the plain beyond the mountains they built their city, Valmar of many bells. Before its western gate there was a green mound, Ezellohar, that is named also Corollairë; and Yavanna hallowed it, and she sat there long upon the green grass and sang a song of power, in which was set all her thought of things that grow in the earth. But Nienna thought in silence, and watered the mound with tears. Yavanna, and they sat silent upon their thrones of council in the Máhanaxar, the Ring of Doom near to the golden gates of Valmar; and Yavanna Kementári sang before them and they watched.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Bar-Rodyn</b>, <i>loc.</i> “City of the Gods” ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-1186651075.html?neo">Valmar</a>, <i>loc.</i> “City of the Gods” [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>padavnen</b>, <i>adj.</i> “full-wrought” from √<a href="https://eldamo.org/content/words/word-2222809799.html?neo">KWA</a>, <i>root.</i> “complete, full, whole, all, every; ⚠️[ᴹ√] something” + ᴺS. !<a href="https://eldamo.org/content/words/word-100611773.html?neo">tavnen</a>, <i>adj.</i> “made (by craft of hand), wrought, fashioned” [author: Rínor]<br>
+  <sup class="fn">3</sup> <b>aeana-</b>, <i>v.</i> “to hallow, bless, treat as holy” ⪤ Q. <a href="https://eldamo.org/content/words/word-1647781279.html?neo">aina-</a> <i>v.</i> “to hallow, bless, treat as holy” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>Nínien</b>, <i>f.</i> “Lady of Pity and Mourning” ⪤ Q. <a href="https://eldamo.org/content/words/word-2261834801.html?neo">Nienna</a> <i>f.</i> “Lady of Pity and Mourning” [author: Elaran]<br>
+  <sup class="fn">5</sup> <b>ultha-</b>, <i>v.</i> “to water plants, (lit.) make pour/rain” from ✶ultā- [author: Parmandil]<br>
+  <sup class="fn">6</sup> <b>Cor Amarth</b>, <i>loc.</i> “Ring of Doom, *(lit.) Ring of Judgement” ⪤ Q. <a href="https://eldamo.org/content/words/word-3134454299.html?neo">Máhanaxar</a> <i>loc.</i> “Ring of Doom, *(lit.) Ring of Judgement” [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>Cevedhrían</b>, <i>f.</i> “Queen of the Earth” ⪤ Q. <a href="https://eldamo.org/content/words/word-1938325883.html?neo">Kementári</a> <i>f.</i> “Queen of the Earth” [author: Rínor]<br>
+  <sup class="fn">8</sup> <b>ho</b>, <i>prep.</i> “before, in front” (spatial only) ✶KʰĀ [author: Ellanto]
+</div>
+
+<h3 id="1.12">Ch. 1 Para. 12 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 12">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.12</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      A lho dirianner, tuig fim dâd ethúler boe gerin, a dîn beliasser thar amar bân vin oreth han, gu û law egel eb lind Ivann. i·Thuig angoler nui lind dín, ah olasser vain, tynd, a lhostasser. Gelaidh Dor-Rodyn dâd echuiasser vi amar, sevir robethaglar<sup class="fn">1</sup> illad i Ivann echant, ah oh en·amarth dín, gwirnin il nern oh in·Oer Einioer.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      And while they watched, two slender shoots came forth on the mound, and silence spread across [the] whole world in that hour, together with no other sound save [the] song [of] Yavanna. The saplings grew under her song and became fair, tall, and blossomed. [The] Two Trees [of] Valinor awoke in [the] world, and they have [the] most renown [of] everything that Yavanna made, and about their fate, all the tales about the Elder Days [are] woven.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      And as they watched, upon the mound there came forth two slender shoots; and silence was over all the world in that hour, nor was there any other sound save the chanting of Yavanna. Under her song the saplings grew and became fair and tall, and came to flower; and thus there awoke in the world the Two Trees of Valinor. Of all things which Yavanna made they have most renown, and about their fate all the tales of the Elder Days are woven.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>pethaglar</b>, <i>n.</i> “renown, (lit.) word-glory” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-3888819409.html?neo">quettalcar</a>, <i>n.</i> “renown, (lit.) word-glory” [author: Rínor]
+</div>
+  
+  <h3 id="1.13">Ch. 1 Para. 13 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 13">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.13</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Er ‘aladh aw lais gelin i sílasser vo grui gelebrin ndi lais, a mîdh na chalad gelebrin i dhannast od il i·lyth únedui dín, tobol e·geven vo i·morchaint ui lais ‘wilwol dín. e·‘Aladh dadui aw lais gelin nan edrain ‘lórin i sílasser ‘ail. Lyth vi velin a cherain glingasser ui ñgylf dín, il echadol cant ve rom hílol livol ross ‘lórin boe geven; ah ast a chalad veleg odúler ui luith dín. Mi Ndor-Rodyn, estanner e·‘aladh vinui “Telperion”, eithro estanner “Silpion,” “Ninquelótë,” ah enith egil, ach hi estab den “Nimloth.”; ah e·‘aladh dadui estanner ‘Lewellin, eithro estanner “Malinalda,” “Culúrien,” a lhae enith egil vi lind.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      One tree had green leaves that shone by [a] silver color beneath the leaves, and [a] dew of silver light that fell from all its countless flowers, covering [the] earth by (agent of) the shadows from its fluttering leaves. The second tree had green leaves of golden borders that shone bright[ly]. Flowers in yellow and red hung from its branches, all forming [a] shape like [a] shining horn dripping golden rain on the ground; and warmth and great light came from its blossoms. In Valinor, they called the first tree Telperion, also called “Silpion,” “Ninquelótë,” and other names, but now we call it “Nimloth”; and the second tree they called Glewellin, also called “Malinalda,” “Culúrien,” and [a] great number [of] other names in song.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      The one had leaves of dark green that beneath were as shining silver, and from each of his countless flowers a dew of silver light was ever falling, and the earth beneath was dappled with the shadows of his fluttering leaves. The other bore leaves of a young green like the new-opened beech; their edges were of glittering gold. Flowers swung upon her branches in clusters of yellow flame, formed each to a glowing horn that spilled a golden rain upon the ground; and from the blossom of that tree there came forth warmth and a great light. Telperion the one was called in Valinor, and Silpion, and Ninquelótë, and many other names; but Laurelin the other was, and Malinalda, and Culúrien, and many names in song beside.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+</div>
+  
+ <h3 id="1.14">Ch. 1 Para. 14 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 14">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.14</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Mi odog erith, en·aglar nan ail cheledh theriast na bathred ah ebil ad<sup class="fn">1</sup> n’ allad; ah ail chaladh echuiast ad<sup class="fn">1</sup> oreth fo<sup class="fn">2</sup> e·‘aladh egel postast sílad. Eni gaeth han, oreth vuig odul lui dâd drin aur vi Ndor·Rodyn io i·ñgelaidh ebíler na galad vuig, ah in·eglain ‘lórin a chelebrin dín covasser. Nimloth einior i·ñgelaidh ah odul vinui na challas bân a lhostad; ah idh·Rodyn ú-nedianner en·oreth vinui i hílast voe fain na minuial gelebrin vi narn in·oerith, ach hennui, estanner den Oreth Edrol a nedianner endrenn i·theinas dín vi Ndor-Rodyn. Eni gaeth han, n’ en·oreth enchui nan en·Aur Vinui, ah o il in·oer ‘lessui ab i·lû han, ten Fuinad<sup class="fn">3</sup> Dor-Rodyn, Nimloth postant i·lû dín al lyth ‘alol; a n’ en·oreth ýnegui<sup class="fn">4</sup>, Glewellin postant i·lostad dín. Enidh Rodyn vi Avon, in·oer óver oerith ýneg ah edíler voe chwinad<sup class="fn">5</sup> dadui nan i·chelaid, io ‘Lewellin ebil, Nimloth theriast. Ach e·galad ethiriast ed i·ñgelaidh a breniast anann fo<sup class="fn">2</sup> ebil n’ ell egor dhuiast viñ geven; a choedhennin vo Ñgilbrennil vîdh Nimloth ah e·ross o Glewellin vi gelph velig ve aelin ‘lain, iuithennin ve eithil nen a chalad an il dor idh·Rodyn. O sen iestast Oer Glass na Ndor·Rodyn a Gonoded Lû.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      In seven hours, the glory of each tree waxed to fullness and waned again to nothing; and each tree awoke again [an] hour before the other tree ceased to shine. For that reason, [a] gentle hour came two times through the day in Valinor when the trees faded to soft light, and their gold and silver rays of light came together. Telperion [was] the elder [of] the trees to come to full height and to bloom; and the Valar did not count the first hour that shone by the shimmering of [a] silver dawn in [the] tale [of] the hours, but instead, they called it [the] Opening Hour and counted [the] ages [of] their rule in Valinor. For that reason, at the sixth hour of the First Day, and of all the joyful days after that time, until [the] Darkening [of] Valinor, Telperion ceased his time for growing flowers; and at the twelfth hour, Laurelin ceased her blossoming. To the Valar in Aman, the days had twelve hours and ended by the second weaving of the lights, for when Laurelin waned, Nimloth waxed. But the light flowed out from the trees and endured for long, before it faded to [the] sky or sank in the earth; and the dew from Telperion and the rain from Laurelin [were] hoarded by Varda in great water-vessels like shining lakes, employed as wells [of] water and light for all the land [of] the Valar. From this began the Days of Bliss of Valinor and the Counting [of] Time.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      In seven hours the glory of each tree waxed to full and waned again to naught; and each awoke once more to life an hour before the other ceased to shine. Thus in Valinor twice every day there came a gentle hour of softer light when both trees were faint and their gold and silver beams were mingled. Telperion was the elder of the trees and came first to full stature and to bloom; and that first hour in which he shone, the white glimmer of a silver dawn, the Valar reckoned not into the tale of hours, but named it the Opening Hour, and counted from it the ages of their reign in Valinor. Therefore at the sixth hour of the First Day, and of all the joyful days thereafter, until the Darkening of Valinor, Telperion ceased his time of flower; and at the twelfth hour Laurelin her blossoming. And each day of the Valar in Aman contained twelve hours, and ended with the second mingling of the lights, in which Laurelin was waning but Telperion was waxing. But the light that was spilled from the trees endured long, ere it was taken up into the airs or sank down into the earth; and the dews of Telperion and the rain that fell from Laurelin Varda hoarded in great vats like shining lakes, that were to all the land of the Valar as wells of water and of light. Thus began the Days of the Bliss of Valinor; and thus began also the Count of Time.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>ad</b>, <i>adv.</i> “again” from <a href="https://eldamo.org/content/words/word-2176818521.html?neo">√AT</a> <i>root.</i> “two, double, bi-, di-; back, re-, [ᴹ√] again, twice” [author: unknown]<br>
+  <sup class="fn">2</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+  <sup class="fn">3</sup> <b>fuinia-</b>, <i>v.</i> “to darken” [author: Parmandil]<br>
+  <sup class="fn">4</sup> <b>ýnegui</b>, <i>num. ord.</i> “Twelfth” [author: uncredited]<br>
+  <sup class="fn">5</sup> <b>hwinna-</b>, <i>v.</i> “to blend, mix” ⪤ ᴺQ. !<b>hwinta-</b>, <i>v.</i> “to mix, stir; to confuse” [author: Rínor]
+</div>
+  
+<h3 id="1.15">Ch. 1 Para. 15 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 15">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.15</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Ach lo in·endrenn lúdasser ah en·oreth bannen vo Iladar<sup class="fn">1</sup> an doled i·Minennin<sup class="fn">2</sup> anglennast, Ennor alant vi aduial ndi ñgîl i Ñgilbrennil echant vin endrenn líthennin nan i·thais dín vi Eng<sup class="fn">3</sup>. A Belegûr ndorthast vim môr, ah eno badrast laew balan vi gaint polodh a goe laew, a thorthant chelch a naur ui choe in·eryd na dhaith e·naur nuir ndin din, a sa’ i mbelch, egor esgair, egor dhely vin oer hain odunc din eni vŷl dín.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+  But while the ages passed and the arranged time by Ilúvatar for [the] coming [of] the Firstborn approached, Middle-Earth lay in twilight under the stars that Varda made in the forgotten ages [of] her labors in Ea. And Melkor dwelt in the darkness, and still walked frequent[ly] abroad in many shapes of power and fear, and he wielded cold and fire from [the] tops [of] the mountains to the deep pits [of] fire beneath them, and those who [were] cruel, or violent, or deadly in those days he brought them to his service.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      But as the ages drew on to the hour appointed by Ilúvatar for the coming of the Firstborn, Middle-earth lay in a twilight beneath the stars that Varda had wrought in the ages forgotten of her labours in Eä. And in the darkness Melkor dwelt, and still often walked abroad, in many shapes of power and fear, and he wielded cold and fire, from the tops of the mountains to the deep furnaces that are beneath them; and whatsoever was cruel or violent or deadly in those days is laid to his charge.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Iladar</b>, <i>m.</i> “Father of All” ⪤ Q. <b>Ilúvatar</b> <i>m.</i> “Father of All” [author: Uncredited]<br>
+  <sup class="fn">2</sup> <b>Minennin</b>, <i>coll.</i> “First-born” ⪤ Q. <a href="https://eldamo.org/content/words/word-1062987751.html?neo">Minnónar</a>, <i>coll.</i> “First-born” [author: Rínor]<br>
+  <sup class="fn">3</sup> <b>Eng</b>, <i>pron.</i> “Creation, the (Material) Universe, Cosmos, †World; it is, let it be, [ᴹQ.] all that is” ⪤ Q. <a href="https://eldamo.org/content/words/word-1062987751.html?neo">Eä</a>, <i>n.</i> “Creation, the (Material) Universe, Cosmos, †World; it is, let it be, [ᴹQ.] all that is” [author: Parmandil]
+</div>
+  
+ <h3 id="1.16">Ch. 1 Para. 16 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 16">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.16</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      idh·Rodyn odúler na lui nodui or in·eryd n’ Ennor ui veinas a glass na Ndor-rodyn ach óner i·chirf ah i·mîl dín n’ i·nduir athar Peluir<sup class="fn">1</sup>. A mi enedh Arthor Eliannen i·mbair na Ñgaul, ah mudast ennas anann. An aw hath vain vin echaded nan il naid vin dôr han, ah echant devn vain a maed laew, vi chûl ah û vi chûl. O den dôl e·Ngolu ah ist oh Amar ah oh il naid hirnin ennas. e·Ngolu o sain i ú-gerir, ach chestanner e·channas oh e·nest na naid, egor e·ngolu oh il vaenyr. e·‘Wirphen<sup class="fn">2</sup>, a maenor e·daw, a maenor i·thinc. Nediennin vîg hin i·Mbernyr<sup class="fn">3</sup> a rhedhyr eithro, ach eni veth sin ah il i maethar naid i ñgalar a chievir boe tired eithro n’ e·vethril na Ñgaul, Ivann Cevedhrían<sup class="fn">4</sup>. Estannen Gaul vellon i·Ñgolodhrim, añ gelianner ovor o then vin oer i aphanner, a thi rovaed in·Edhil. Mil leng naed dín<sup class="fn">5</sup>, mo vaethas<sup class="fn">6</sup> in·ain i Iladar<sup class="fn">8</sup> ón an din, óner ovor n’ e·ñgolthanneth dín, gellol vi lem a mi daith, a midh raed na lannas<sup class="fn">7</sup>, ah emmad, ah echaded. i·Ñgolodhrim eithro vinui ridianner<sup class="fn">9</sup> echaded i·mîr; a rhovain i·Silveril athar il vîr, a thi ‘wenwin.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      The Valar came at few occasions over the mountains to Middle-earth from the beauty and bliss of Valinor but gave their protection and their love to the lands beyond [the] Pelóri. And the mansion of Aulë [were] in [the] middle [of the] Blessed Realm, and he labored there for long. For he had [a] part in the making of all things in that land, and he made many beautiful and shapely works, in secret and not in secret. From him came the lore and knowledge about Earth and about all things found there. The lore about those who do not make, but seek the understanding about the being of things, or the lore about all craftsmen. The weaver, and the craftsman [of] wood, and the craftsman [of] metals. Counted among these [are] the tiller and husbandman also, but for these last and all that they handle things that grow and bear fruit must look also to the spouse of Aulë, Yavanna Kementári. Named [is] Aulë [the] friend [of] the Noldor, for they learned much about him in the days that followed, and they [are the] most-skilled of the Elves. In their own fashion, according to the gifts that Ilúvatar gave to them, they added abundant to his teaching, delighting in tongues and in scripts, and in the peculiar hue of broidery, and drawing, and carving. The Noldor also first achieved [the] making [of] the gems; and the Silmarils [were] most-fair beyond all gems, and they [are] lost.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      From the beauty and bliss of Valinor the Valar came seldom over the mountains to Middle-earth, but gave to the land beyond the Pelóri their care and their love. And in the midst of the Blessed Realm were the mansions of Aulë, and there he laboured long. For in the making of all things in that land he had the chief part, and he wrought there many beautiful and shapely works both openly and in secret. Of him comes the-lore and knowledge of the Earth and of all things that it contains: whether the lore of those that make not, but seek only for the understanding of what is, or the lore of all craftsmen: the weaver, the shaper of wood, and the worker in metals; and the tiller and husbandman also, though these last and all that deal with things that grow and bear fruit must look also to the spouse of Aulë, Yavanna Kementári. Aulë it is who is named the Friend of the Noldor, for of him they learned much in after days, and they are the most skilled of the Elves; and in their own fashion, according to the gifts which Ilúvatar gave to them, they added much to his teaching, delighting in tongues and in scripts, and in the figures of broidery, of drawing, and of carving. The Noldor also it was who first achieved the making of gems; and the fairest of all gems were the Silmarils, and they are lost.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Peluir</b>, <i>loc.</i> “Mountain Wall, Fencing Heights” ⪤ Q. <a href="https://eldamo.org/content/words/word-2661848693.html?neo">Pelóri</a>, <i>loc.</i> “Mountain Wall, Fencing Heights” [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>gwirphen</b>, <i>n.</i> “weaver; one who weaves” from ᴺS. [G.] <a href="https://eldamo.org/content/words/word-443896263.html?neo">gwir-</a>, <i>v.</i> “to weave” + S. <a href="https://eldamo.org/content/words/word-2557917401.html?neo">pen²</a> <i>pron.</i> “one, somebody, anybody; ⚠️[N.] Elf” [author: Rínor]<br>
+  <sup class="fn">3</sup> <b>barnor [mb-]</b>, <i>n.</i> “tiller; one who tills land” from ᴺS. [G.] <a href="https://eldamo.org/content/words/word-1062987751.html?neo">barna- [mb-]</a>, <i>v.</i> “to till (land), *cultivate; (orig.) to dwell in (a land)” + S., N., G. #<a href="https://eldamo.org/content/words/word-42547423.html?neo">-or</a>, <i>suf.</i> “agental suffix” [author: Parmandil]<br>
+  <sup class="fn">4</sup> <b>Cevedhrían</b>, <i>f.</i> “Queen of the Earth” ⪤ Q. <a href="https://eldamo.org/content/words/word-1938325883.html?neo">Kementári</a> <i>f.</i> “Queen of the Earth” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>e·leng naed ín</b>, = “their own manner (lit.) their true manner” [author: Rínor]<br>
+  <sup class="fn">6</sup> <b>mo vaethas</b>, = “according (lit.) by means of authority” [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>lannas</b>, <i>n.</i> “embroidery (lit.) weave-work” from √, ᴹ√<a href="https://eldamo.org/content/words/word-3134454299.html?neo">LAN</a> <i>root.</i> “stretch, extend; ‽twine; [ᴹ√] weave” + N. <a href="https://eldamo.org/content/words/word-105028715.html?neo">tass</a>, <i>n.</i> “labour, task” [author: Rínor]<br>
+  <sup class="fn">8</sup> <b>Iladar</b>, <i>m.</i> “Father of All” ⪤ Q. <b>Ilúvatar</b> <i>m.</i> “Father of All” [author: Uncredited]<br>
+  <sup class="fn">9</sup> <b>ridia-</b>, <i>v.</i> “to achieve, accomplish” ⪤ ᴺQ. !<b>hritya-</b>, <i>v.</i> “to achieve, accomplish”
+</div>
+  
+<h3 id="1.17">Ch. 1 Para. 17 (Mithriel, updated by Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 17">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.17</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Ach Vanwe Thúlor<sup class="fn">1</sup>, rovrand ah anaer nan idh·Rhodyn, achodh bo rain Avon, ú-awarthol i·Nduir Edrin vi nûth dín. An hestannen vi nast chall bo daen Ras-Arphain en·archadhu dín, rodond nan in·eryd nan amar, tarol bo rain e·‘aear. i·Faer echennin ve fynd<sup class="fn">2</sup> a theryn ewiler ui n’ ah ui them dín, ah i·chend dín obúler cened n’ núrais<sup class="fn">3</sup> e·‘aear ah eithad i·rhynd dhelin ndi amar. e·Leng<sup class="fn">4</sup> hen tolthanner beth an din o nabant illad i lúdas vi ‘Ardhon; ach ui deblennin naid nodui o chend Manwe a bŷr Manwe, eni had ias<sup class="fn">5</sup> Mbelegûr achodh miñ gordh ndûr dín dúaith bemmaegui<sup class="fn">6</sup> alanner.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      But Manwë Súlimo, most-high and holier of the Valar, sat on the borders [of] Aman, not abandoning the Outer Lands in his thought. For his throne [was] set in [an] exalted state on [the] height [of] Taniquetil, most-high of the mountains of [the] world, standing on [the] border [of] the sea. The spirits shaped like hawks and eagles flew ever to and from his halls, and their eyes could see towards the depths of the sea and pierce the hidden caves under [the] world. In this way they brought word to him about almost everything that passed in Arda; but some things [were] even hidden from the eyes [of] Manwë and the followers of Manwe, for the place where Melkor sat in his dark deep thought, impenetrable shadows extended.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      But Manwë Súlimo, highest and holiest of the Valar, sat upon the borders of Aman, forsaking not in his thought the Outer Lands. For his throne was set in majesty upon the pinnacle of Taniquetil, the highest of the mountains of the world, standing upon the margin of the sea. Spirits in the shape of hawks and eagles flew ever to and from his halls; and their eyes could see to the depths of the seas, and pierce the hidden caverns beneath the world. Thus they brought word to him of well nigh all that passed in Arda; yet some things were hidden even from the eyes of Manwë and the servants of Manwë, for where Melkor sat in his dark thought impenetrable shadows lay.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Thúlor</b>, <i>m.</i> “Lord of the Breath of Arda, (lit.) Breather” ⪤ Q. <a href="https://eldamo.org/content/words/word-1438153453.html?neo">Súlimo</a>, <i>m.</i> “Lord of the Breath of Arda, (lit.) Breather” [author: Mithriel]<br>
+  <sup class="fn">2</sup> <b>fion</b>, <i>n.</i> “hawk” ⪤ ᴹQ. <a href="https://eldamo.org/content/words/word-1743797131.html?neo">fion</a>, <i>n.</i> “hawk” [author: Mithriel]<br>
+  <sup class="fn">3</sup> <b>núras</b>, <i>n.</i> “depth” ⪤ ᴺQ. !<b>núrië</b> <i>n.</i> “depth (abstract)” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>leng</b>, <i>n.</i> “method, way, manner” &gt; Q. <b>lé</b>¹, <i>n.</i> “way, method, manner” received x4 [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>ias</b>, <i>pron.</i> “where (relative)” ⪤ ᴹQ. <b>yassë</b>, <i>adv.</i> “there [remote, relative]” [author: Unknown]<br>
+  <sup class="fn">6</sup> <b>úvaegui</b>, <i>adj.</i> “impenetrable, unpierceable”
+</div>
+
+<h3 id="1.18">Ch. 1 Para. 18 (Mithriel, updated by Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 18">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.18</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Manwe ú-aníra aglar, ah úvilfui<sup class="fn">1</sup> en·ind dín am bolodh, ach mbardha ilphen vo hîdh. Melant i·Mínil ammaer<sup class="fn">2</sup> nan il in·Eledhrim; ah o then agóver lind a glîr, am Manwe ‘ella vi ‘lired, a lhind i·phith e·linnas dín. Luin e·chammad dín, a lhuin naur i·chend dín, a mírluin<sup class="fn">3</sup> en·arvang<sup class="fn">4</sup> dín, i i·Ñgolodhrim echanner an den; a the gillen ve chirdaid<sup class="fn">5</sup> Iladar<sup class="fn">6</sup>, Aran Amar nan idh·Rodyn ah Edhil ah Edain, a garthad main ndan rhû Belegûr. Manwe ndorthast ‘u Ñgilbrennil rovain, i vil lam na Thindren estanner Elbereth, Rían idh·Rodyn, caron in·elenath; a rhim velig na faer ndorthasser ‘u din vi elias.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Manwe does not desire glory, and his heart [is] not-greedy for authority, but he rules everyone by peace. He loved the Vanyar best of all the Elves; and from him they received song and poem, for Manwe delights in poetry, and the song [of] words [is] his music. Blue is his clothing, and blue is the fire of his eyes, and sapphire his sceptre, that the Noldor made for him; and he [was] chosen as the second-in-command of Ilúvatar, King of [the] World of the Valar and Elves and Men, and main defending against [the] evil [of] Melkor. Manwe dwelt together with Varda [the] most-beautiful, who in the language of Sindarin they called Elbereth, Queen of the Valar, maker [of] the stars; and [a] great host dwelt of spirits together with them in blessedness.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Manwë has no thought for his own honour, and is not jealous of his power, but rules all to peace. The Vanyar he loved best of all the Elves, and of him they received song and poetry; for poetry is the delight of Manwë, and the song of words is his music. His raiment is blue, and blue is the fire of his eyes, and his sceptre is of sapphire, which the Noldor wrought for him; and he was appointed to be the vicegerent of Ilúvatar, King of the world of Valar and Elves and Men, and the chief defence against the evil of Melkor. With Manwë dwelt Varda the most beautiful, she who in the Sindarin tongue is named Elbereth, Queen of the Valar, maker of the stars; and with them were a great host of spirits in blessedness.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>úvilfui</b>, <i>adj.</i> “not-greedy” from S., N., G. <a href="https://eldamo.org/content/words/word-1438153453.html?neo">ú-</a>, <i>pref.</i> “no, not, negative; impossible; ⚠️[N.] bad-” + ᴺS. !<a href="https://eldamo.org/content/words/word-1767897615.html?neo">milf</a>, <i>n.</i> “greed, avarice” + S., N., ᴱN. <a href="https://eldamo.org/content/words/word-2511870571.html?neo">-ui</a>, <i>suf.</i> “-ful, having quality, adjective suffix; [as verbal suffix] possibility, suitability, *-able” [author: Mithriel]<br>
+  <sup class="fn">2</sup> <b>ammear</b>, <i>adj.</i> “best” (<b>an-</b> “intensive prefix” + <b>maer</b> “good, excellent, fair; [N.] useful, fit, good (of things)”) [author: Mithriel]<br>
+  <sup class="fn">3</sup> <b>mírluin</b>, <i>n.</i> “sapphire, (lit.) blue gem” from S., N. <a href="https://eldamo.org/content/words/word-1222397067.html?neo">ar(a)-</a>, <i>pref.</i> “noble, royal, high” + ᴺS. [ᴱN., G.] <a href="https://eldamo.org/content/words/word-741781065.html?neo">bang</a>, <i>n.</i> “staff” [author: Mithriel]<br>
+  <sup class="fn">4</sup> <b>arvang</b>, <i>n.</i> “sceptre, (lit.) royal staff” (<b>ar-</b> “royal” + <b>bang</b> “staff”) [author: Mithriel]<br>
+  <sup class="fn">5</sup> <b>hirdaid</b>, <i>n.</i> “vicegerent, second-in-command ruler” from S., N., ᴱN. <a href="https://eldamo.org/content/words/word-3444049341.html?neo">hîr</a>, <i>n.</i> “lord, master” + S. <a href="https://eldamo.org/content/words/word-2394219563.html?neo">taid</a>, <i>n.</i> “supporting, second in command” [author: Mithriel]<br>
+  <sup class="fn">6</sup> <b>Iladar</b>, <i>m.</i> “Father of All” ⪤ Q. <b>Ilúvatar</b> <i>m.</i> “Father of All” [author: Uncredited]
+</div>
+  
+ <h3 id="1.19">Ch. 1 Para. 19 (Mithriel, updated by Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 19">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.19</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Ach eriol Núron, ah ú-ndorthast vi Ndor-Rodyn, egor allu odul taw, air io mbauranner chûd veleg; n’ iest<sup class="fn">1</sup> Gardhon ndorthast viñ Gaearon Edren, a dortha ennas eno. O ennas vaetha e·hirith nan il nîn, i·ndennin, in·iuir nan il hîr, adbannadad in·eithil, e·beliad nan il vîdh a rhoss v’ il nduir nu venel. Mi haid nuir gauda linnas veleg a thaur; a lham e·linnas han hiria thar il rent amar vi naeras a mi ‘lass; an lo ‘lassui en·eithel i eria vi ‘law, e·gelu dín vin naeras ú-hinnen na thynd Ceven. i·Thelerrim ngelianner lae naid o Núron, ah eni gaeth hen e·linnas dín aw naeras a lhúthad. Salvar<sup class="fn">2</sup> odul ‘u den na ‘Ardhon, te i agor rym Núron, i alphen líthatha i erlu lastant din; a Gaerys ah Uinen eithro, an i ón ‘ovaethas i·felf a sirith e·‘Aear Ivren<sup class="fn">3</sup>, a lhae faer egil eithro. A mo valas Núron ndi fuin Belegûr, cuith hirias eno thar lae i·rent dhelin, ah Amar ú-efir; ah an ilphen i líthast vi e·fuin hen egor reniast 'wachae o ‘alad idh·Rodyn, illu edrannen lheweg Núron; ah allu awarthant Ennor, a mîg e·derthas a gwist ú-bostant, hebed den vi e·‘ordh dín, ah ú-bostatha dem meth in·oer.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      But alone [was] Ulmo, and did not dwell in Valinor, or never came thither, only when they needed [a] great assembly; at [the] beginning [of] Arda he dwelled in the Outer Ocean, and still he dwells there still. From there he controls the flow of all waters, the ebbs, the courses of all rivers, [and the] refilling [of] the springs, the spreading of all dews and rain in all lands under [the] heavens. In deep places he invents great and horrible music; and [the] echo [of] that music flows across all veins of [the] world in sorrow and in joy; for while joyful is the spring that rises in sunshine, its source [is] in the unknown sorrow at [the] roots [of] the Earth. The Teleri learned [a] great number [of] things from Ulmo, and for this reason their music has sorrow and enchantment. Salmar came together with him to Arda, he who made [the] horns [of] Ulmo, that nobody will forget who once heard them; and Ossë and Uinen also, to whom he gave government [of] the waves and the flow of the Inner Sea, and [a] great number [of] other spirits also. And by [the] power [of] Ulmo under [the] darkness [of] Melkor, life flowed still across [a] great number [of] secret lodes, and the Earth did not die; and to everyone who [was] lost in this darkness or strayed far away from [the] light [of] the Valar, [the] ear [of] Ulmo [was] always open; and he never forsook Middle-earth, and among the destruction and change, he did not stop keeping it in his deep thought, and will not stop until [the] end [of] the days.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      But Ulmo was alone, and he abode not in Valinor, nor ever came thither unless there were need for a great council; he dwelt from the beginning of Arda in the Outer Ocean, and still he dwells there. Thence he governs the flowing of all waters, and the ebbing, the courses of all rivers and the replenishment of springs, the distilling of all dews and rain in every land beneath the sky. In the deep places he gives thought to music great and terrible; and the echo of that music runs through all the veins of the world in sorrow and in joy; for if joyful is the fountain that rises in the sun, its springs are in the wells of sorrow unfathomed at the foundations of the Earth. The Teleri learned much of Ulmo, and for this reason their music has both sadness and enchantment. Salmar came with him to Arda, he who made the horns of Ulmo that none may ever forget who once has heard them; and Ossë and Uinen also, to whom he gave the government of the waves and the movements of the Inner Seas, and many other spirits beside. And thus it was by the power of Ulmo that even under the darkness of Melkor life coursed still through many secret lodes, and the Earth did not die; and to all who were lost in that darkness or wandered far from the light of the Valar the ear of Ulmo was ever open; nor has he ever forsaken Middle-earth, and whatsoever may since have befallen of ruin or of change he has not ceased to take thought for it, and will not until the end of days.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>iest</b>, <i>n.</i> “beginning” ⪤ ᴺQ. !<b>yestië</b> <i>n.</i> “beginning” [author: Luinyelle]<br>
+  <sup class="fn">2</sup> <b>Salvar</b>, <i>m.</i> cf. G. <b>Salvor</b> ✧ <a href="https://eldamo.org/content/references/ref-PE14.html#PE14/013.0304">PE14/13</a> [author: uncredited]<br>
+  <sup class="fn">3</sup> <b>ivren</b>, <i>adj.</i> “inner” from √, ᴹ√, ᴱ√<a href="https://eldamo.org/content/words/word-1222397067.html?neo">MI/IMI</a>, <i>root.</i> “in” + S., N. #<a href="https://eldamo.org/content/words/word-741781065.html?neo">-ren</a>, <i>suf.</i> “adjective suffix” [author: Mithriel]
+</div>
+  
+  <h3 id="1.20">Ch. 1 Para. 20 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 20">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.20</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      A mil lû ndûr han, eithro ú-nidhol awarthad i·Nduir Edrin Ivann; am mill an den il naid i ñgalar, a naenant i·thais i chestant vi Ennor, ach i Mbelegûr charnant. Eth<sup class="fn">1</sup>, haenol mbar Gaul a pherth Dor-Rodyn lostol, tolatha aen<sup class="fn">2</sup> na lui a nestatha aen<sup class="fn">2</sup> charnas Belegûr; a rhadhol huiatha aen<sup class="fn">2</sup> idh·Rodyn n’ en·oeth han ‘ui vaethas rhû dín i mbaurar am maethad fo<sup class="fn">3</sup> doled i·Minennin<sup class="fn">4</sup>. Ah Araw Lavamarthor<sup class="fn">5</sup> northatha aen<sup class="fn">2</sup> na lui mi môr i·thoer ú-geliennin; odul ve faron veleg ‘u aith a chû, ruidol ylyn n’ e·ñgurth dín a gwî en·arnad dhely na Mbelegûr, a Nachar<sup class="fn">6</sup>, e·roch nim dín hílast ve geleb vi ñgwaith. To<sup class="fn">7</sup> geven lorol bothast nu dhringad i·phethail<sup class="fn">8</sup> ‘lórin dín, a mi aduial amar, Araw leniatha aen<sup class="fn">2</sup> Rododhrom<sup class="fn">9</sup> e·rom veleg dín bo laid Gardhon; ias<sup class="fn">10</sup> in·eryd lammasser, a morchaint rhû dhregasser hae, a Belegûr ‘ostast vi Udûn, abgenol e·rûth dolatha. Ach lo Araw evin vŷr Belegûr govathar aen<sup class="fn">2</sup> ad<sup class="fn">11</sup>; a i·nduir bathrasser vo morchaint a choeth.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      And in that dark time, Yavanna [was] not willing to forsake the Outer Lands; for all things that grow [were] dear to her, and she wailed for the works that she began in Middle-earth, but that Melkor wounded. Therefore, leaving [the] house [of] Aulë and [the] blooming fields of Valinor, she would come at times and heal [the] damage [of] Melkor; and returning she would urge the Valar to that war together with his evil authority that they need for fighting before [the] coming [of] the Firstborn. And Oromë [the] Animal Tamer would ride at times in [the] darkness [of] the not illuminated forests; he came like [a] mighty hunter together with [a] spear and bow, pursuing monsters to their death and fell creatures [of] the kingdom of Melkor, and Nahar, his white horse shone like silver in the shadows. Then [the] sleeping earth trembled under the beating [of] his golden hooves, and in [the] twilight [of the] world, Oromë would sound Valaróma his great horn on [the] plains [of] Arda; where the mountains echoed, and the shadows [of] evil fled away, and Melkor feared exceedingly in Utumno, foreboding the wrath to come. But while Oromë passed [the] servants [of] Melkor gathered a second time; and the lands filled by shadows and deception.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      And in that time of dark Yavanna also was unwilling utterly to forsake the Outer Lands; for all things that grow are dear to her, and she mourned for the works that she had begun in Middle-earth but Melkor had marred. Therefore leaving the house of Aulë and the flowering meads of Valinor she would come at times and heal the hurts of Melkor; and returning she would ever urge the Valar to that war with his evil dominion that they must surely wage ere the coming of the Firstborn. And Oromë tamer of beasts would ride too at whiles in the darkness of the unlit forests; as a mighty hunter he came with spear and bow, pursuing to the death the monsters and fell creatures of the kingdom of Melkor, and his white horse Nahar shone like silver in the shadows. Then the sleeping earth trembled at the beat of his golden hooves, and in the twilight of the world Oromë would sound the Valaróma his great horn upon the plains of Arda; whereat the mountains echoed, and the shadows of evil fled away, and Melkor himself quailed in Utumno, foreboding the wrath to come. But even as Oromë passed the servants of Melkor would gather again; and the lands were filled with shadows and deceit.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>eth</b>, <i>conj.</i> “therefore” ⪤ Q. <a href="https://eldamo.org/content/words/word-1515458015.html?neo">etta</a>, <i>conj.</i> “*therefore, (lit.) out of that” [author: Elaran]<br>
+  <sup class="fn">2</sup> <b>...atha aen</b>, <i>v.</i> “would (lit) will should, could” [author: Elaran]<br>
+  <sup class="fn">3</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+  <sup class="fn">4</sup> <b>Minennin</b>, <i>coll.</i> “First-born” ⪤ Q. <a href="https://eldamo.org/content/words/word-1062987751.html?neo">Minnónar</a>, <i>coll.</i> “First-born” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>Lavamarthor</b>, <i>m.</i> “Animal Tamer” from S. <a href="https://eldamo.org/content/words/word-4243988031.html?neo">lavan</a>, <i>n.</i> “animal” + ᴺS. <b>*bartha- [mb-]</b> <i>v.</i> “to tame” The verb already exists as “to doom” in the sense of deciding something’s future, this is extending its sense slightly. It can also be viewed as “to domesticate”, rather easily since (m)bâr is “house, home, dwelling”. [author: Elran]<br>
+  <sup class="fn">6</sup> <b>Nachar</b>, <i>m.</i> ⪤ Q. <b>Nahar</b>, <i>m.</i> [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+  <sup class="fn">8</sup> <b>pathal</b>, <i>n.</i> “hoof” ⪤ of ᴺQ. !<a href="https://eldamo.org/content/words/word-2552747905.html?neo">pattal</a> <i>n.</i> “hoof” [author: Rínor]<br>
+  <sup class="fn">9</sup> <b>Rododhrom</b>, <i>pn.</i> “Horn of Oromë, *(lit.) Vala-horn” ⪤ of Q. <a href="https://eldamo.org/content/words/word-550244735.html?neo">Valaróma</a> <i>pn.</i> “Horn of Oromë, *(lit.) Vala-horn” [author: Rínor]<br>
+  <sup class="fn">10</sup> <b>ias</b>, <i>pron.</i> “where (relative)” ⪤ ᴹQ. <b>yassë</b>, <i>adv.</i> “there [remote, relative]” [author: Unknown]<br>
+  <sup class="fn">11</sup> <b>ad</b>, <i>adv.</i> “again” from <a href="https://eldamo.org/content/words/word-2176818521.html?neo">√AT</a> <i>root.</i> “two, double, bi-, di-; back, re-, [ᴹ√] again, twice” [author: unknown]
+</div>
+  
+  <h3 id="1.21">Ch. 1 Para. 21 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 21">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.21</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Hí, il phennen o lheng Amar ah i·chîr dín v’ iest<sup class="fn">1</sup> in·oer, a fo<sup class="fn">2</sup> amar odul na leng<sup class="fn">3</sup> i in·Eruchín istasser o then. An Edhil ah Edain in·Eruchín, ah añ gaeth i ú-cheniannar vi bant e·banu han, ial<sup class="fn">4</sup> i·Chîn vinnanner e·linnas, û Aeny verthanner aned aenad<sup class="fn">5</sup> n’ e·nast dín. Eni gaeth han idh·Rodyn n’ i·nys dín hennui in·einyr dín ah i·chonin dín athar i·chîr dín; a phi ui voen ethregerid ‘uin Edhil ah Edain in·Aeny rithanner caethad din io anírasser i ben rastad<sup class="fn">6</sup> din, na lui nodui<sup class="fn">7</sup> he vaeras, an il i·maith am maeras. in·Aeny óver am ethergerid ‘uin Edhil, an Iladar echant din am ‘ovai vi nast n’ Aeny, an il i<sup class="fn">8</sup> bîn in·Edhil athar in·Aeny vo valt a challas; lo an Edain ón ain ethrin.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Now, all [is] said concerning [the] manner [of the] Earth and its lords in [the] beginning [of] days, and before [the] world came to [a] manner that the Children of Ilúvatar had knowledge about it. For the Children of Ilúvatar [are] Elves and Men; and for reason that they did not understand in full that theme, whence the Children entered the Music, no Ainur dared to add anything to their being. For that reason the Valar [are] to these kindreds rather their elders and their chieftains beyond their masters; and if ever by their interactions together with the Elves and Men the Ainur strove to compel them when they did not desire that someone to guide them, seldom this [was] good, for all the intentions for good. The Ainur had more interactions together with the Elves, for Ilúvatar made them more alike in being to the Ainur, for all that little [are] the Elves beyond the Ainur by might and height; while to Men he gave strange gifts.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      Now all is said concerning the manner of the Earth and its rulers in the beginning of days, and ere the world became such as the Children of Ilúvatar have known it. For Elves and Men are the Children of Ilúvatar; and since they understood not fully that theme by which the Children entered into the Music, none of the Ainur dared to add anything to their fashion. For which reason the Valar are to these kindreds rather their elders and their chieftains than their masters; and if ever in their dealings with Elves and Men the Ainur have endeavoured to force them when they would not be guided, seldom has this turned to good, howsoever good the intent. The dealings of the Ainur have indeed been mostly with the Elves, for Ilúvatar made them more like in nature to the Ainur, though less in might and stature; whereas to Men he gave strange gifts.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>iest</b>, <i>n.</i> “beginning” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-1898335019.html?neo">yestië</a> <i>n.</i> “beginning” [author: Luinyelle]<br>
+  <sup class="fn">2</sup> <b>fo</b>, <i>prep.</i> “before” (temporal only) ✶PʰĀ [author: Ellanto]<br>
+  <sup class="fn">3</sup> <b>leng</b>, <i>n.</i> “method, way, manner” &gt; Q. <b>lé</b>¹, <i>n.</i> “way, method, manner” received x4 [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>ial</b>, <i>pron.</i> “whench” ⪤ ᴺQ. !<b>yallo</b>, <i>adv.</i> “whence” [author: Rínor]<br>
+  <sup class="fn">5</sup> <b>aenad-</b>, <i>pron.</i> “anything” ✶ai “supposing” + nad “thing” [author: Rínor, Elaran]<br>
+  <sup class="fn">6</sup> <b>rasta-</b>, <i>v.</i> “to guide (with allative); to explain (with dative)” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-2270716097.html?neo">rasta-</a>, <i>v.</i> “to guide (with allative); to explain (with dative)” [author: Rínor]<br>
+  <sup class="fn">7</sup> <b>na lui nodui</b>, = “seldom, on few occasions” [author: Rínor]<br>
+  <sup class="fn">8</sup> <b>an il i</b>, = “though (lit.) for all that” [author: Rínor]
+</div>
+  
+ <h3 id="1.22">Ch. 1 Para. 22 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 22">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.22</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      A phedir i dhîn vreniast ab ledhu idh·Rodyn, ah an andrann Iladar<sup class="fn">1</sup> achodh air vi nûth. To<sup class="fn">2</sup> ebent: Elo! Melin Amar, i tho mbâr eni Phenidh<sup class="fn">3</sup> ah in·Edain! Ach i·Phenidh thor bain athar il ‘wî nan amar, a savathar a nauthathar ah ethogathar am meinas athar il i·Chîn nín; a savathar am alvar vi amar hen. Ach enin Edain annathon ann gîw. Eth<sup class="fn">4</sup> enidh i guir in·Edain chestathar aen<sup class="fn">5</sup> athar amar a chirathar aen<sup class="fn">5</sup> û îdh ennas; ach havathar aen<sup class="fn">5</sup> bolodh an echaded i·chuithais dín, mîg i·phelydh a thync nan amar, athar Linnas in·Aeny, i be amarth an il naid egil; ah o i·goer dín, illad tolatha aen<sup class="fn">5</sup>, mi gant a charth, ah amar amathatha<sup class="fn">6</sup> aen<sup class="fn">5</sup> naden e·veth a rhobigen.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      For they say that silence endured after [the] departure [of] the Valar, and for a long age Ilúvatar sat alone in thought. Then he said: “Behold! I love [the] Earth, that will be [a] home for Quendi and the Atani! But the Quendi will be fair beyond all creatures of [the] earth, and they shall have and shall conceive and bring forth more beauty beyond all my Children; and they shall have more bliss in this world. But to the Atani I will give [a] new gift. Therefore he willed that the hearts of the Men should seek beyond [the] world and should find no rest there; but they should have power for shaping their lives, among the powers and chances of [the] world, beyond [the] Music [of] the Ainur, that like fate for all other things; and from their actions, everything would be done, in shape and deed, and [the] world fulfilled until the last and most-small.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      For it is said that after the departure of the Valar there was silence, and for an age Ilúvatar sat alone in thought. Then he spoke and said: ‘Behold I love the Earth, which shall be a mansion for the Quendi and the Atani! But the Quendi shall be the fairest of all earthly creatures, and they shall have and shall conceive and bring forth more beauty than all my Children; and they shall have the greater bliss in this world. But to the Atani I will give a new gift. Therefore he willed that the hearts of Men should seek beyond the world and should find no rest therein; but they should have a virtue to shape their life, amid the powers and chances of the world, beyond the Music of the Ainur, which is as fate to all things else; and of their operation everything should be, in form and deed, completed, and the world fulfilled unto the last and smallest.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>Iladar</b>, <i>m.</i> “Father of All” ⪤ Q. <b>Ilúvatar</b> <i>m.</i> “Father of All” [author: Uncredited]<br>
+  <sup class="fn">2</sup> <b>to</b>, <i>adv.</i> “so, then” ⪤ Q. <a href="https://eldamo.org/content/words/word-4035110015.html?neo">tá</a>, <i>adv.</i> “then, [ᴹQ.] at that time [past]” [author: Elaran]<br>
+  <sup class="fn">3</sup> <b>†penedh</b>, <i>n.</i> “Elf” ⪤ Q. <b>Quende</b>, <i>n.</i> “Elf, (lit.) One That Speaks”<br>
+  <sup class="fn">4</sup> <b>eth</b>, <i>conj.</i> “therefore” ⪤ Q. <a href="https://eldamo.org/content/words/word-1515458015.html?neo">etta</a>, <i>conj.</i> “*therefore, (lit.) out of that” [author: Elaran]<br>
+  <sup class="fn">5</sup> <b>...atha aen</b>, <i>v.</i> “would (lit) will should, could” [author: Elaran]<br>
+  <sup class="fn">6</sup> <b>amatha-</b>, <i>v.</i> “to fulfill (lit.) up fill” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-2003222553.html?neo">amaquat-</a>, <i>v.</i> “to fulfill, (lit.) up fill” [author: Rínor]
+</div>
+  
+ <h3 id="1.23">Ch. 1 Para. 23 (Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 23">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.23</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Ach Iladar istast oh Edain, i pennin vîg úbarthas<sup class="fn">1</sup> amar, reniathar aen<sup class="fn">2</sup> lui laew ah ú-iuithathar in·ain dín vo ‘olinn<sup class="fn">3</sup>; ah ebent, “Si eithro vil lû dín hirathar i il i cherir goianna n’ e·veth n’ aglar e·dass nín.” Eno in·Edhil havir i Edain geirianner naeras veleg am Manwe na lui laew<sup class="fn">4</sup>, i sâf ist rodhaer nan ind Iladar; an nêf i enin Edhil, i Edain vilthar Mbelegûr athar il in·Aeny, ach anuir ‘ostant ah ediw din, eithro ai vuianner den.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      But Ilúvatar had knowledge about Men, who [were] set among [the] chaos of [the] world, would stray [a] great many times and will not employ their gifts by harmony; and he said. “These also in their time will find that all that they do adds to the end only to the glory of my work.” Still the Elves believe that Men caused great sorrow to Manwe on many occasions, who has the greatest knowledge of [the] mind [of] Ilúvatar; for it seems that to the Elves, that Men resemble Melkor beyond all the Ainur, but forever he feared and hated them, also those who served him.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      But Ilúvatar knew that Men, being set amid the turmoils of the powers of the world, would stray often, and would not use their gifts in harmony; and he said, ‘These too in their time shall find that all that they do redounds at the end only to the glory of my work.’ Yet the Elves believe that Men are often a grief to Manwë, who knows most of the mind of Ilúvatar; for it seems to the Elves that Men resemble Melkor most of all the Ainur, although he has ever feared and hated them, even those that served him.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>úbarthas</b>, <i>n.</i> “disorder, chaos” ⪤ ᴺQ. !<b>úpartale</b> <i>n.</i> “unorder, *disorder” [author: Rínor]<br>
+  <sup class="fn">2</sup> <b>...atha aen</b>, <i>v.</i> “would (lit) will should, could” [author: Elaran]<br>
+  <sup class="fn">3</sup> <b>golinn</b>, <i>n.</i> “harmony (lit.) together sing” ⪤ ᴺQ. !<a href="https://eldamo.org/content/words/word-449300461.html?neo">olindë</a> <i>n.</i> “harmony” [author: Rínor]<br>
+  <sup class="fn">4</sup> <b>na lui laew</b>, = “often, on frequent occasions” [author: Rínor]
+</div>
+  
+ <h3 id="1.24">Ch. 1 Para. 24 (Mithriel, updated by Rínor)</h3>
+
+<div class="div-table" role="table" aria-label="Ch. 1 Para. 24">
+  <div class="row head" role="row">
+    <div class="cell" role="columnheader">#</div>
+    <div class="cell" role="columnheader">Sindarin</div>
+    <div class="cell" role="columnheader">Back Translation</div>
+    <div class="cell" role="columnheader">Original</div>
+  </div>
+
+  <div class="row" role="row">
+    <div class="cell num" role="cell" data-label="#">1.24</div>
+
+    <div class="cell" role="cell" data-label="Sindarin">
+      Gu ann e·leinas hen chîn in·Edain guiar, air lû thent vi amar, ah ú-'wennin na den, a gwannar rong navan in·Edhil ú-istar. Ach in·Edhil rethir dem methed in·oer, ah amminai ah annûr e·meleth dín añ geven ah amar bân, ah annírol lo in·în ledir. Ach in·Edhil ú-‘wannar den amar ‘wanna, air bi di ndengin egor belir vi faegol (ah i·ñgyrth dâd nim hin bessar din); ach íphathred ú-nítha e·vellas dín, air bi dhrauthar voen edrenn bae menig; a gwanniel covar na them Bannas vi Ndor-Rodyn, oman ndandolathar aen<sup class="fn">1</sup> vi lû gammui. Ach ionnath in·Edain firir î, ah awarthar en·amar; eni gaeth hen estanner din i·Nethail egor in·Ethyl. Gurth en·ammarth dín, en·ann nan Iluvadar<sup class="fn">2</sup>, i lo in·în lúdar i·Mbelain eithro anírathar. Ach Mbelegûr achant e·vorchant dín thar den, a changant den ‘u fuin, ah ethonc rhû e maeras, a goe ed estel. Ach miñ gwanwas, idh·Rodyn ebenner an in·Edhil vi Ndor-Rodyn i in·Edain ‘oiannathar vi Linnas in·Aeny Dadui; lo Iladar ú-bathant man meitha enin Edhil ab vethed amar, a Belegûr ú-echir hen.
+    </div>
+
+    <div class="cell" role="cell" data-label="Back Translation">
+      Together with this gift of freedom [the] children [of] Men live, only [a] short time [in] the world, and [are] not bound to it, and depart soon whither the Elves do not have knowledge. But the Elves remain until [the] end [of] the days, and more-single and deeper their love for the earth and the whole world, and more-sorrowful while the years lengthen. But the Elves did not die until [the] world dies, only if slain or they fade in grief (and these two seeming deaths affect them); but age does not reduce their strength, only if they tire out by the ten-thousand ages; and having departed they-gather to the halls of Mandos in Valinor, whence they might return in appropriate time. But the sons of the Men die indeed, and forsake [the] world; for this reason they call them the Guests or the Strangers. Death [is] their fate, the gift of Ilúvatar, which while the years pass the Powers also they will desire. But Melkor cast his shadow across it, and confounded it together with darkness, and brought forth evil out of good, and fear out of hope. But in the past, the Valar told the Elves in Valinor that the Men will join in the Second Music of the Ainur; while Ilúvatar did not reveal what he intends for the Elves after the end of [the] world, and Melkor did not discover it.
+    </div>
+
+    <div class="cell" role="cell" data-label="Original">
+      It is one with this gift of freedom that the children of Men dwell only a short space in the world alive, and are not bound to it, and depart soon whither the Elves know not. Whereas the Elves remain until the end of days, and their love of the Earth and all the world is more single and more poignant therefore, and as the years lengthen ever more sorrowful. For the Elves die not till the world dies, unless they are slain or waste in grief (and to both these seeming deaths they are subject); neither does age subdue their strength, unless one grow weary of ten thousand centuries; and dying they are gathered to the halls of Mandos in Valinor, whence they may in time return. But the sons of Men die indeed, and leave the world; wherefore they are called the Guests, or the Strangers. Death is their fate, the gift of Ilúvatar, which as Time wears even the Powers shall envy. But Melkor has cast his shadow upon it, and confounded it with darkness, and brought forth evil out of good, and fear out of hope. Yet of old the Valar declared to the Elves in Valinor that Men shall join in the Second Music of the Ainur; whereas Ilúvatar has not revealed what he purposes for the Elves after the World’s end, and Melkor has not discovered it.
+    </div>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:2em;">
+  <strong>Notes:</strong><br>
+  <sup class="fn">1</sup> <b>...atha aen</b>, <i>v.</i> “would (lit) will should, could” [author: Elaran]<br>
+  <sup class="fn">2</sup> <b>Iladar</b>, <i>m.</i> “Father of All” ⪤ Q. <b>Ilúvatar</b> <i>m.</i> “Father of All” [author: Uncredited]
+</div>
+  
+  <button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+  </main>
+
+  <script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            // On mobile, treat as accordion; on desktop allow open/close
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Make sure the panel doesn't overflow off the right edge of the viewport
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    // (This replaces per-dropdown identical listeners to avoid N duplicate handlers.)
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+
+    /* FALLBACK: intercept anchors if browser doesn't support scroll-margin/scroll-padding */
+    (function anchorOffsetFallback(){
+      const testEl = document.createElement('div');
+      const supportsScrollMargin = ('scrollMarginTop' in testEl.style) || ('scrollMargin' in testEl.style);
+      if (supportsScrollMargin) return;
+
+      const anchors = Array.from(document.querySelectorAll('a[href^="#"]')).filter(a => a.hash && a.hash.length > 1);
+      if (!anchors.length) return;
+
+      function getNavHeight() {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-height').trim();
+        const n = parseFloat(raw);
+        return isNaN(n) ? 72 : n;
+      }
+
+      anchors.forEach(a => {
+        a.addEventListener('click', function(ev) {
+          if (!this.hash) return;
+          const id = this.hash.slice(1);
+          const target = document.getElementById(id);
+          if (!target) return;
+          ev.preventDefault();
+          const navH = getNavHeight() + 12;
+          const top = target.getBoundingClientRect().top + window.scrollY - navH;
+          window.scrollTo({ top, behavior: 'smooth' });
+          try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = '#' + id; }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

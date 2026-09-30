@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Most common words</title>
+
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+
+ <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+table {
+
+  border-radius: 14px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(2,6,23,0.04);
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+}
+
+th, td {
+  padding: 4px 4px;
+  text-align: left;
+  border: none;
+  font-size: 11px;
+  color: var(--text);
+}
+
+th {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-size: 11px;
+}
+
+tr:not(:last-child) td,
+tr:not(:last-child) th {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+td:not(:last-child),
+th:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+/* hover color from original theme */
+tbody tr:hover td {
+  background: rgba(14,165,164,0.03);
+}
+/* Row highlight for tables */
+table.row-highlight {
+  position: relative;
+  overflow: hidden;
+}
+
+table.row-highlight tr:hover {
+  background-color: rgba(14,165,164,0.03);
+}
+
+table.row-highlight td,
+table.row-highlight th {
+  position: relative;
+}
+
+/* active cell hover (stronger than row hover) */
+table.row-highlight td:hover {
+  background-color: rgba(14,165,164,0.10);
+}
+
+table.row-highlight td:hover::after,
+table.row-highlight th:hover::after {
+  content: "";
+  position: absolute;
+  background-color: rgba(14,165,164,0.03);
+  left: 0;
+  top: -5000px;
+  height: 10000px;
+  width: 100%;
+  z-index: -1;
+}
+
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+
+@media (max-width:820px) {
+  .dropdown-panel {
+    position: static;
+    transform: none !important;
+    opacity:1 !important;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    border: none;
+    display: none; 
+  }
+  .dropdown.open > .dropdown-panel { display:block; padding:8px 0 16px 0; }
+  .panel-grid nav { grid-template-columns: 1fr; gap:6px; }
+  .dropdown-panel nav a { padding:10px 6px; border-radius:6px; }
+  /* mobile override: keep font-size readable/tappable — still 12px but with larger hit area */
+  .dropdown-panel nav a { font-size: 12px; line-height:1.3; padding:12px 8px; }
+}
+.responsive-grid {
+  width: 100%;
+  margin: 12px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04);
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1));
+  font-family: var(--font-ui);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Desktop layout: CSS Grid with 5 equal columns */
+.responsive-grid .rg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* first column wider */
+  align-items: center;
+  gap: 0;
+}
+
+/* header band */
+.responsive-grid .rg-header { 
+  background: linear-gradient(180deg,var(--accent), #0b7f7e);
+  color: #fff4d9;
+  font-weight:700;
+  font-size:14px;
+}
+
+.responsive-grid .rg-head {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* body rows */
+.responsive-grid .rg-row:not(.rg-header) {
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell { /* subtle banding */
+  background: rgba(14,165,164,0.01);
+}
+.responsive-grid .rg-cell {
+  padding: 10px;
+  font-size: 14px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* hover highlight of row (like your table behavior) */
+.responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+  background: rgba(14,165,164,0.03);
+}
+
+/* Small screens: keep the exact same grid/table layout but scale down to fit */
+@media (max-width: 720px) {
+  .responsive-grid {
+    font-size: clamp(12px, 2.2vw, 14px);
+  }
+
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header {
+    display: grid;
+    align-items: center;
+    gap: 0;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .responsive-grid .rg-head {
+    padding: 8px 8px;
+    font-size: 0.95em;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-cell {
+    padding: 7px 8px;
+    font-size: inherit;
+    line-height: 1.15;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .responsive-grid .rg-row:nth-child(odd):not(.rg-header) .rg-cell {
+    background: rgba(14,165,164,0.01);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header):hover .rg-cell {
+    background: rgba(14,165,164,0.03);
+  }
+
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell {
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .responsive-grid .rg-row:last-child .rg-cell {
+    border-bottom: none;
+  }
+}
+
+/* print-friendly tweaks */
+@media print{
+  .responsive-grid .rg-row { page-break-inside: avoid; }
+  .responsive-grid .rg-row:not(.rg-header) .rg-cell::before { content: ""; } /* remove labels for print */
+}
+
+/* Very small devices: tighten further */
+@media (max-width:420px){
+  .responsive-grid{
+    font-size: clamp(11px, 3.0vw, 13px);
+  }
+  .responsive-grid .rg-row,
+  .responsive-grid .rg-header{
+    grid-template-columns:1.15fr 0.95fr 0.85fr 0.8fr 0.8fr;
+  }
+  .responsive-grid .rg-cell{
+    padding:6px 6px;
+  }
+}
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+
+
+  </style>
+</head>
+
+<body>
+ <div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+<main class="main-center" role="main">
+
+<p>Here is a current tentative list of <a href="https://en.wikipedia.org/wiki/Most_common_words_in_English">100 Common Words</a>. This list was first started and compiled by Elaran, and working with Elaran, I refined it to this current list.</p>
+<center>
+  <table class="sortable">
+                                    
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Rank &#x25B2;&#x25BC;</th> <!-- Clickable -->
+                                            <th scope="col">English &#x25B2;&#x25BC;</th> <!-- Clickable -->
+                                            <th scope="col">Sindarin &#x25B2;&#x25BC;</th> <!-- Clickable -->
+                                            <th scope="col">Parts of Speech &#x25B2;&#x25BC;</th> <!-- Clickable -->
+                                            <th scope="col">Note</th>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td> 
+                                            <td><b>the</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1324303307.html?neo">e(n)</a> | <a href="https://eldamo.org/content/words/word-1324303307.html?neo">i(n)</a></td>
+                                            <td>Article</td>
+                                            <td>Singular | Plural | (n) before vowels; e → soft mutation, i → nasal mutation.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td> 
+                                            <td><b>be</b>, exist as</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3079325279.html?neo">na-</a></td>
+                                            <td>Verb</td>
+                                            <td>Seen only in imperative form as <i>no</i> "be" & <i>no i</i> "be that / may"</td>
+                                        </tr>
+                                        <tr id="rank-3">
+                                            <td>3</td> 
+                                            <td><b>to</b>(words), at</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3149142565.html?neo">na</a></td>
+                                            <td>Preposition</td>
+                                            <td>Allative case</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td> 
+                                            <td><b>of</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3619674927.html?neo">na(n)</a></td>
+                                            <td>Preposition</td>
+                                            <td>Unnecessary word order is enough. Example: <i>Dor Daedeloth</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td> 
+                                            <td><b>and</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2814200763.html?neo">a(h)</a></td>
+                                            <td>Conjunction</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td> 
+                                            <td>a</td>
+                                            <td>N/A</td>
+                                            <td>Article</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td> 
+                                            <td><b>in</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2583985695.html?neo">mi</a></td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-8">
+                                            <td>8</td>
+                                            <td>who/<b>that</b> | <b>that</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1123899243.html?neo">i</a> | <a href="https://eldamo.org/content/words/word-2374695621.html?neo">sa</a> | <a href="https://eldamo.org/content/words/word-3265662125.html?neo">san</a>
+                                            </td>
+                                            <td>Pronoun</td>
+                                            <td>Relative | Dem. Nom./Subj. | Dem. Acc./Obj./Adj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td><b>have</b> | hold, <b>have</b>, *possess</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2115068425.html?neo">sav-</a> | <a href="https://eldamo.org/content/words/word-3371312947.html?neo">gar-</a></td>
+                                            <td>Verb</td>
+                                            <td>General Ownership/Experience | Physical Grasp/Control</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="rank-10">10</td>
+                                            <td><b>I</b> | me</td>
+                                            <td><a href="https://eldamo.org/content/words/word-1556186409.html?neo">ni</a> | <a href="https://eldamo.org/content/words/word-2068694825.html?neo">nin</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Nom./Subj. | Acc./Obj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="rank-11">11</td>
+                                            <td>he/she/<b>it</b> | him/her/<b>it</b></td>
+                                            <td>te <a href="https://eldamo.org/content/words/word-1432476883.html?neo"> | ten</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Nom./Subj. | Acc./Obj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>to, <b>for</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-667014213.html?neo">an</a></td>
+                                            <td>Preposition</td>
+                                            <td>Dative case</td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>no, <b>not</b> | no, <b>not</b>, negative</td>
+                                           <td><a href="https://eldamo.org/content/words/word-2536897167.html?neo">û</a>/<a href="https://eldamo.org/content/words/word-393893289.html?neo">law</a> | <a href="https://eldamo.org/content/words/word-1438153453.html?neo">ú-</a>/ló-</td>
+                                            <td>Adverb | Interj. | Prefix</td>
+                                            <td><i>law¹</i> “sound” vs. <i>law²</i> “not”</td>
+                                        </tr>
+                                        <tr>
+                                            <td>14</td>
+                                            <td>(up)<b>on</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1583148037.html?neo">bo</a></td>
+                                            <td>Preposition</td>
+                                            <td>“*on” [is, per editors, perhaps related to] √apa “touch”</td>
+                                        </tr>
+                                        <tr>
+                                            <td>15</td>
+                                            <td>(together) <b>with</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-6498811.html?neo">gu</a> | <a href="https://eldamo.org/content/words/word-3171154943.html?neo">*</a>ŷ</td>
+                                            <td>Preposition</td>
+                                            <td><i>ŷ</i> for more than one other thing.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>16</td>
+                                            <td><b>he</b></td>
+                                            <td>(see #<a href="#rank-11">11</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-17">
+                                            <td>17</td>
+                                            <td><b>as</b>, like | <b>*as</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1296856217.html?neo">be</a>, <a href="https://eldamo.org/content/words/word-917698495.html?neo">sui</a></td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>18</td>
+                                            <td><b>you</b> (thou | thee | <b>you</b> pl.)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2298877587.html?neo">ci</a>/<a href="https://eldamo.org/content/words/word-2084114697.html?neo">cin</a> | <a href="https://eldamo.org/content/words/word-1581961535.html?neo">le</a>/len | <a href="https://eldamo.org/content/words/word-3071865501.html?neo">de</a>/den</td>
+                                            <td>Pronoun</td>
+                                            <td>Nom./Subj. | Acc./Obj.</td>
+                                        </tr>
+                                        <tr id="rank-19">
+                                            <td>19</td>
+                                            <td><b>do</b>, make</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3736354243.html?neo">car-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>20</td>
+                                            <td><b>at</b></td>
+                                            <td>(see #<a href="#rank-3">3</a>)</td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>21</td>
+                                            <td><b>this</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2425137055.html?neo">se</a> | <a href="https://eldamo.org/content/words/word-3239931345.html?neo">sen</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Dem. Nom./Subj. | Dem. Acc./Obj./Adj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>22</td>
+                                            <td><b>but</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2091206437.html">ach</a></td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-23">
+                                            <td>23</td>
+                                            <td><b>his</b>/her(s)/its</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2130737323.html?neo">tín</a></td>
+                                            <td>Possessive pronoun</td>
+                                            <td>circumflex "î" vs. acute "í".</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td><b>by</b> (agent of) | beside, alongside</td>
+                                            <td><a href="https://eldamo.org/content/words/word-843550059.html?neo">mo</a> | <a href="https://eldamo.org/content/words/word-3169970463.html?neo">sa</a></td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>25</td>
+                                            <td><b>from</b>, of | away (<b>from</b>)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2407603967.html?neo">o</a> | o(d)</td>
+                                            <td>Preposition</td>
+                                            <td><i>o</i> &lt; ✶hō causing lenition. | <i>o(d)</i> &lt; ✶aut causing stop mutation</td>
+                                        </tr>
+                                        <tr id="rank-26">
+                                            <td>26</td>
+                                            <td>*<b>they</b> | them</td>
+                                            <td><a href="https://eldamo.org/content/words/word-206577057.html?neo">ti</a> | <a href="https://eldamo.org/content/words/word-3044042645.html?neo">tin</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Nom./Subj. | Acc./Obj.</td>
+                                        </tr>
+                                        <tr id="rank-27">
+                                            <td>27</td>
+                                            <td><b>we</b> (excl.)/us (excl.) | <b>we</b> (incl.)/us (incl.)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-558208521.html?neo">me</a>/<a href="https://eldamo.org/content/words/word-2968542933.html?neo">men</a> | <a href="https://eldamo.org/content/words/word-1491673253.html?neo">pe</a>/<a href="https://eldamo.org/content/words/word-2466285747.html?neo">pen</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Nom./Subj. | Acc./Obj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>28</td>
+                                            <td><b>say</b>, speak</td>
+                                            <td><a href="https://eldamo.org/content/words/word-599418975.html?neo">ped-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>29</td>
+                                            <td><b>her</b></td>
+                                            <td>(see #<a href="#rank-23">23</a>)</td>
+                                            <td>Possessive pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>30</td>
+                                            <td><b>she</b></td>
+                                            <td>(see #<a href="#rank-11">11</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td><b>or</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3073110357.html?neo">egor</a></td>
+                                            <td>Preposition</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>32</td>
+                                            <td>an</td>
+                                            <td>N/A</td>
+                                            <td>Article</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>33</td>
+                                            <td><b>will</b> (future) | <b>will</b>, mean to, intend | *<b>will</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-4238395593.html?neo">atha-</a> | <a href="https://eldamo.org/content/words/word-524470103.html?neo">nidh-</a> | <a href="https://eldamo.org/content/words/word-3558124111.html?neo">innas</a></td>
+                                            <td>verb | verb | noun</td>
+                                            <td><i>-atha(-)</i> "will (future conjugation)"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>34</td>
+                                            <td><b>my</b>, *mine</td>
+                                            <td><a href="https://eldamo.org/content/words/word-191574293.html?neo">nín</a></td>
+                                            <td>Possessive pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                       <tr>
+                                            <td>35</td>
+                                            <td><b>one</b> | <b>one</b>, alone | <b>one</b>, somebody, anybody</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2871412533.html?neo">min</a> | <a href="https://eldamo.org/content/words/word-36582213.html?neo">er</a> | <a href="https://eldamo.org/content/words/word-2557917401.html?neo">pen</a></td>
+                                            <td>Cardinal | Adjective | Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>36</td>
+                                            <td><b>*all</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3414825689.html?neo">il</a></td>
+                                            <td>Adjective</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-37">
+                                            <td>37</td>
+                                            <td><b>would</b> (hypothetical)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-4238395593.html?neo">-ath(a)-</a> & <a href="https://eldamo.org/content/words/word-1414245343.html?neo">aen</a></td>
+                                            <td>Verb, Adverb</td>
+                                            <td>meant to be "<i>...atha aen</i> = would"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>38</td>
+                                            <td><b>there</b> | (in) <b>there</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-433074759.html?neo">ennas</a> | <a href="https://eldamo.org/content/words/word-2192924659.html?neo">*</a>tas</td>
+                                            <td>Adverb</td>
+                                            <td>not used like English "there is" [may interfere with "index finger"]</td>
+                                        </tr>
+                                        <tr>
+                                            <td>39</td>
+                                            <td><b>their(s)</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2130737323.html?neo">tín</a></td>
+                                            <td>Possessive pronoun</td>
+                                            <td>identical in form to #23, clarified by context</td>
+                                        </tr>
+                                        <tr id="rank-40">
+                                            <td>40</td>
+                                            <td>*<b>what</b>, who</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2818329207.html?neo">man</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Interrogative | *Hypothetically like pronouns: <i>ma(n)/van</i>, e.g., <i>"Ma agor han?"</i></td>
+                                        </tr>
+                                        <tr id="rank-41">
+                                            <td>41</td>
+                                            <td><b>so</b>, then, (after) that</td>
+                                            <td><a href="https://eldamo.org/content/words/word-4035110015.html?neo">*</a>to</td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>42</td>
+                                            <td><b>up</b>(wards)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-638385031.html?neo">am</a></td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>43</td>
+                                            <td><b>out</b> (of)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3169907981.html?neo">ed</a></td>
+                                            <td>Prepostion</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>44</td>
+                                            <td><b>if</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-746839845.html?neo">pi</a></td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>45</td>
+                                            <td><b>*about</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-350323223.html?neo">o(h)</a></td>
+                                            <td>Adverb</td>
+                                            <td><i>os</i> updated to <i>o(h)</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td>46</td>
+                                            <td><b>who</b></td>
+                                            <td>(see both #<a href="#rank-8">8</a> & #<a href="#rank-40">40</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>47</td>
+                                            <td><b>get</b>, catch, obtain, take | receive, *accept</td>
+                                            <td><a href="https://eldamo.org/content/words/word-4211148585.html?neo">ged-</a> [ng-] | <a href="https://eldamo.org/content/words/word-3047589499.html?neo">cav-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>48</td>
+                                            <td><b>which</b></td>
+                                            <td>(see #<a href="#rank-40">40</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>49</td>
+                                            <td><b>go</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-800667727.html?neo">men-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>50</td>
+                                            <td><b>me</b></td>
+                                            <td>(see #<a href="#rank-10">10</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>51</td>
+                                            <td><b>when</b> | <b>when</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3364329155.html?neo">*</a>maw/mo | <a href="https://eldamo.org/content/words/word-983344431.html?neo">io</a></td>
+                                            <td>Interrogative | Conjunction</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>52</td>
+                                            <td><b>make</b></td>
+                                            <td>(see #<a href="#rank-19">19</a>)</td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-53">
+                                            <td>53</td>
+                                            <td><b>can</b>, be (physically) able to</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3018804647.html?neo">pol-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>54</td>
+                                            <td>as, <b>like</b> | to <b>like</b></td>
+                                            <td>(see #<a href="#rank-17">17</a>) | <a href="https://eldamo.org/content/words/word-43747303.html?neo">mav-</a></td>
+                                            <td>Prepostion | Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>55</td>
+                                            <td><b>time</b>, occasion</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3092141245.html?neo">lû</a></td>
+                                            <td>Noun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>56</td>
+                                            <td><b>no</b></td>
+                                            <td>(see #<a href="#rank-13">13</a>)</td>
+                                            <td>Interjection</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-57">
+                                            <td>57</td>
+                                            <td><b>just</b>, *lonely</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3345570783.html?neo">air</a></td>
+                                            <td>Adjective</td>
+                                            <td>adjectives adverbially so "alone" works to say "alonely > on(e)ly / just"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>58</td>
+                                            <td><b>him</b></td>
+                                            <td>(see #<a href="#rank-11">11</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>59</td>
+                                            <td><b>know</b>, have knowledge</td>
+                                            <td><a href="https://eldamo.org/content/words/word-4226423969.html?neo">ista-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>60</td>
+                                            <td>seize | <b>take</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3973688583.html?neo">mab-</a> | <a href="https://eldamo.org/content/words/word-4102772263.html?neo">nab-</a></td>
+                                            <td>Verb</td>
+                                            <td>*grasp, grab | lay hold of</td>
+                                        </tr>
+                                        <tr>
+                                            <td>61</td>
+                                            <td><b>people</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1209194993.html?neo">lî</a> | <a href="https://eldamo.org/content/words/word-1926942351.html?neo">gwaith</a> | <a href="https://eldamo.org/content/words/word-2541307047.html?neo">rim</a></td>
+                                            <td>Verb</td>
+                                            <td>(of one kind or origin) | [ᴱN.] men, folk | host, great number</td>
+                                        </tr>
+                                        <tr>
+                                            <td>62</td>
+                                            <td><b>into</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-4094191989.html?neo">mî</a></td>
+                                            <td>Preposition & Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>63</td>
+                                            <td><b>year</b> | <b>year</b> | seasonal <b>year</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-610330175.html?neo">în</a> | <a href="https://eldamo.org/content/words/word-3753462699.html?neo">idhrinn</a> | <a href="https://eldamo.org/content/words/word-324103635.html?neo">lóran</a></td>
+                                            <td>Noun</td>
+                                            <td>year | *(lit.) year-circle | (lit.) growth-cycle</td>
+                                        </tr>
+                                        <tr>
+                                            <td>64</td>
+                                            <td><b>your</b> (sg. fam. | *thy sg. polite | <b>your</b> pl.)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2210988927.html?neo">cín</a> | <a href="https://eldamo.org/content/words/word-3806423637.html?neo">lín</a> | dín</td>
+                                            <td>Possesive Pronoun</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>65</td>
+                                            <td><b>good</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2354944799.html?neo">ma</a> | <a href="https://eldamo.org/content/words/word-3652402261.html?neo">maer</a></td>
+                                            <td>Interjunction | Adjective</td>
+                                            <td>excellent, that’s right | excellent, fair</td>
+                                        </tr>
+                                        <tr>
+                                            <td>66</td>
+                                            <td><b>some</b>, few, several</td>
+                                            <td><a href="https://eldamo.org/content/words/word-880959447.html?neo">nodui</a></td>
+                                            <td>Adjective</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                         <tr>
+                                            <td>67</td>
+                                            <td><b>could</b></td>
+                                            <td>(see both #<a href="#rank-37">37</a> & #<a href="#rank-53">53</a>)</td>
+                                            <td>Adverb</td>
+                                            <td>debatable, possibly *"<i>pelin mened</i> = I can go" vs. "<i>pelin aen mened</i> = I could go"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>68</td>
+                                            <td><b>them</b></td>
+                                            <td>(see #<a href="#rank-26">26</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>69</td>
+                                            <td><b>see</b>, perceive, look | <b>see</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1590244863.html?neo">cen-</a> | <a href="https://eldamo.org/content/words/word-608718335.html?neo">tíra-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>70</td>
+                                            <td><b>other</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-375824727.html?neo">egel</a></td>
+                                            <td>Adjective</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-71">
+                                            <td>71</td>
+                                            <td><b>than</b>, *beyond | across, athwart, over</td>
+                                            <td>athar | <a href="https://eldamo.org/content/words/word-1223027571.html?neo">thar</a></td>
+                                            <td>Adjective</td>
+                                            <td>alternative to "than" in English, e.g. "A is greater than B" → "A is great beyond B"</td>
+                                        </tr>
+                                         <tr>
+                                            <td>72</td>
+                                            <td><b>then</b></td>
+                                            <td>(see #<a href="#rank-41">41</a>)</td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>73</td>
+                                            <td><b>now</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1925514569.html?neo">hí</a></td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>74</td>
+                                            <td><b>look</b> (towards), watch (over)</td>
+                                            <td><a href="https://eldamo.org/content/words/word-1681096947.html?neo">tir-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>75</td>
+                                            <td><b>only</b> | *<b>only</b>, alone</td>
+                                            <td>(see #<a href="#rank-57">57</a>)
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>76</td>
+                                            <td><b>come</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2756894593.html?neo">tol-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>77</td>
+                                            <td><b>its</b></td>
+                                            <td>(see #<a href="#rank-23">23</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>78</td>
+                                            <td><b>over</b>, above</td>
+                                            <td><a href="https://eldamo.org/content/words/word-1304260511.html?neo">or</a> | (see #<a href="#rank-71">71</a>)</td>
+                                            <td>Prepostion</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>79</td>
+                                            <td><b>think</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3923804893.html?neo">*</a>sana-</td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr id="rank-80">
+                                            <td>80</td>
+                                            <td><b>also</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1789005665.html?neo">eithro</a> | <a href="https://eldamo.org/content/words/word-3772099257.html?neo">aich</a></td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>81</td>
+                                            <td><b>back</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1739892921.html?neo">ad-</a> | <a href="https://eldamo.org/content/words/word-1905541541.html?neo">dan</a> [nd-] | <a href="https://eldamo.org/content/words/word-3591368295.html?neo">galf</a></td>
+                                            <td>Prefix | Adverb | Noun</td>
+                                            <td>again, re- | back to, back on, back again | [of a body], shoulders [collectively]</td>
+                                        </tr>
+                                        <tr>
+                                            <td>82</td>
+                                            <td><b>after</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-323464029.html?neo">ab</a> | <a href="https://eldamo.org/content/words/word-3427892515.html?neo">cad</a></td>
+                                            <td>Preposition | Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>83</td>
+                                            <td>employ, <b>*use</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1507806889.html?neo">iuitha-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>84</td>
+                                            <td><b>two</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-4250276895.html?neo">tâd</a></td>
+                                            <td>Cardinal</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>85</td>
+                                            <td><b>how</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-437993289.html?neo">movan</a> | <a href="https://eldamo.org/content/words/word-2533857839.html?neo">naman</a></td>
+                                            <td>Interrogative</td>
+                                            <td>by means of what | with what</td>
+                                        </tr>
+                                        <tr>
+                                            <td>86</td>
+                                            <td><b>our(s)</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1998998965.html?neo">mín</a> | <a href="https://eldamo.org/content/words/word-3961441311.html?neo">pín</a></td>
+                                            <td>Possesive Pronoun</td>
+                                            <td>Exclusive | Inclusive</td>
+                                        </tr>
+                                        <tr>
+                                            <td>87</td>
+                                            <td><b>work</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-2492227927.html?neo">ammuia-</a> | <a href="https://eldamo.org/content/words/word-1997277981.html?neo">muda-</a> | <a href="https://eldamo.org/content/words/word-105028715.html?neo">tass</a></td>
+                                            <td>Verb | Noun</td>
+                                            <td>to work (hard) for, to earn | to labour, toil, *work | labour, task</td>
+                                        </tr>
+                                        <tr>
+                                            <td>88</td>
+                                            <td><b>first</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3227474549.html?neo">minui</a></td>
+                                            <td>Ordinal</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>89</td>
+                                            <td><b>well</b>; excellent, admirable</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3420722951.html?neo">mae</a> | <a href="https://eldamo.org/content/words/word-1785473727.html?neo">mael</a></td>
+                                            <td>Adverb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>90</td>
+                                            <td>road, <b>way</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-3653772469.html?neo">men</a> (mên)</td>
+                                            <td>Verb | Noun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>91</td>
+                                            <td><b>even</b></td>
+                                            <td>(see #<a href="#rank-80">80</a>)</td>
+                                            <td>Adjective</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>92</td>
+                                            <td>young, *<b>new</b> | fresh, <b>new</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1087096531.html?neo">gwain</a> | <a href="https://eldamo.org/content/words/word-4033790303.html?neo">cîw</a></td>
+                                            <td>Adjective</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>93</td>
+                                            <td><b>want</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-549462809.html?neo">aníra-</a> | <a href="https://eldamo.org/content/words/word-1493484221.html?neo">mer- </a></td>
+                                            <td>Verb</td>
+                                            <td>desire, *long for | hope, wish, desire, want</td>
+                                        </tr>
+                                        <tr>
+                                            <td>94</td>
+                                            <td><b>because</b></td>
+                                            <td>(see #<a href="#rank-12">12</a>)</td>
+                                            <td>Preposition</td>
+                                            <td>Can also be used as "because".</td>
+                                        </tr>
+                                        <tr>
+                                            <td>95</td>
+                                            <td><b>any</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-4053066113.html?neo">*</a>ae</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>96</td>
+                                            <td><b>these</b></td>
+                                            <td>si | <a href="https://eldamo.org/content/words/word-3240556149.html?neo">sin</a></td>
+                                            <td>Pronoun</td>
+                                            <td>Dem. Nom./Subj. | Dem. Acc./Obj./Adj.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>97</td>
+                                            <td><b>give</b></td>
+                                            <td><a href="https://eldamo.org/content/words/word-1272131327.html?neo">anna-</a></td>
+                                            <td>Verb</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>98</td>
+                                            <td>(whole) <b>day</b>, sunlight</td>
+                                            <td><a href="https://eldamo.org/content/words/word-2784467005.html?neo">aur</a></td>
+                                            <td>Noun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>99</td>
+                                            <td><b>most</b>, -est</td>
+                                            <td><a href="https://eldamo.org/content/words/word-3068996511.html?neo">ro-</a></td>
+                                            <td>Prefix (*superlative)</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>100</td>
+                                            <td><b>us</b></td>
+                                            <td>(see #<a href="#rank-27">27</a>)</td>
+                                            <td>Pronoun</td>
+                                            <td style="background-color: #CCCCCC;"></td>
+                                        </tr>
+                                    </thead>
+                                </table>
+ </center>
+
+<button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+</main>
+
+<script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+<script>
+    // New code for responsive navbar dropdowns
+
+    // Get all dropdown buttons
+    var dropdownButtons = document.querySelectorAll('.dropdown button');
+
+    dropdownButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            // Prevent default action
+            event.preventDefault();
+
+            // Toggle active class on the button
+            this.classList.toggle('active');
+
+            // Get the associated dropdown content
+            var dropdownContent = this.nextElementSibling;
+
+            // Toggle the display of the dropdown content
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+            }
+
+            // Close other dropdowns
+            dropdownButtons.forEach(function(otherButton) {
+                if (otherButton !== button) {
+                    otherButton.classList.remove('active');
+                    var otherDropdownContent = otherButton.nextElementSibling;
+                    if (otherDropdownContent) {
+                        otherDropdownContent.style.display = "none";
+                    }
+                }
+            });
+        });
+    });
+
+    // Function to remove special characters for sorting
+    function cleanText(text) {
+        return text.replace(/[^\w\s]/g, "").toLowerCase().trim();
+    }
+
+    // Function to check if a column is numeric
+    function isNumericColumn(rows, colIndex) {
+        for (let i = 1; i < rows.length; i++) {
+            let cellText = rows[i].cells[colIndex].textContent.trim();
+            if (!/^\d+$/.test(cellText)) { // If any value is not purely numeric, return false
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Function to sort the table by column
+    function sortTable(colIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.querySelector("table.sortable");
+        switching = true;
+        dir = "asc"; // Default sorting direction
+
+        // Check if the column contains numbers
+        let numericSort = isNumericColumn(table.rows, colIndex);
+
+        while (switching) {
+            switching = false;
+            rows = Array.from(table.rows).slice(1); // Exclude header row
+
+            for (i = 0; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+
+                // Get cell values
+                x = rows[i].cells[colIndex].textContent.trim();
+                y = rows[i + 1].cells[colIndex].textContent.trim();
+
+                // Use numeric sorting if the column contains only numbers
+                if (numericSort) {
+                    x = parseInt(x);
+                    y = parseInt(y);
+                } else {
+                    x = cleanText(x);
+                    y = cleanText(y);
+                }
+
+                if (dir === "asc" && x > y) {
+                    shouldSwitch = true;
+                    break;
+                } else if (dir === "desc" && x < y) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount === 0 && dir === "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+
+    // Ensure sorting is only enabled when the page is fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        let headers = document.querySelectorAll("th");
+
+        headers.forEach((th, index) => {
+            if (index === 0 || index === 1 || index === 2 || index === 3) { // Rank = 0, English = 1, Sindarin = 2, Parts of Speech = 3
+                th.style.cursor = "pointer"; // Make it look clickable
+                th.addEventListener("click", function() {
+                    sortTable(index);
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

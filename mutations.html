@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sindarin Mutation Chart</title>
+
+  <!-- Favicons (keep your own files) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <meta name="theme-color" content="#ffffff">
+  <meta name="msapplication-TileColor" content="#da532c">
+  
+  <!-- JS (kept, since your page calls displayMutations() and updateNouns()) -->
+  <script src="mutations-and-plurals.js"></script>
+  <script src="nouns.js"></script>
+
+  <style>
+   :root{
+  --bg: #f6f8fa;
+  --card: rgba(255,255,255,0.98);
+  --muted: #6b7280;
+  --accent: #0ea5a4;
+  --accent-2: #ff7a59;
+  --pill-bg: var(--accent);
+  --pill-fore: #ffffff;
+  --text: #0f1724;
+  --glass: rgba(255,255,255,0.6);
+  --nav-height: 72px;
+  --radius: 12px;
+  --max-width: 1200px;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root[data-theme="dark"]{
+  --bg: #0b1113;
+  --card: rgba(12,14,16,0.92);
+  --muted: #9aa4b2;
+  --accent: #26c6c0;
+  --accent-2: #ff9b7a;
+  --pill-bg: #26c6c0;
+  --pill-fore: #052024;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* anchor offset for sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+[id] { scroll-margin-top: calc(var(--nav-height) + 12px); }
+
+*{box-sizing:border-box}
+html { font-family: var(--font-ui); -webkit-font-smoothing:antialiased;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #eef2f3 100%);
+  color:var(--text);
+  line-height:1.6;
+  font-size:17px;
+}
+
+.site { max-width:var(--max-width); margin:0 auto; padding: 0 20px 48px; }
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:var(--nav-height);
+  flex-wrap:wrap;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), var(--glass));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(15,23,36,0.04);
+  padding: 8px 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+
+.nav-inner{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:12px;
+  position: relative; 
+}
+
+.nav-left { display:flex; align-items:center; gap:12px; margin-right:auto; min-width:0; }
+#bardh-logo img { width:46px; height:46px; border-radius:8px; display:block; object-fit:cover; box-shadow:0 4px 18px rgba(2,6,23,0.06); }
+
+.brand { display:flex; flex-direction:column; line-height:1; margin-left:4px; }
+.brand .title { font-weight:700; font-size:1.05rem; color:var(--accent); }
+.brand .subtitle { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+.nav-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* IMPORTANT: allow visible overflow so dropdown panels can extend outside */
+.nav-menu { display:flex; gap:6px; align-items:center; margin-left:8px; flex-wrap:wrap; row-gap:4px; overflow: visible; position: relative; z-index: 100; }
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  padding:6px 6px;
+  border-radius: 999px;
+  font-weight:600;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  transition: background .14s, color .14s, transform .06s;
+  line-height:1;
+}
+.nav-link:hover { background: rgba(14,165,164,0.08); color: var(--accent-2); transform: translateY(-1px); }
+
+/* hamburger button (mobile) */
+.hamburger {
+  display:none;
+  background:transparent;
+  border:none;
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+}
+.hamburger:hover { color: var(--accent); }
+.hamburger svg { display:block; width:18px; height:14px; }
+
+/* OFFCANVAS */
+.offcanvas { position: fixed; inset: 0 0 0 0; display:none; z-index:1200; }
+.offcanvas .overlay { position:absolute; inset:0; background: rgba(2,6,23,0.5); }
+.offcanvas .panel { position:absolute; top:0; right:0; width:320px; max-width:86%; height:100%; background:var(--card); box-shadow:-8px 0 30px rgba(2,6,23,.35); padding:20px; overflow:auto; transform: translateX(16px); animation: panelIn .22s ease forwards; }
+@keyframes panelIn { from { transform: translateX(18px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+
+.mobile-link-list{ display:grid; gap:10px; margin-top:6px; }
+.mobile-link-list a{ padding:10px 12px; border-radius:10px; font-weight:600; text-decoration:none; color:var(--text); font-family:var(--font-ui); }
+.mobile-link-list a:hover{ background: rgba(14,165,164,0.06); color:var(--accent); }
+
+/* MAIN */
+main.main-center {
+  max-width: var(--max-width);
+  margin: calc(var(--nav-height) + 18px) auto 40px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.06);
+  font-family: var(--font-ui);
+}
+
+main h1{ font-weight:700; color:var(--accent); margin:0 0 6px 0; font-size:2.05rem; }
+.byline { color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+.hero { display:flex; gap:18px; align-items:center; flex-wrap:wrap; margin: 14px 0 22px 0; }
+.hero img { width:128px; height:128px; border-radius:999px; object-fit:cover; box-shadow:0 8px 26px rgba(2,6,23,0.06); }
+
+.intro-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .35em 2.2em;
+
+  margin-bottom: 1.2em;
+  padding-left: 1.2rem;
+  color: var(--text);
+}
+
+.intro-list li {
+  margin: 0;
+}
+
+.callout {
+  background: linear-gradient(180deg, rgba(255,251,228,1), rgba(255,250,235,1));
+  border-left:6px solid var(--accent-2);
+  padding:12px 14px;
+  border-radius:10px;
+  color:#5b4a32;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.04);
+  margin:18px 0;
+}
+.callout b { color:var(--accent-2); }
+
+section { margin-top:18px; }
+section p { margin:8px 0; color:var(--text); }
+
+.responsive-table { overflow:auto; border-radius:10px; margin:12px 0; }
+table { width:auto; border-collapse:collapse; background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); border-radius:10px; overflow:hidden; box-shadow: 0 4px 14px rgba(2,6,23,0.04); font-family: var(--font-ui); }
+thead th{ text-align:left; padding:12px 10px; background: linear-gradient(180deg,var(--accent), #0b7f7e); color: #fff4d9; font-weight:700; font-size:14px; border-bottom:1px solid rgba(0,0,0,0.04); }
+tbody td { padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); font-size:14px; color:var(--text); }
+tbody tr:hover td { background: rgba(14,165,164,0.03); }
+
+.h3-nav{ display: inline-flex; gap: 6px; margin-left: .6rem; vertical-align: middle; white-space: nowrap; }
+.h3-nav a.pill { display: inline-block; font-size: .85rem; line-height: 1.1; padding: 6px 10px; border-radius: 999px; background: var(--pill-bg); color: var(--pill-fore) !important; text-decoration: none; font-weight: 700; border: none; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: background .12s, transform .06s; font-family: var(--font-ui); }
+.h3-nav a.pill:hover, .h3-nav a.pill:active { background: var(--accent-2); transform: translateY(-1px); }
+
+.cta-row a.primary { display:inline-block; background: var(--accent); color: white; padding: 9px 16px; border-radius: 10px; font-size:0.98rem; font-weight:700; text-decoration:none; box-shadow: 0 6px 18px rgba(14,165,164,0.08); transition: transform .06s, box-shadow .12s; font-family: var(--font-ui); }
+.cta-row a.primary:hover { transform: translateY(-2px); }
+
+#myBtn { display:none; position: fixed; bottom:28px; right:28px; z-index: 1000; background:var(--accent-2); color: white; padding:10px 12px; font-size:14px; border: none; border-radius: 12px; cursor: pointer; box-shadow:0 8px 20px rgba(2,6,23,0.08); }
+
+@media (max-width:1000px){ .hero img{ width:110px; height:110px; } }
+@media (max-width:820px){
+  .nav-actions .nav-menu { display:none; }
+  .hamburger { display:inline-flex; }
+}
+@media (max-width:640px){ main.main-center { padding:18px; } .hero { gap:12px; } }
+
+.muted { color:var(--muted) }
+a { color:var(--accent); text-decoration:none; font-weight:700; font-family: var(--font-ui); }
+a:hover { color:var(--accent-2); }
+
+a:focus, button:focus, input:focus { outline: 3px solid rgba(108,156,214,0.16); outline-offset: 2px; }
+code { background: rgba(0,0,0,0.04); padding:4px 6px; border-radius:6px; font-family:monospace; }
+
+@media print{
+  .navbar, .hamburger, #myBtn, .offcanvas, .nav-actions { display:none !important; }
+  main.main-center { box-shadow:none; background:transparent; border-radius:0; }
+}
+
+/* DROPDOWN PANEL STYLES */
+.nav-item { position: relative; display:inline-flex; align-items:center; }
+.nav-item .nav-link { display:inline-flex; align-items:center; gap:6px; text-align:center; }
+
+
+.dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 260px;
+  max-width: 760px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  padding: 14px;
+  z-index: 1500;
+  display: none;
+  border: 1px solid rgba(2,6,23,0.06);
+  will-change: transform, opacity;
+  transform-origin: top left;
+  opacity: 0;
+  transform: translateY(6px) scale(.99);
+  transition: opacity .14s ease, transform .16s ease;
+  overflow: visible;       
+}
+
+
+.dropdown.open > .dropdown-panel,
+.nav-item:hover > .dropdown-panel { display: block; opacity:1; transform: translateY(0) scale(1); }
+
+.panel-grid nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 16px; }
+.dropdown-panel nav a { display:block; padding:8px 8px; border-radius:6px; font-weight:600; text-decoration:none; color: var(--text); transition: background .12s, color .12s; }
+.dropdown-panel nav a:hover, .dropdown-panel nav a:focus { background: rgba(14,165,164,0.06); color: var(--accent); outline: none; }
+.nav-sub { font-size: 0.66rem; color: var(--muted); font-weight:600; display:block; line-height:1; }
+
+
+.dropdown-panel { max-height: none; }
+
+
+.dropdown-panel,
+.dropdown-panel nav,
+.dropdown-panel nav a {
+  font-size: 12px;
+  line-height: 1.1;
+  font-weight: 600; 
+  font-family: var(--font-ui);
+}
+
+/* Small tweaks for the interactive widget area */
+.scx-exv { font-family: var(--font-ui); color: var(--text); margin-top:12px; }
+.scx-card { border-radius: 10px; border:1px solid rgba(0,0,0,0.04); padding:10px; background: linear-gradient(180deg, #fff, #f7f7fb); box-shadow: 0 6px 20px rgba(2,6,23,0.04); }
+sup.fn {
+  font-size: 0.72em;
+  line-height: 1;            /* allow glyph to render without clipping */
+  vertical-align: super;
+  font-family: inherit;      /* keeps EB Garamond */
+  color: var(--accent);
+  font-weight: 700;          /* bold */
+}
+
+ 
+
+  /* ===== Inputs should fit on phones ===== */
+  input[type="text"]{
+    width: 100%;
+    max-width: 520px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    padding: .6rem .75rem;
+  }
+
+  /* ===== Mutation legend chips ===== */
+  .mutation-legend-compact{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0.6em 0 1em 0;
+    font-size: 12px;
+  }
+
+  .chip{
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 6px;
+    line-height: 1.15;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .mutation-chip{
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 6px;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .vocalic{ background:#c6e0b4; }
+  .nasal{ background:#8ea9db; }
+  .mixed{ background:#f4b084; }
+  .stop{ background:#f0bcf0; }
+  .liquid{ background:#ffd966; }
+  .sibilant{ background:#d0c4f0; }
+
+  /* ===== Dense grid table ===== */
+  .grid-table {
+  border: 1px solid rgba(0,0,0,0.04); /* From thead/tbody borders */
+  border-radius: 10px; /* From responsive-table */
+  background: linear-gradient(180deg, rgba(249,249,251,1), rgba(247,247,250,1)); /* From table */
+  font-size: 14px; /* From tbody td */
+  color: var(--text); /* From tbody td */
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.04); /* From table */
+}
+
+.grid-head {
+  background: linear-gradient(180deg, var(--accent), #0b7f7e); /* From thead th */
+  color: #fff4d9; /* From thead th */
+  font-weight: 700;
+  font-size: 14px; /* From thead th */
+}
+
+.grid-row {
+  display: grid;
+}
+
+/* Added hover effect */
+.grid-row:hover > div {
+  background: rgba(14, 165, 164, 0.03); /* From tbody tr:hover td */
+}
+
+.grid-row > div {
+  padding: 10px; /* From tbody td */
+  line-height: 1.2;
+  border-bottom: 1px solid rgba(0,0,0,0.04); /* From tbody td */
+  min-width: 0; 
+}
+
+.grid-row > div:not(:last-child) {
+  border-right: 1px solid rgba(0,0,0,0.04); /* Matched border color */
+}
+
+.grid-row:last-child > div {
+  border-bottom: none;
+}
+
+  /* Articles columns */
+  .grid-row-articles{
+    grid-template-columns:
+      100px                  /* Mutation Type */
+      70px                   /* Article */
+      minmax(0, 1fr)         /* Meaning */
+      minmax(140px, 220px);  /* Mutation */
+  }
+
+  /* Relational/Directional/Locational/Temporal columns */
+  .grid-row-rel{
+    grid-template-columns:
+      65px                   /* Prep */
+      minmax(0, 2fr)         /* Meaning */
+      minmax(0, 1fr)         /* Etym. */
+      minmax(140px, 220px)   /* INF */
+      minmax(160px, 260px);  /* DEF */
+  }
+
+  /* Wrapping helpers */
+  .meaning-col, .etym-col{
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* DEF stacks */
+  .def-stack{
+    display: grid;
+    gap: 2px;
+  }
+
+  /* FIX: this must be grid (not inline-block) for grid-template-columns to work */
+  .def-line{
+    display: inline-block;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 6px;
+    align-items: baseline;
+  }
+
+  .def-tag{
+    font-weight: 700;
+    font-size: 11px;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .blank{ background:#DCDCDC; }
+
+  /* ===== Back-to-top button ===== */
+  #myBtn{
+    position: fixed;
+    right: 14px;
+    bottom: 14px;
+    z-index: 9999;
+    padding: 10px 14px;
+  }
+
+  /* ========= MOBILE TABLE MODE (no sideways squish) ========= */
+  @media (max-width: 700px){
+
+    /* Safety: if a rare row still goes wide, allow scroll */
+    .grid-table{
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* --- ARTICLES: 4 cols -> 2 cols --- */
+    .grid-row-articles{
+      grid-template-columns: 110px minmax(0, 1fr);
+    }
+
+    /* Put the Mutation cell on its own line for breathing room */
+    .grid-row-articles > div:nth-child(4){
+      grid-column: 1 / -1;
+      border-right: none;
+    }
+
+    /* The header row doesn’t map cleanly anymore on mobile */
+    .grid-head.grid-row-articles > div:nth-child(3),
+    .grid-head.grid-row-articles > div:nth-child(4){
+      display: none;
+    }
+
+    /* --- RELATIONAL/etc: 5 cols -> stacked “card” rows --- */
+    .grid-row-rel{
+      grid-template-columns: 110px minmax(0, 1fr);
+    }
+
+    .grid-row-rel.grid-row > div{
+      border-right: none;
+    }
+
+    /* Move Etym, INF, DEF onto full-width lines */
+    .grid-row-rel > div:nth-child(3),
+    .grid-row-rel > div:nth-child(4),
+    .grid-row-rel > div:nth-child(5){
+      grid-column: 1 / -1;
+    }
+
+    /* Hide the big header row on mobile */
+    .grid-head.grid-row-rel{
+      display: none;
+    }
+
+    /* Make DEF stack readable on phones */
+    .def-stack{ gap: 6px; }
+    .def-line{
+      grid-template-columns: 36px minmax(0, 1fr);
+      gap: 10px;
+    }
+  }
+</style>
+
+
+</head>
+
+<body>
+ <div id="offcanvas-root" class="offcanvas" aria-hidden="true">
+    <div class="overlay" data-action="close"></div>
+    <aside class="panel" role="dialog" aria-label="Site menu">
+      <div class="close" style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; gap:12px; align-items:center;">
+          <img src="Celebrinor.png" alt="logo" width="44" height="44" style="border-radius:8px;">
+          <div>
+            <div style="font-weight:700; color:var(--accent);">Bardh</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Sindarin Crash Course</div>
+          </div>
+        </div>
+        <button aria-label="Close menu" data-action="close" style="background:transparent;border:none;font-size:1.2rem;cursor:pointer;">✕</button>
+      </div>
+
+      <nav aria-label="Primary mobile navigation">
+
+        <div class="mobile-link-list">
+  
+          <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+          <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+          <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+          <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives</a>
+          <a href="/1.2.4.html#1.2.5">1.2.5 Adjectives</a>
+          <a href="/1.2.4.html#1.2.6">1.2.6 Conjunctions</a>
+          <a href="/mutations.html#chart">Mutation Tool</a>
+          <a href="/VerbConjugator.html">Verb Conjugator</a>
+          <a href="/pluralizer">Noun Pluralizer</a>
+          <a href="/100words.html">100 Most common words</a>
+          <a href="/celebrinor">Tale of Celebrinor</a>
+          <a href="/aesop">Aesops</a>
+          <a href="/chapter1.html">History of the Silmarils</a>
+        </div>
+
+        <hr style="margin:12px 0;border:none;height:1px;background:rgba(0,0,0,0.04)">
+
+        <div style="font-size:0.9rem;color:var(--muted);">
+          <div style="margin-bottom:8px">Quick links</div>
+          <a href="https://eldamo.org/intro-quenya/index.html" target="_blank" rel="noopener">Eldamo Intro Quenya</a><br>
+          <a href="https://sindarin.elvish.nz" target="_blank" rel="noopener">Celephinnel's Sindarin</a>
+        </div>
+      </nav>
+    </aside>
+  </div>
+
+ <header class="navbar" role="banner">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a id="bardh-logo" href="/" aria-label="Home">
+        <img src="Celebrinor.png" alt="Six-pointed star emblem">
+      </a>
+      <div class="brand" style="margin-left:8px;">
+        <div class="title">Bardh</div>
+        <div class="subtitle">Sindarin Crash Course by Rínor</div>
+      </div>
+    </div>
+
+
+    <button id="open-menu" class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="offcanvas-root" type="button">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <rect width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="6" width="18" height="2" rx="1" fill="currentColor"></rect>
+        <rect y="12" width="18" height="2" rx="1" fill="currentColor"></rect>
+      </svg>
+    </button>
+
+    <div class="nav-actions" role="navigation" aria-label="Primary">
+      <div class="nav-menu" role="list" id="main-nav">
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="emith-panel">
+            Emith<br>Nouns
+          </button>
+          <div id="emith-panel" class="dropdown-panel" role="menu" aria-label="Emith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.3">1.2.1.3 Noun Class Plural</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+                <a role="menuitem" href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+                <a role="menuitem" href="/1.2.1.html#vocab">1.2.1.6a Vocabulary Practice</a>
+                <a role="menuitem" href="/pluralizer">Noun Pluralizer</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+<div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="ceraith-panel">
+            Ceraith<br>Verbs
+          </button>
+          <div id="ceraith-panel" class="dropdown-panel" role="menu" aria-label="Ceraith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist/Present Tense</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+                <a role="menuitem" href="/1.2.2.html#vocab-verbs">1.2.2.2a Verb &amp; Conjugation Practice</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.3">1.2.2.3 Future and Past</a>
+                <a role="menuitem" href="/1.2.2.html#other-verb-forms">1.2.2.3a Other Verb Forms</a>
+                <a role="menuitem" href="/1.2.2.html#1.2.2.4">1.2.2.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.2.html#1.1">Exercise 1.1</a>
+                <a role="menuitem" href="/VerbConjugator.html">Verb Conjugator</a>
+                <a role="menuitem" href="/stress">Stress &amp; IPA</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="pemith-panel">
+            Pemith<br>Pronouns
+          </button>
+          <div id="pemith-panel" class="dropdown-panel" role="menu" aria-label="Pemith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#reading-pronoun-chart">1.2.3a How to Read the Chart</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.1">1.2.3.1 Independent and Object Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2a">1.2.3.2a Dative Pronouns</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.2b">1.2.3.2b Demonstratives</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3a">1.2.3.3a Reflexive Possession</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3b">1.2.3.3b Indefinites and Related Words</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.3c">1.2.3.3c My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.3.html#1.2">Exercise 1.2: Pronoun Practice</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="cephith-panel">
+            Cephith a Mebith<br>Adjectives &amp; Adverbs
+          </button>
+          <div id="cephith-panel" class="dropdown-panel" role="menu" aria-label="Cephith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.4.html#1.2.4">1.2.4 Adjectives and Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#reading-adjectives">1.2.4a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.4.html#vocab-adjectives">1.2.4b Vocabulary</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3a">1.2.4.3a Comparison</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.3b">1.2.4.3b Course Conventions</a>
+                <a role="menuitem" href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.4.html#1.3">Exercise 1.3</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="febith-panel">
+            Febith<br>Prepositions
+          </button>
+          <div id="febith-panel" class="dropdown-panel" role="menu" aria-label="Febith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.5.html#1.2.5">1.2.5 Prepositions &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5a">1.2.5a Definite Prepositions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5b">1.2.5b Choosing a Preposition</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.1a">1.2.5.1a Purpose Clauses with an</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.2a">1.2.5.2a Definiteness in Genitive Phrases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3">1.2.5.3 Direction and Location</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.3a">1.2.5.3a o, o(h), and od</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4">1.2.5.4 Preposition Mutation Patterns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.4a">1.2.5.4a Prepositions with Pronouns</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5">1.2.5.5 Possessive Pronouns &amp; Noun Cases</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.5a">1.2.5.5a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.5.html#1.2.5.6">1.2.5.6 Section Summary</a>
+                <a role="menuitem" href="/1.2.5.html#1.4">Exercise 1.4</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="limith-panel">
+            Limith<br>Conjunctions
+          </button>
+          <div id="limith-panel" class="dropdown-panel" role="menu" aria-label="Limith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/1.2.6.html#1.2.6">1.2.6 Conjunctions and Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#reading-conjunctions">1.2.6a Reading the Examples</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.1a">1.2.6.1a Coordination and Mutation</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2a">1.2.6.2a Restrictive and Non-restrictive Relatives</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2b">1.2.6.2b Relative ias and Clause Attachment</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.2c">1.2.6.2c Reason and Purpose</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.3a">1.2.6.3a My Usage Conventions</a>
+                <a role="menuitem" href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+                <a role="menuitem" href="/1.2.6.html#1.5">Exercise 1.5</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="prestennith-panel">
+            Prestennith a Gwimith<br>Mutations &amp; Neologisms
+          </button>
+          <div id="prestennith-panel" class="dropdown-panel" role="menu" aria-label="Prestennith menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/mutations.html">1.4 Mutation Tool</a>
+                <a role="menuitem" href="/neologisms.html">1.5 Neologisms</a>
+                <a role="menuitem" href="/compounds.html">1.6 Compounds</a>
+                <a role="menuitem" href="/consonants.html">1.7 Consonant Chart</a>
+                <a role="menuitem" href="/100words.html">100 Most common words</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+        
+        
+         <div class="nav-item dropdown" data-dropdown>
+          <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="nern-panel">
+            Nern<br>Tales
+          </button>
+          <div id="nern-panel" class="dropdown-panel" role="menu" aria-label="Nern menu">
+            <div class="panel-grid">
+              <nav>
+                <a role="menuitem" href="/aesop.html">Aesop Stories</a>
+                <a role="menuitem" href="/chapter1.html">History of the Silmarils</a>
+                <a role="menuitem" href="/elvishbook.html">My first Elvish book</a>
+                <a role="menuitem" href="/celebrinor">Tale of Celebrinor</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> 
+  </header>
+
+  <main class="main-center" role="main">
+    <h1>Sindarin Consonant Mutation Tool</h1>
+
+    <div class="callout">
+      When a noun’s root starts with <strong>nd</strong>, <strong>mb</strong>, or <strong>ng</strong>, type it exactly that way (e.g., <em>ngil</em>, <em>mbar</em>) so the tool returns the correct results.<br>
+      Tolkien also notes that the consonant <strong>j</strong> only survived at the beginning of words in Sindarin and later became the vowel <strong>i</strong>. Therefore, be sure to enter <strong>j</strong> for those nouns as well, so the proper mutation is applied.<br>
+      I want to give a special thank you to <b>Ellanto</b> on Vinyë Lambengolmor, as this is his mutation chart.
+    </div>
+
+ <label for="text-input" style="font-weight: bold; color: #ff7a59; font-size: 1.17em; margin-bottom: 0.45em; display: block;">
+                Enter a Sindarin noun:
+            </label>
+    <input
+      type="text"
+      id="noun"
+      placeholder="e.g., taur"
+      oninput="try{displayMutations()}catch(e){console.error(e)}; updateNouns(this.value)"
+      style="font-size: 1.08em; padding: 6px 8px; width: 340px; max-width: 96%; border: 1px solid #0ea5a4; border-radius: 8px; margin-bottom: 1.2em;" autocomplete="off"
+    >
+
+    <div id="resultPresent"></div>
+  
+
+    <section class="mutation-legend-compact" aria-label="Mutation Legend">
+      <span class="chip vocalic">Vocalic</span>
+      <span class="chip nasal">Nasal</span>
+      <span class="chip mixed">Mixed</span>
+      <span class="chip stop">Stop</span>
+      <span class="chip liquid">Liquid</span>
+      <span class="chip sibilant">Sibilant</span>
+    </section>
+
+
+    <section class="grid-table" aria-label="Articles">
+  <header class="grid-row grid-row-articles grid-head">
+    <div>Mutation</div>
+    <div>Article</div>
+    <div class="meaning-col">Meaning</div>
+    <div>Mutation</div>
+  </header>
+
+  <div class="grid-row grid-row-articles">
+    <div><span class="chip vocalic">Vocalic</span></div>
+    <div><i>i</i></div>
+    <div class="meaning-col">“the”</div>
+    <div><span class="mutation-chip vocalic"><span id="articlei-mutation"></span></span></div>
+  </div>
+
+  <div class="grid-row grid-row-articles">
+    <div><span class="chip nasal">Nasal</span></div>
+    <div><i>in</i></div>
+    <div class="meaning-col">“the (plural)”</div>
+    <div><span class="mutation-chip nasal"><span id="articlein-mutation"></span></span></div>
+  </div>
+
+  <div class="grid-row grid-row-articles">
+    <div><span class="chip vocalic">Vocalic</span></div>
+    <div><i>e(n)</i></div>
+    <div class="meaning-col">“the” PE23</div>
+    <div><span class="mutation-chip vocalic"><span id="articlee-mutation"></span></span></div>
+  </div>
+
+  <div class="grid-row grid-row-articles">
+    <div><span class="chip nasal">Nasal</span></div>
+    <div><i>i(n)</i></div>
+    <div class="meaning-col">“the (plural)” PE23</div>
+    <div><span class="mutation-chip nasal"><span id="articlein2-mutation"></span></span></div>
+  </div>
+</section>
+    
+<h3 id="relational">Relational</h3>
+
+<section class="grid-table" aria-label="Relational Prepositions">
+      <header class="grid-row-rel grid-row grid-head">
+        <div>Prep</div>
+        <div class="meaning-col">Meaning</div>
+        <div class="etym-col">Etym.</div>
+        <div>INF</div>
+        <div>DEF</div>
+      </header>
+
+      <!-- an -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip mixed">an</span></div>
+        <div class="meaning-col">DATIVE to, for</div>
+        <div class="etym-col">✶ana &lt; √NĀ/ANA</div>
+        <div><span class="mutation-chip mixed"><span id="an-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="eni-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="enin-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- nan -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip nasal">nan</span></div>
+        <div class="meaning-col">GENITIVE of</div>
+        <div class="etym-col">√NĀ/ANA</div>
+        <div><span class="mutation-chip nasal"><span id="nan-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+      <!-- o -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">o</span></div>
+        <div class="meaning-col">from, coming from (genitive of origin)</div>
+        <div class="etym-col">✶hō &lt; √HO</div>
+        <div><span class="mutation-chip vocalic"><span id="o-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="ui-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="uin-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- dan -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip mixed">ⁿdan</span></div>
+        <div class="meaning-col">back to/on/again, (back in return) against, down</div>
+        <div class="etym-col">√DAN</div>
+        <div><span class="mutation-chip mixed"><span id="dan-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+      <!-- di -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">ⁿdi</span></div>
+        <div class="meaning-col">beneath, under</div>
+        <div class="etym-col">✶ndī</div>
+        <div><span class="mutation-chip vocalic"><span id="di-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip mixed"><span id="din1-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="din2-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- o(h) -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip sibilant">o(h)</span></div>
+        <div class="meaning-col">about, concerning</div>
+        <div class="etym-col">√OS</div>
+        <div><span class="mutation-chip sibilant"><span id="oh-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+      <!-- gu -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">gu</span></div>
+        <div class="meaning-col">(together) with</div>
+        <div class="etym-col">✶wō &lt; √WO</div>
+        <div><span class="mutation-chip vocalic"><span id="gu-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="gui-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="guin-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- mo -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">mo</span></div>
+        <div class="meaning-col">by (agent of)</div>
+        <div class="etym-col">✶mā</div>
+        <div><span class="mutation-chip vocalic"><span id="mo-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="moe-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="moen-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- be -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">be</span></div>
+        <div class="meaning-col">as, like</div>
+        <div class="etym-col">✶bai</div>
+        <div><span class="mutation-chip vocalic"><span id="be-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip mixed"><span id="ben1-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="ben2-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- sui -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">sui</span></div>
+        <div class="meaning-col">as, like</div>
+        <div class="etym-col">&lt;? ✶sija</div>
+        <div><span class="mutation-chip vocalic"><span id="sui-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip mixed"><span id="suin1-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="suin2-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+ <!-- pen -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip mixed">pen</span></div>
+        <div class="meaning-col">without, lacking</div>
+        <div class="etym-col">√PEN</div>
+        <div><span class="mutation-chip mixed"><span id="pen-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+      
+      <!-- eb -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">eb</span></div>
+        <div class="meaning-col">save, excluding, except</div>
+        <div class="etym-col">✶hekʷā &lt; √HEK</div>
+        <div><span class="mutation-chip vocalic"><span id="eb-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+    
+</section>
+
+
+<h3 id="directional">Directional</h3>
+
+<section class="grid-table" aria-label="Directional Prepositions">
+      <header class="grid-row-rel grid-row grid-head">
+        <div>Prep</div>
+        <div class="meaning-col">Meaning</div>
+        <div class="etym-col">Etym.</div>
+        <div>INF</div>
+        <div>DEF</div>
+      </header>
+
+<!-- na -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">na</span></div>
+        <div class="meaning-col">ALLATIVE to, towards; at</div>
+        <div class="etym-col">✶na &lt; √NĀ/ANA</div>
+        <div><span class="mutation-chip vocalic"><span id="na-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+<!-- ten -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip mixed">ten</span></div>
+        <div class="meaning-col">TERMINATIVE, up to, until</div>
+        <div class="etym-col">√TEN</div>
+        <div><span class="mutation-chip mixed"><span id="ten-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+      <!-- od -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip stop">od</span></div>
+        <div class="meaning-col">ABLATIVE, (away) from (here elsewards)</div>
+        <div class="etym-col">✶aw(d/t) &lt; √WĀ/AWA</div>
+        <div><span class="mutation-chip stop"><span id="od-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+      <!-- ed -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip stop">ed</span></div>
+        <div class="meaning-col">out (of), forth</div>
+        <div class="etym-col">√ET</div>
+        <div><span class="mutation-chip stop"><span id="ed-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+            <!-- am -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">am</span></div>
+        <div class="meaning-col">up, towards the top of</div>
+        <div class="etym-col">✶amba &lt; √AM</div>
+        <div><span class="mutation-chip vocalic"><span id="am-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+            <!-- dad -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">dad</span></div>
+        <div class="meaning-col">down, towards the bottom of</div>
+        <div class="etym-col">✶data &lt; √DAT</div>
+        <div><span class="mutation-chip vocalic"><span id="dad-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+            <!-- thar -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">thar</span></div>
+        <div class="meaning-col">across, athwart, over</div>
+        <div class="etym-col">✶tʰara &lt; √THAR</div>
+        <div><span class="mutation-chip vocalic"><span id="thar-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+            <!-- tri -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">tri</span></div>
+        <div class="meaning-col">through</div>
+        <div class="etym-col">√TER</div>
+        <div><span class="mutation-chip vocalic"><span id="tri-mutation"></span></span></div>
+
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip mixed"><span id="trin1-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="trin2-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- pelah -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip sibilant">pela(h)</span></div>
+        <div class="meaning-col">along, by the boundary of</div>
+        <div class="etym-col">√PEL + √AS</div>
+        <div><span class="mutation-chip sibilant"><span id="pelah-mutation"></span></span></div>
+<div class="blank"></div>
+</div>
+</section>
+
+<h3 id="locational">Locational</h3>
+
+<section class="grid-table" aria-label="Locational Prepositions">
+      <header class="grid-row-rel grid-row grid-head">
+        <div>Prep</div>
+        <div class="meaning-col">Meaning</div>
+        <div class="etym-col">Etym.</div>
+        <div>INF</div>
+        <div>DEF</div>
+      </header>
+
+      <!-- ho -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">ho</span></div>
+        <div class="meaning-col">in front of, before</div>
+        <div class="etym-col">✶kʰʲĀ</div>
+        <div><span class="mutation-chip vocalic"><span id="ho-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="hoe-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="hoen-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- pad -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">pad</span></div>
+        <div class="meaning-col">behind</div>
+        <div class="etym-col">✶pata &lt; √PĀ/PATA</div>
+        <div><span class="mutation-chip vocalic"><span id="pad-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+<!-- adel -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">adel</span></div>
+        <div class="meaning-col">behind, in rear of</div>
+        <div class="etym-col">√TELES</div>
+        <div><span class="mutation-chip vocalic"><span id="adel-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+            <!-- po -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">po</span></div>
+        <div class="meaning-col">on</div>
+        <div class="etym-col">✶pă &lt; √PĀ/APA</div>
+        <div><span class="mutation-chip vocalic"><span id="po-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="poe-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="poen-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- or -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip liquid">or</span></div>
+        <div class="meaning-col">above</div>
+        <div class="etym-col">√RŌ/ORO</div>
+        <div><span class="mutation-chip liquid"><span id="or-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+            <!-- nu -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">nu</span></div>
+        <div class="meaning-col">under</div>
+        <div class="etym-col">√NŪ/UNU</div>
+        <div><span class="mutation-chip vocalic"><span id="nu-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="nui-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="nuin-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+            <!-- mi -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">mi</span></div>
+        <div class="meaning-col">in</div>
+        <div class="etym-col">✶mī &lt; √MI/IMI</div>
+        <div><span class="mutation-chip vocalic"><span id="mi-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip mixed"><span id="min1-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="min2-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- im -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">im</span></div>
+        <div class="meaning-col">between</div>
+        <div class="etym-col">✶imbi &lt; √MI/IMI</div>
+        <div><span class="mutation-chip vocalic"><span id="im-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+<!-- sa -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">sa</span></div>
+        <div class="meaning-col">beside, alongside, next (to)</div>
+        <div class="etym-col">√AS</div>
+        <div><span class="mutation-chip vocalic"><span id="sa-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+<!-- mig -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">mig</span></div>
+        <div class="meaning-col">among</div>
+        <div class="etym-col">✶miki &lt; √MI/IMI</div>
+        <div><span class="mutation-chip vocalic"><span id="mig-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+<!-- nef -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">nef</span></div>
+        <div class="meaning-col">hither, on this side of</div>
+        <div class="etym-col">✶nebā &lt; √NEB</div>
+        <div><span class="mutation-chip vocalic"><span id="nef-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+<!-- athar -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">athar</span></div>
+        <div class="meaning-col">beyond</div>
+        <div class="etym-col">√TʰAR</div>
+        <div><span class="mutation-chip vocalic"><span id="athar-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+</section>      
+
+<h3 id="temporal">Temporal</h3>
+
+<section class="grid-table" aria-label="Temporal Prepositions">
+      <header class="grid-row-rel grid-row grid-head">
+        <div>Prep</div>
+        <div class="meaning-col">Meaning</div>
+        <div class="etym-col">Etym.</div>
+        <div>INF</div>
+        <div>DEF</div>
+      </header>
+
+      <!-- fo -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">fo</span></div>
+        <div class="meaning-col">before</div>
+        <div class="etym-col">√PʰĀ</div>
+        <div><span class="mutation-chip vocalic"><span id="fo-mutation"></span></span></div>
+        <div>
+          <div class="def-stack">
+            <div class="def-line">
+              <span class="def-tag">SG</span>
+              <span class="mutation-chip vocalic"><span id="foe-mutation"></span></span>
+            </div>
+            <div class="def-line">
+              <span class="def-tag">PL</span>
+              <span class="mutation-chip nasal"><span id="foen-mutation"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cad -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">cad</span></div>
+        <div class="meaning-col">after</div>
+        <div class="etym-col">✶kata &lt; √KĀ/KATĀ</div>
+        <div><span class="mutation-chip vocalic"><span id="cad-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+
+<!-- ab -->
+      <div class="grid-row-rel grid-row">
+        <div><span class="chip vocalic">ab</span></div>
+        <div class="meaning-col">after</div>
+        <div class="etym-col">✶apa &lt; √PĀ/APA</div>
+        <div><span class="mutation-chip vocalic"><span id="ab-mutation"></span></span></div>
+        <div class="blank"></div>
+      </div>
+      
+</section>
+
+
+  <div class="callout">
+    <strong>Note:</strong> CC- pattern as expected from the single consonants above.
+    <br>
+    <strong>1.</strong> Liquid mutation works the same when triggered by /l/, except for replacing the trigger’s [r] with [l]. See however [2].
+    <br>
+    <strong>2.</strong> Historically <em>rs &gt; ss</em>, <em>ls &gt; lθ</em>, with the latter further developing into <em>ll</em>, but likely not across a clitic/prefix boundary. As such we expect assimilated forms in liquid mutation, e.g. <em>or + sarn &gt; os sarn</em>, <em>adel + sarn &gt; adel tharn</em>.
+    <br>
+    <strong>3.</strong> In later Sindarin <em>lh</em>, <em>rh</em>, and <em>wh</em> resist all mutations.
+    <br>
+    <strong>4.</strong> In later Sindarin lenition of /m/ may be optional or altogether absent.
+    <br>
+    <strong>5.</strong> Initial <em>gw-</em> is /w/ in conservation Sindarin, with mutations as outlined. In later Sindarin it is commonly reanalysed as /gw/, with the following mutations: <em>e·wend</em>, <em>i·ñ(g)wind</em>, <em>añ gwend</em>, <em>e gwend</em>, <em>or wend</em>, <em>a gwend</em>.
+    <br>
+    <strong>6.</strong> A single attested word constitutes an exception in conservative/archaic Sindarin: <em>rhass &lt; ✶kʰrassē</em>, mutated as follows: <em>e chrass</em>, <em>i chrais</em>, <em>a chrass</em>, <em>ech rass</em>, <em>or chrass</em>, <em>a chrass</em>. Later analogical normal <em>rh</em>.
+  </div>
+
+  <div class="callout">
+    <strong>Disclaimer:</strong> This tool is designed to help with mutations in Sindarin. While it strives for accuracy, please be aware that Sindarin is a constructed language with intricate rules, including vowel changes, consonant mutations, and contextual variations. Despite best efforts, certain renditions may be incorrect. It is advisable to cross-reference the results with trusted Sindarin resources or consult with knowledgeable linguists to ensure accuracy, especially for scholarly or formal work. If you encounter any errors or have suggestions, your feedback is valued!
+  </div>
+
+<div class="cta-row" style="margin-top:16px;">
+        <a href="/VerbConjugator.html" class="primary">Verb Conjugator →</a>
+        <div style="flex:1"></div>
+      </div>
+
+<button onclick="scrollToTop()" id="myBtn" title="Go to top">Am</button>
+</main>
+
+<script>
+    /* OFFCANVAS FOR MOBILE */
+    (function(){
+      const open = document.getElementById('open-menu');
+      const off = document.getElementById('offcanvas-root');
+      if (!open || !off) return;
+      function setOpen(on){
+        if (on) {
+          off.style.display = 'block';
+          off.setAttribute('aria-hidden','false');
+          open.setAttribute('aria-expanded','true');
+          document.body.style.overflow = 'hidden';
+        } else {
+          off.style.display = 'none';
+          off.setAttribute('aria-hidden','true');
+          open.setAttribute('aria-expanded','false');
+          document.body.style.overflow = '';
+          open.focus();
+        }
+      }
+
+      open.addEventListener('click', () => setOpen(true));
+      off.querySelectorAll('[data-action="close"]').forEach(el => el.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+
+      // If user clicks overlay (outside panel), close:
+      off.querySelector('.overlay')?.addEventListener('click', () => setOpen(false));
+    })();
+
+    /* BACK-TO-TOP */
+    function scrollFunction() {
+      const mybutton = document.getElementById("myBtn");
+      if (!mybutton) return;
+      if (document.body.scrollTop > 220 || document.documentElement.scrollTop > 220) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    window.addEventListener('scroll', scrollFunction);
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    /* AUTO-GENERATE H3 PILLS */
+    (function addInlineH3Pager(){
+      const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+      if (!h3s.length) return;
+      h3s.forEach((h3, i) => {
+        if (h3.querySelector('.h3-nav')) return;
+        const nav = document.createElement('span');
+        nav.className = 'h3-nav';
+        if (i > 0) {
+          const prev = document.createElement('a');
+          prev.className = 'pill';
+          prev.href = '#' + h3s[i - 1].id;
+          prev.textContent = '◀ Prev';
+          prev.setAttribute('aria-label', 'Previous: ' + (h3s[i - 1].textContent || '').trim());
+          nav.appendChild(prev);
+        }
+        if (i < h3s.length - 1) {
+          const next = document.createElement('a');
+          next.className = 'pill';
+          next.href = '#' + h3s[i + 1].id;
+          next.textContent = 'Next ▶';
+          next.setAttribute('aria-label', 'Next: ' + (h3s[i + 1].textContent || '').trim());
+          nav.appendChild(next);
+        }
+        h3.appendChild(nav);
+      });
+    })();
+
+    /* DROPDOWN: desktop flyouts + mobile accordion behavior */
+    (function(){
+      const DROPDOWNS = Array.from(document.querySelectorAll('[data-dropdown]'));
+      DROPDOWNS.forEach(drop => {
+        const toggle = drop.querySelector('.dropdown-toggle');
+        const panel = drop.querySelector('.dropdown-panel');
+        let closeTimer = null;
+
+        function open() {
+          clearTimeout(closeTimer);
+          drop.classList.add('open');
+          if (toggle) toggle.setAttribute('aria-expanded','true');
+        }
+        function close() {
+          drop.classList.remove('open');
+          if (toggle) toggle.setAttribute('aria-expanded','false');
+        }
+
+        // pointer interactions for desktop
+        drop.addEventListener('pointerenter', (e) => {
+          if (window.innerWidth > 820) open();
+        });
+        drop.addEventListener('pointerleave', (e) => {
+          if (window.innerWidth > 820) {
+            closeTimer = setTimeout(close, 160);
+          }
+        });
+
+        // Click/touch toggling (works for mobile & keyboard users)
+        if (toggle) {
+          toggle.addEventListener('click', (ev) => {
+            const isOpen = drop.classList.contains('open');
+            if (isOpen) close(); else open();
+          });
+
+          // Keyboard support
+          toggle.addEventListener('keydown', (ev) => {
+            if (ev.key === 'ArrowDown' || ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              open();
+              const first = panel && panel.querySelector('a');
+              if (first) first.focus();
+            } else if (ev.key === 'Escape') {
+              close();
+              toggle.focus();
+            }
+          });
+        }
+
+        // Position adjustments to avoid overflow
+        function adjustPosition() {
+          if (!drop.classList.contains('open') || !panel) return;
+          panel.style.left = ''; panel.style.right = '';
+          const panelRect = panel.getBoundingClientRect();
+          const overflowRight = panelRect.right - window.innerWidth + 12;
+          const overflowLeft = panelRect.left - 12;
+          if (overflowRight > 0) {
+            panel.style.left = 'auto';
+            panel.style.right = '0';
+          } else if (overflowLeft < 0) {
+            panel.style.left = '12px';
+            panel.style.right = 'auto';
+          }
+        }
+
+        window.addEventListener('resize', adjustPosition, { passive: true });
+        window.addEventListener('scroll', adjustPosition, { passive: true });
+        drop.addEventListener('pointerenter', adjustPosition);
+        drop.addEventListener('click', adjustPosition);
+      });
+
+      // Close all dropdowns on Escape globally
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown].open').forEach(d => {
+            d.classList.remove('open');
+            const t = d.querySelector('.dropdown-toggle');
+            if (t) t.setAttribute('aria-expanded','false');
+          });
+        }
+      });
+    })();
+
+    // Global document click handler to close dropdowns when clicking outside.
+    document.addEventListener('click', (ev) => {
+      document.querySelectorAll('[data-dropdown].open').forEach(drop => {
+        if (!drop.contains(ev.target)) {
+          drop.classList.remove('open');
+          const t = drop.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  </script>
+<script>
+(function addInlineH3Pager(){
+  const h3s = Array.from(document.querySelectorAll('main h3[id]'));
+  if (!h3s.length) return;
+
+  h3s.forEach((h3, i) => {
+    // Don’t add twice if script re-runs
+    if (h3.querySelector('.h3-nav')) return;
+
+    const nav = document.createElement('span');
+    nav.className = 'h3-nav';
+
+    // Build Prev link
+    if (i > 0) {
+      const prev = document.createElement('a');
+      prev.className = 'prev';
+      prev.href = '#' + h3s[i - 1].id;
+      prev.textContent = '◀ Prev';
+      prev.setAttribute('aria-label', 'Previous: ' + h3s[i - 1].textContent.trim());
+      nav.appendChild(prev);
+    }
+
+    // Build Next link
+    if (i < h3s.length - 1) {
+      const next = document.createElement('a');
+      next.className = 'next';
+      next.href = '#' + h3s[i + 1].id;
+      next.textContent = 'Next ▶';
+      next.setAttribute('aria-label', 'Next: ' + h3s[i + 1].textContent.trim());
+      nav.appendChild(next);
+    }
+
+    h3.appendChild(nav);
+  });
+})();
+</script>
+</body>
+</html>

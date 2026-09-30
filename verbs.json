@@ -1,0 +1,1032 @@
+const verbDictionary = {
+  "achar": {
+  definition: "to avenge, do back, react, requite",
+  stem: "i-stem",
+  english: {
+    present: ["avenges", "does back", "reacts", "requites"],
+    past: ["avenged", "did back", "reacted", "requited"],
+    future: ["will avenge", "will do back", "will react", "will requite"],
+    gerund: ["avenging", "doing back", "reacting", "requiting"],
+    imperative: ["avenge!", "do back!", "react!", "requite!"],
+    infinitive: ["to avenge", "to do back", "to react", "to requite"],
+    presentActiveParticiple: ["avenging", "doing back", "reacting", "requiting"],
+    pastActiveParticiple: ["having avenged", "having done back", "having reacted", "having requited"],
+    passivePastParticipleSingular: ["avenged", "done back", "reacted to", "requited"],
+    passivePastParticiplePlural: ["avenged", "done back", "reacted to", "requited"]
+  }
+},
+"adbed": {
+  definition: "to rephrase",
+  stem: "i-stem",
+  english: {
+    present: ["rephrases"],
+    past: ["rephrased"],
+    future: ["will rephrase"],
+    gerund: ["rephrasing"],
+    imperative: ["rephrase!"],
+    infinitive: ["to rephrase"],
+    presentActiveParticiple: ["rephrasing"],
+    pastActiveParticiple: ["having rephrased"],
+    passivePastParticipleSingular: ["rephrased"],
+    passivePastParticiplePlural: ["rephrased"]
+  }
+},
+  "car": {
+  definition: "to do, make",
+  stem: "i-stem",
+  english: {
+    present: ["does", "makes"],
+    past: ["did", "made"],
+    future: ["will do", "will make"],
+    gerund: ["doing", "making"],
+    imperative: ["do!", "make!"],
+    infinitive: ["to do", "to make"],
+    presentActiveParticiple: ["doing", "making"],
+    pastActiveParticiple: ["having done", "having made"],
+    passivePastParticipleSingular: ["done", "made"],
+    passivePastParticiplePlural: ["done", "made"]
+  }
+},
+"adertha": {
+  definition: "to reunite",
+  stem: "a-stem",
+  english: {
+    present: ["reunites"],
+    past: ["reunited"],
+    future: ["will reunite"],
+    gerund: ["reuniting"],
+    imperative: ["reunite!"],
+    infinitive: ["to reunite"],
+    presentActiveParticiple: ["reuniting"],
+    pastActiveParticiple: ["having reunited"],
+    passivePastParticipleSingular: ["reunited"],
+    passivePastParticiplePlural: ["reunited"]
+  }
+},
+"amartha": {
+  definition: "to define, decree, destine",
+  stem: "a-stem",
+  english: {
+    present: ["defines", "decrees", "destines"],
+    past: ["defined", "decreed", "destined"],
+    future: ["will define", "will decree", "will destine"],
+    gerund: ["defining", "decreeing", "destining"],
+    imperative: ["define!", "decree!", "destine!"],
+    infinitive: ["to define", "to decree", "to destine"],
+    presentActiveParticiple: ["defining", "decreeing", "destining"],
+    pastActiveParticiple: ["having defined", "having decreed", "having destined"],
+    passivePastParticipleSingular: ["defined", "decreed", "destined"],
+    passivePastParticiplePlural: ["defined", "decreed", "destined"]
+  }
+},
+"anglenna": {
+  definition: "to approach",
+  stem: "a-stem",
+  english: {
+    present: ["approaches"],
+    past: ["approached"],
+    future: ["will approach"],
+    gerund: ["approaching"],
+    imperative: ["approach!"],
+    infinitive: ["to approach"],
+    presentActiveParticiple: ["approaching"],
+    pastActiveParticiple: ["having approached"],
+    passivePastParticipleSingular: ["approached"],
+    passivePastParticiplePlural: ["approached"]
+  }
+},
+"aníra": {
+  definition: "to desire, long for",
+  stem: "a-stem",
+  english: {
+    present: ["desires", "longs for"],
+    past: ["desired", "longed for"],
+    future: ["will desire", "will long for"],
+    gerund: ["desiring", "longing for"],
+    imperative: ["desire!", "long for!"],
+    infinitive: ["to desire", "to long for"],
+    presentActiveParticiple: ["desiring", "longing for"],
+    pastActiveParticiple: ["having desired", "having longed for"],
+    passivePastParticipleSingular: ["desired", "longed for"],
+    passivePastParticiplePlural: ["desired", "longed for"]
+  }
+},
+"anna": {
+  definition: "to give, †add to",
+  stem: "a-stem",
+  english: {
+    present: ["gives", "†adds to"],
+    past: ["gave", "†added to"],
+    future: ["will give", "†will add to"],
+    gerund: ["giving", "†adding to"],
+    imperative: ["give!", "†add to!"],
+    infinitive: ["to give", "†to add to"],
+    presentActiveParticiple: ["giving", "†adding to"],
+    pastActiveParticiple: ["having given", "†having added to"],
+    passivePastParticipleSingular: ["given", "†added to"],
+    passivePastParticiplePlural: ["given", "†added to"]
+  }
+},
+"aphad": {
+  definition: "to follow",
+  stem: "i-stem",
+  english: {
+    present: ["follows"],
+    past: ["followed"],
+    future: ["will follow"],
+    gerund: ["following"],
+    imperative: ["follow!"],
+    infinitive: ["to follow"],
+    presentActiveParticiple: ["following"],
+    pastActiveParticiple: ["having followed"],
+    passivePastParticipleSingular: ["followed"],
+    passivePastParticiplePlural: ["followed"]
+  }
+},
+"atha": {
+  definition: "will (future)",
+  stem: "a-stem",
+  english: {
+    present: ["wills"],
+    past: ["willed"],
+    future: ["will"],
+    gerund: ["willing"],
+    imperative: ["will!"],
+    infinitive: ["to will"],
+    presentActiveParticiple: ["willing"],
+    pastActiveParticiple: ["having willed"],
+    passivePastParticipleSingular: ["willed"],
+    passivePastParticiplePlural: ["willed"]
+  }
+},
+"athra": {
+  definition: "to cross (to and fro); to treat medically",
+  stem: "a-stem",
+  english: {
+    present: ["crosses to and fro", "treats medically"],
+    past: ["crossed to and fro", "treated medically"],
+    future: ["will cross to and fro", "will treat medically"],
+    gerund: ["crossing to and fro", "treating medically"],
+    imperative: ["cross to and fro!", "treat medically!"],
+    infinitive: ["to cross to and fro", "to treat medically"],
+    presentActiveParticiple: ["crossing to and fro", "treating medically"],
+    pastActiveParticiple: ["having crossed to and fro", "having treated medically"],
+    passivePastParticipleSingular: ["crossed to and fro", "treated medically"],
+    passivePastParticiplePlural: ["crossed to and fro", "treated medically"]
+  }
+},
+"ava": {
+  definition: "will not, do not",
+  stem: "a-stem",
+  english: {
+    present: ["does not", "will not"],
+    past: ["did not", "would not"],
+    future: ["will not"],
+    gerund: ["not doing", "not willing"],
+    imperative: ["do not!"],
+    infinitive: ["to not do", "to not will"],
+    presentActiveParticiple: ["not doing", "not willing"],
+    pastActiveParticiple: ["having not done", "having not willed"],
+    passivePastParticipleSingular: ["not done", "not willed"],
+    passivePastParticiplePlural: ["not done", "not willed"]
+  }
+},
+"bal": {
+  definition: "*to have power",
+  stem: "i-stem",
+  english: {
+    present: ["has power"],
+    past: ["had power"],
+    future: ["will have power"],
+    gerund: ["having power"],
+    imperative: ["have power!"],
+    infinitive: ["to have power"],
+    presentActiveParticiple: ["having power"],
+    pastActiveParticiple: ["having had power"],
+    passivePastParticipleSingular: ["empowered"],
+    passivePastParticiplePlural: ["empowered"]
+  }
+},
+"bauda": {
+  definition: "to ban, prohibit, refuse",
+  stem: "a-stem",
+  english: {
+    present: ["bans", "prohibits", "refuses"],
+    past: ["banned", "prohibited", "refused"],
+    future: ["will ban", "will prohibit", "will refuse"],
+    gerund: ["banning", "prohibiting", "refusing"],
+    imperative: ["ban!", "prohibit!", "refuse!"],
+    infinitive: ["to ban", "to prohibit", "to refuse"],
+    presentActiveParticiple: ["banning", "prohibiting", "refusing"],
+    pastActiveParticiple: ["having banned", "having prohibited", "having refused"],
+    passivePastParticipleSingular: ["banned", "prohibited", "refused"],
+    passivePastParticiplePlural: ["banned", "prohibited", "refused"]
+  }
+},
+"boda": {
+  definition: "to ban, prohibit, refuse, forbid",
+  stem: "a-stem",
+  english: {
+    present: ["bans", "prohibits", "refuses", "forbids"],
+    past: ["banned", "prohibited", "refused", "forbade"],
+    future: ["will ban", "will prohibit", "will refuse", "will forbid"],
+    gerund: ["banning", "prohibiting", "refusing", "forbidding"],
+    imperative: ["ban!", "prohibit!", "refuse!", "forbid!"],
+    infinitive: ["to ban", "to prohibit", "to refuse", "to forbid"],
+    presentActiveParticiple: ["banning", "prohibiting", "refusing", "forbidding"],
+    pastActiveParticiple: ["having banned", "having prohibited", "having refused", "having forbidden"],
+    passivePastParticipleSingular: ["banned", "prohibited", "refused", "forbidden"],
+    passivePastParticiplePlural: ["banned", "prohibited", "refused", "forbidden"]
+  }
+},
+"brasta": {
+  definition: "to tower up, loom",
+  stem: "a-stem",
+  english: {
+    present: ["towers up", "looms"],
+    past: ["towered up", "loomed"],
+    future: ["will tower up", "will loom"],
+    gerund: ["towering up", "looming"],
+    imperative: ["tower up!", "loom!"],
+    infinitive: ["to tower up", "to loom"],
+    presentActiveParticiple: ["towering up", "looming"],
+    pastActiveParticiple: ["having towered up", "having loomed"],
+    passivePastParticipleSingular: ["towered up", "loomed"],
+    passivePastParticiplePlural: ["towered up", "loomed"]
+  }
+},
+"cab": {
+  definition: "to leap, [G.] jump",
+  stem: "i-stem",
+  english: {
+    present: ["leaps", "jumps"],
+    past: ["leapt", "jumped"],
+    future: ["will leap", "will jump"],
+    gerund: ["leaping", "jumping"],
+    imperative: ["leap!", "jump!"],
+    infinitive: ["to leap", "to jump"],
+    presentActiveParticiple: ["leaping", "jumping"],
+    pastActiveParticiple: ["having leapt", "having jumped"],
+    passivePastParticipleSingular: ["leapt", "jumped"],
+    passivePastParticiplePlural: ["leapt", "jumped"]
+  }
+},
+"cal": {
+  definition: "to shine",
+  stem: "i-stem",
+  english: {
+    present: ["shines"],
+    past: ["shone"],
+    future: ["will shine"],
+    gerund: ["shining"],
+    imperative: ["shine!"],
+    infinitive: ["to shine"],
+    presentActiveParticiple: ["shining"],
+    pastActiveParticiple: ["having shone"],
+    passivePastParticipleSingular: ["shone"],
+    passivePastParticiplePlural: ["shone"]
+  }
+},
+"can": {
+  definition: "to cry out, shout, call",
+  stem: "i-stem",
+  english: {
+    present: ["cries out", "shouts", "calls"],
+    past: ["cried out", "shouted", "called"],
+    future: ["will cry out", "will shout", "will call"],
+    gerund: ["crying out", "shouting", "calling"],
+    imperative: ["cry out!", "shout!", "call!"],
+    infinitive: ["to cry out", "to shout", "to call"],
+    presentActiveParticiple: ["crying out", "shouting", "calling"],
+    pastActiveParticiple: ["having cried out", "having shouted", "having called"],
+    passivePastParticipleSingular: ["cried out", "shouted", "called"],
+    passivePastParticiplePlural: ["cried out", "shouted", "called"]
+  }
+},
+"caw": {
+  definition: "to taste",
+  stem: "i-stem",
+  english: {
+    present: ["tastes"],
+    past: ["tasted"],
+    future: ["will taste"],
+    gerund: ["tasting"],
+    imperative: ["taste!"],
+    infinitive: ["to taste"],
+    presentActiveParticiple: ["tasting"],
+    pastActiveParticiple: ["having tasted"],
+    passivePastParticipleSingular: ["tasted"],
+    passivePastParticiplePlural: ["tasted"]
+  }
+},
+"cen": {
+  definition: "to see, perceive, look",
+  stem: "i-stem",
+  english: {
+    present: ["sees", "perceives", "looks"],
+    past: ["saw", "perceived", "looked"],
+    future: ["will see", "will perceive", "will look"],
+    gerund: ["seeing", "perceiving", "looking"],
+    imperative: ["see!", "perceive!", "look!"],
+    infinitive: ["to see", "to perceive", "to look"],
+    presentActiveParticiple: ["seeing", "perceiving", "looking"],
+    pastActiveParticiple: ["having seen", "having perceived", "having looked"],
+    passivePastParticipleSingular: ["seen", "perceived", "looked at"],
+    passivePastParticiplePlural: ["seen", "perceived", "looked at"]
+  }
+},
+"cova": {
+  definition: "to come together, meet; to gather, assemble",
+  stem: "a-stem",
+  english: {
+    present: ["comes together", "meets", "gathers", "assembles"],
+    past: ["came together", "met", "gathered", "assembled"],
+    future: ["will come together", "will meet", "will gather", "will assemble"],
+    gerund: ["coming together", "meeting", "gathering", "assembling"],
+    imperative: ["come together!", "meet!", "gather!", "assemble!"],
+    infinitive: ["to come together", "to meet", "to gather", "to assemble"],
+    presentActiveParticiple: ["coming together", "meeting", "gathering", "assembling"],
+    pastActiveParticiple: ["having come together", "having met", "having gathered", "having assembled"],
+    passivePastParticipleSingular: ["come together", "met", "gathered", "assembled"],
+    passivePastParticiplePlural: ["come together", "met", "gathered", "assembled"]
+  }
+},
+"covada": {
+  definition: "to bring together, make meet",
+  stem: "a-stem",
+  english: {
+    present: ["brings together", "makes meet"],
+    past: ["brought together", "made meet"],
+    future: ["will bring together", "will make meet"],
+    gerund: ["bringing together", "making meet"],
+    imperative: ["bring together!", "make meet!"],
+    infinitive: ["to bring together", "to make meet"],
+    presentActiveParticiple: ["bringing together", "making meet"],
+    pastActiveParticiple: ["having brought together", "having made meet"],
+    passivePastParticipleSingular: ["brought together", "made to meet"],
+    passivePastParticiplePlural: ["brought together", "made to meet"]
+  }
+},
+"cuia": {
+  definition: "to live",
+  stem: "a-stem",
+  english: {
+    present: ["lives"],
+    past: ["lived"],
+    future: ["will live"],
+    gerund: ["living"],
+    imperative: ["live!"],
+    infinitive: ["to live"],
+    presentActiveParticiple: ["living"],
+    pastActiveParticiple: ["having lived"],
+    passivePastParticipleSingular: ["lived"],
+    passivePastParticiplePlural: ["lived"]
+  }
+},
+"cuina": {
+  definition: "to be alive",
+  stem: "a-stem",
+  english: {
+    present: ["is alive"],
+    past: ["was alive"],
+    future: ["will be alive"],
+    gerund: ["being alive"],
+    imperative: ["be alive!"],
+    infinitive: ["to be alive"],
+    presentActiveParticiple: ["being alive"],
+    pastActiveParticiple: ["having been alive"],
+    passivePastParticipleSingular: ["been alive"],
+    passivePastParticiplePlural: ["been alive"]
+  }
+},
+"cýra": {
+  definition: "to renew",
+  stem: "a-stem",
+  english: {
+    present: ["renews"],
+    past: ["renewed"],
+    future: ["will renew"],
+    gerund: ["renewing"],
+    imperative: ["renew!"],
+    infinitive: ["to renew"],
+    presentActiveParticiple: ["renewing"],
+    pastActiveParticiple: ["having renewed"],
+    passivePastParticipleSingular: ["renewed"],
+    passivePastParticiplePlural: ["renewed"]
+  }
+},
+"ndag": {
+  definition: "to slay, [ᴱN.] kill",
+  stem: "i-stem",
+  english: {
+    present: ["slays", "kills"],
+    past: ["slew", "killed"],
+    future: ["will slay", "will kill"],
+    gerund: ["slaying", "killing"],
+    imperative: ["slay!", "kill!"],
+    infinitive: ["to slay", "to kill"],
+    presentActiveParticiple: ["slaying", "killing"],
+    pastActiveParticiple: ["having slain", "having killed"],
+    passivePastParticipleSingular: ["slain", "killed"],
+    passivePastParticiplePlural: ["slain", "killed"]
+  }
+},
+"ndandol": {
+  definition: "to return, come back",
+  stem: "i-stem",
+  english: {
+    present: ["returns", "comes back"],
+    past: ["returned", "came back"],
+    future: ["will return", "will come back"],
+    gerund: ["returning", "coming back"],
+    imperative: ["return!", "come back!"],
+    infinitive: ["to return", "to come back"],
+    presentActiveParticiple: ["returning", "coming back"],
+    pastActiveParticiple: ["having returned", "having come back"],
+    passivePastParticipleSingular: ["returned", "come back"],
+    passivePastParticiplePlural: ["returned", "come back"]
+  }
+},
+"ndangar": {
+  definition: "to undo",
+  stem: "i-stem",
+  english: {
+    present: ["undoes"],
+    past: ["undid"],
+    future: ["will undo"],
+    gerund: ["undoing"],
+    imperative: ["undo!"],
+    infinitive: ["to undo"],
+    presentActiveParticiple: ["undoing"],
+    pastActiveParticiple: ["having undone"],
+    passivePastParticipleSingular: ["undone"],
+    passivePastParticiplePlural: ["undone"]
+  }
+},
+"danna": {
+  definition: "to fall",
+  stem: "a-stem",
+  english: {
+    present: ["falls"],
+    past: ["fell"],
+    future: ["will fall"],
+    gerund: ["falling"],
+    imperative: ["fall!"],
+    infinitive: ["to fall"],
+    presentActiveParticiple: ["falling"],
+    pastActiveParticiple: ["having fallen"],
+    passivePastParticipleSingular: ["fallen"],
+    passivePastParticiplePlural: ["fallen"]
+  }
+},
+"dar": {
+  definition: "[N.] to stop, halt",
+  stem: "i-stem",
+  english: {
+    present: ["stops", "halts"],
+    past: ["stopped", "halted"],
+    future: ["will stop", "will halt"],
+    gerund: ["stopping", "halting"],
+    imperative: ["stop!", "halt!"],
+    infinitive: ["to stop", "to halt"],
+    presentActiveParticiple: ["stopping", "halting"],
+    pastActiveParticiple: ["having stopped", "having halted"],
+    passivePastParticipleSingular: ["stopped", "halted"],
+    passivePastParticiplePlural: ["stopped", "halted"]
+  }
+},
+"ndev": {
+  definition: "to try, *seek opportunity, experiment",
+  stem: "i-stem",
+  english: {
+    present: ["tries", "*seeks opportunity", "experiments"],
+    past: ["tried", "*sought opportunity", "experimented"],
+    future: ["will try", "*will seek opportunity", "will experiment"],
+    gerund: ["trying", "*seeking opportunity", "experimenting"],
+    imperative: ["try!", "*seek opportunity!", "experiment!"],
+    infinitive: ["to try", "*to seek opportunity", "to experiment"],
+    presentActiveParticiple: ["trying", "*seeking opportunity", "experimenting"],
+    pastActiveParticiple: ["having tried", "*having sought opportunity", "having experimented"],
+    passivePastParticipleSingular: ["tried", "*sought opportunity", "experimented"],
+    passivePastParticiplePlural: ["tried", "*sought opportunity", "experimented"]
+  }
+},
+"dew": {
+  definition: "to fail, miss",
+  stem: "i-stem",
+  english: {
+    present: ["fails", "misses"],
+    past: ["failed", "missed"],
+    future: ["will fail", "will miss"],
+    gerund: ["failing", "missing"],
+    imperative: ["fail!", "miss!"],
+    infinitive: ["to fail", "to miss"],
+    presentActiveParticiple: ["failing", "missing"],
+    pastActiveParticiple: ["having failed", "having missed"],
+    passivePastParticipleSingular: ["failed", "missed"],
+    passivePastParticiplePlural: ["failed", "missed"]
+  }
+},
+"dha": {
+  definition: "there is",
+  stem: "i-stem",
+  english: {
+    present: ["there is"],
+    past: ["there was"],
+    future: ["there will be"],
+    gerund: ["there being"],
+    imperative: ["let there be!"],
+    infinitive: ["for there to be"],
+    presentActiveParticiple: ["being there"],
+    pastActiveParticiple: ["having been there"],
+    passivePastParticipleSingular: ["been there"],
+    passivePastParticiplePlural: ["been there"]
+  }
+},
+"díhena": {
+  definition: "*to forgive",
+  stem: "a-stem",
+  english: {
+    present: ["forgives"],
+    past: ["forgave"],
+    future: ["will forgive"],
+    gerund: ["forgiving"],
+    imperative: ["forgive!"],
+    infinitive: ["to forgive"],
+    presentActiveParticiple: ["forgiving"],
+    pastActiveParticiple: ["having forgiven"],
+    passivePastParticipleSingular: ["forgiven"],
+    passivePastParticiplePlural: ["forgiven"]
+  }
+},
+"drega": {
+  definition: "to flee",
+  stem: "a-stem",
+  english: {
+    present: ["flees"],
+    past: ["fled"],
+    future: ["will flee"],
+    gerund: ["fleeing"],
+    imperative: ["flee!"],
+    infinitive: ["to flee"],
+    presentActiveParticiple: ["fleeing"],
+    pastActiveParticiple: ["having fled"],
+    passivePastParticipleSingular: ["fled"],
+    passivePastParticiplePlural: ["fled"]
+  }
+},
+"echad": {
+  definition: "to form, make, shape, cut out, [N.] fashion; [S.] (lit.) to shape out",
+  stem: "i-stem",
+  english: {
+    present: ["forms", "makes", "shapes", "cuts out", "fashions", "(lit.) shapes out"],
+    past: ["formed", "made", "shaped", "cut out", "fashioned", "(lit.) shaped out"],
+    future: ["will form", "will make", "will shape", "will cut out", "will fashion", "(lit.) will shape out"],
+    gerund: ["forming", "making", "shaping", "cutting out", "fashioning", "(lit.) shaping out"],
+    imperative: ["form!", "make!", "shape!", "cut out!", "fashion!", "(lit.) shape out!"],
+    infinitive: ["to form", "to make", "to shape", "to cut out", "to fashion", "(lit.) to shape out"],
+    presentActiveParticiple: ["forming", "making", "shaping", "cutting out", "fashioning", "(lit.) shaping out"],
+    pastActiveParticiple: ["having formed", "having made", "having shaped", "having cut out", "having fashioned", "(lit.) having shaped out"],
+    passivePastParticipleSingular: ["formed", "made", "shaped", "cut out", "fashioned", "(lit.) shaped out"],
+    passivePastParticiplePlural: ["formed", "made", "shaped", "cut out", "fashioned", "(lit.) shaped out"]
+  }
+},
+"edra": {
+  definition: "to open (out), *come out",
+  stem: "a-stem",
+  english: {
+    present: ["opens out", "*comes out"],
+    past: ["opened out", "*came out"],
+    future: ["will open out", "*will come out"],
+    gerund: ["opening out", "*coming out"],
+    imperative: ["open out!", "*come out!"],
+    infinitive: ["to open out", "*to come out"],
+    presentActiveParticiple: ["opening out", "*coming out"],
+    pastActiveParticiple: ["having opened out", "*having come out"],
+    passivePastParticipleSingular: ["opened out", "*come out"],
+    passivePastParticiplePlural: ["opened out", "*come out"]
+  }
+},
+"egleria": {
+  definition: "to glorify",
+  stem: "a-stem",
+  english: {
+    present: ["glorifies"],
+    past: ["glorified"],
+    future: ["will glorify"],
+    gerund: ["glorifying"],
+    imperative: ["glorify!"],
+    infinitive: ["to glorify"],
+    presentActiveParticiple: ["glorifying"],
+    pastActiveParticiple: ["having glorified"],
+    passivePastParticipleSingular: ["glorified"],
+    passivePastParticiplePlural: ["glorified"]
+  }
+},
+"eitha": {
+  definition: "to prick with a sharp point, stab; to treat with scorn, insult",
+  stem: "a-stem",
+  english: {
+    present: ["pricks with a sharp point", "stabs", "treats with scorn", "insults"],
+    past: ["pricked with a sharp point", "stabbed", "treated with scorn", "insulted"],
+    future: ["will prick with a sharp point", "will stab", "will treat with scorn", "will insult"],
+    gerund: ["pricking with a sharp point", "stabbing", "treating with scorn", "insulting"],
+    imperative: ["prick with a sharp point!", "stab!", "treat with scorn!", "insult!"],
+    infinitive: ["to prick with a sharp point", "to stab", "to treat with scorn", "to insult"],
+    presentActiveParticiple: ["pricking with a sharp point", "stabbing", "treating with scorn", "insulting"],
+    pastActiveParticiple: ["having pricked with a sharp point", "having stabbed", "having treated with scorn", "having insulted"],
+    passivePastParticipleSingular: ["pricked with a sharp point", "stabbed", "treated with scorn", "insulted"],
+    passivePastParticiplePlural: ["pricked with a sharp point", "stabbed", "treated with scorn", "insulted"]
+  }
+},
+"elia": {
+  definition: "to cause to prosper, bless (a work), help one",
+  stem: "a-stem",
+  english: {
+    present: ["causes to prosper", "blesses (a work)", "helps one"],
+    past: ["caused to prosper", "blessed (a work)", "helped one"],
+    future: ["will cause to prosper", "will bless (a work)", "will help one"],
+    gerund: ["causing to prosper", "blessing (a work)", "helping one"],
+    imperative: ["cause to prosper!", "bless (a work)!", "help one!"],
+    infinitive: ["to cause to prosper", "to bless (a work)", "to help one"],
+    presentActiveParticiple: ["causing to prosper", "blessing (a work)", "helping one"],
+    pastActiveParticiple: ["having caused to prosper", "having blessed (a work)", "having helped one"],
+    passivePastParticipleSingular: ["caused to prosper", "blessed (a work)", "helped"],
+    passivePastParticiplePlural: ["caused to prosper", "blessed (a work)", "helped"]
+  }
+},
+"en": {
+  definition: "*to name",
+  stem: "i-stem",
+  english: {
+    present: ["names"],
+    past: ["named"],
+    future: ["will name"],
+    gerund: ["naming"],
+    imperative: ["name!"],
+    infinitive: ["to name"],
+    presentActiveParticiple: ["naming"],
+    pastActiveParticiple: ["having named"],
+    passivePastParticipleSingular: ["named"],
+    passivePastParticiplePlural: ["named"]
+  }
+},
+"ephed": {
+  definition: "to say out; [ᴺS.] to confess",
+  stem: "i-stem",
+  english: {
+    present: ["says out", "confesses"],
+    past: ["said out", "confessed"],
+    future: ["will say out", "will confess"],
+    gerund: ["saying out", "confessing"],
+    imperative: ["say out!", "confess!"],
+    infinitive: ["to say out", "to confess"],
+    presentActiveParticiple: ["saying out", "confessing"],
+    pastActiveParticiple: ["having said out", "having confessed"],
+    passivePastParticipleSingular: ["said out", "confessed"],
+    passivePastParticiplePlural: ["said out", "confessed"]
+  }
+},
+"ephola": {
+  definition: "?to remember",
+  stem: "a-stem",
+  english: {
+    present: ["remembers"],
+    past: ["remembered"],
+    future: ["will remember"],
+    gerund: ["remembering"],
+    imperative: ["remember!"],
+    infinitive: ["to remember"],
+    presentActiveParticiple: ["remembering"],
+    pastActiveParticiple: ["having remembered"],
+    passivePastParticipleSingular: ["remembered"],
+    passivePastParticiplePlural: ["remembered"]
+  }
+},
+"ertha": {
+  definition: "to unite",
+  stem: "a-stem",
+  english: {
+    present: ["unites"],
+    past: ["united"],
+    future: ["will unite"],
+    gerund: ["uniting"],
+    imperative: ["unite!"],
+    infinitive: ["to unite"],
+    presentActiveParticiple: ["uniting"],
+    pastActiveParticiple: ["having united"],
+    passivePastParticipleSingular: ["united"],
+    passivePastParticiplePlural: ["united"]
+  }
+},
+"esta": {
+  definition: "to call, *name",
+  stem: "a-stem",
+  english: {
+    present: ["calls", "*names"],
+    past: ["called", "*named"],
+    future: ["will call", "*will name"],
+    gerund: ["calling", "*naming"],
+    imperative: ["call!", "*name!"],
+    infinitive: ["to call", "*to name"],
+    presentActiveParticiple: ["calling", "*naming"],
+    pastActiveParticiple: ["having called", "*having named"],
+    passivePastParticipleSingular: ["called", "*named"],
+    passivePastParticiplePlural: ["called", "*named"]
+  }
+},
+"estola": {
+  definition: "to encamp, *erect tents",
+  stem: "a-stem",
+  english: {
+    present: ["encamps", "*erects tents"],
+    past: ["encamped", "*erected tents"],
+    future: ["will encamp", "*will erect tents"],
+    gerund: ["encamping", "*erecting tents"],
+    imperative: ["encamp!", "*erect tents!"],
+    infinitive: ["to encamp", "*to erect tents"],
+    presentActiveParticiple: ["encamping", "*erecting tents"],
+    pastActiveParticiple: ["having encamped", "*having erected tents"],
+    passivePastParticipleSingular: ["encamped", "*erected tents"],
+    passivePastParticiplePlural: ["encamped", "*erected tents"]
+  }
+},
+"fanna": {
+  definition: "to veil, cloak",
+  stem: "a-stem",
+  english: {
+    present: ["veils", "cloaks"],
+    past: ["veiled", "cloaked"],
+    future: ["will veil", "will cloak"],
+    gerund: ["veiling", "cloaking"],
+    imperative: ["veil!", "cloak!"],
+    infinitive: ["to veil", "to cloak"],
+    presentActiveParticiple: ["veiling", "cloaking"],
+    pastActiveParticiple: ["having veiled", "having cloaked"],
+    passivePastParticipleSingular: ["veiled", "cloaked"],
+    passivePastParticiplePlural: ["veiled", "cloaked"]
+  }
+},
+"feria": {
+  definition: "to make ready (promptly)",
+  stem: "a-stem",
+  english: {
+    present: ["makes ready (promptly)"],
+    past: ["made ready (promptly)"],
+    future: ["will make ready (promptly)"],
+    gerund: ["making ready (promptly)"],
+    imperative: ["make ready (promptly)!"],
+    infinitive: ["to make ready (promptly)"],
+    presentActiveParticiple: ["making ready (promptly)"],
+    pastActiveParticiple: ["having made ready (promptly)"],
+    passivePastParticipleSingular: ["made ready (promptly)"],
+    passivePastParticiplePlural: ["made ready (promptly)"]
+  }
+},
+"fir": {
+  definition: "to fade, *die",
+  stem: "i-stem",
+  english: {
+    present: ["fades", "*dies"],
+    past: ["faded", "*died"],
+    future: ["will fade", "*will die"],
+    gerund: ["fading", "*dying"],
+    imperative: ["fade!", "*die!"],
+    infinitive: ["to fade", "*to die"],
+    presentActiveParticiple: ["fading", "*dying"],
+    pastActiveParticiple: ["having faded", "*having died"],
+    passivePastParticipleSingular: ["faded", "*dead"],
+    passivePastParticiplePlural: ["faded", "*dead"]
+  }
+},
+"gal": {
+  definition: "to shine clear, [G.] shine golden as the Sun",
+  stem: "i-stem",
+  english: {
+    present: ["shines clear", "shines golden as the Sun"],
+    past: ["shone clear", "shone golden as the Sun"],
+    future: ["will shine clear", "will shine golden as the Sun"],
+    gerund: ["shining clear", "shining golden as the Sun"],
+    imperative: ["shine clear!", "shine golden as the Sun!"],
+    infinitive: ["to shine clear", "to shine golden as the Sun"],
+    presentActiveParticiple: ["shining clear", "shining golden as the Sun"],
+    pastActiveParticiple: ["having shone clear", "having shone golden as the Sun"],
+    passivePastParticipleSingular: ["shone clear", "shone golden as the Sun"],
+    passivePastParticiplePlural: ["shone clear", "shone golden as the Sun"]
+  }
+},
+"gala": {
+  definition: "to grow",
+  stem: "a-stem",
+  english: {
+    present: ["grows"],
+    past: ["grew"],
+    future: ["will grow"],
+    gerund: ["growing"],
+    imperative: ["grow!"],
+    infinitive: ["to grow"],
+    presentActiveParticiple: ["growing"],
+    pastActiveParticiple: ["having grown"],
+    passivePastParticipleSingular: ["grown"],
+    passivePastParticiplePlural: ["grown"]
+  }
+},
+"genedia": {
+  definition: "to reckon, *calculate",
+  stem: "a-stem",
+  english: {
+    present: ["reckons", "*calculates"],
+    past: ["reckoned", "*calculated"],
+    future: ["will reckon", "*will calculate"],
+    gerund: ["reckoning", "*calculating"],
+    imperative: ["reckon!", "*calculate!"],
+    infinitive: ["to reckon", "*to calculate"],
+    presentActiveParticiple: ["reckoning", "*calculating"],
+    pastActiveParticiple: ["having reckoned", "*having calculated"],
+    passivePastParticipleSingular: ["reckoned", "*calculated"],
+    passivePastParticiplePlural: ["reckoned", "*calculated"]
+  }
+},
+"geria": {
+  definition: "to ponder",
+  stem: "a-stem",
+  english: {
+    present: ["ponders"],
+    past: ["pondered"],
+    future: ["will ponder"],
+    gerund: ["pondering"],
+    imperative: ["ponder!"],
+    infinitive: ["to ponder"],
+    presentActiveParticiple: ["pondering"],
+    pastActiveParticiple: ["having pondered"],
+    passivePastParticipleSingular: ["pondered"],
+    passivePastParticiplePlural: ["pondered"]
+  }
+},
+"gir": {
+  definition: "to shudder",
+  stem: "i-stem",
+  english: {
+    present: ["shudders"],
+    past: ["shuddered"],
+    future: ["will shudder"],
+    gerund: ["shuddering"],
+    imperative: ["shudder!"],
+    infinitive: ["to shudder"],
+    presentActiveParticiple: ["shuddering"],
+    pastActiveParticiple: ["having shuddered"],
+    passivePastParticipleSingular: ["shuddered"],
+    passivePastParticiplePlural: ["shuddered"]
+  }
+},
+"gladh": {
+  definition: "to laugh [at a joke], *guffaw",
+  stem: "i-stem",
+  english: {
+    present: ["laughs [at a joke]", "*guffaws"],
+    past: ["laughed [at a joke]", "*guffawed"],
+    future: ["will laugh [at a joke]", "*will guffaw"],
+    gerund: ["laughing [at a joke]", "*guffawing"],
+    imperative: ["laugh [at a joke]!", "*guffaw!"],
+    infinitive: ["to laugh [at a joke]", "*to guffaw"],
+    presentActiveParticiple: ["laughing [at a joke]", "*guffawing"],
+    pastActiveParticiple: ["having laughed [at a joke]", "*having guffawed"],
+    passivePastParticipleSingular: ["laughed [at a joke]", "*guffawed"],
+    passivePastParticiplePlural: ["laughed [at a joke]", "*guffawed"]
+  }
+},
+"gleina": {
+  definition: "to bound, enclose, limit",
+  stem: "a-stem",
+  english: {
+    present: ["bounds", "encloses", "limits"],
+    past: ["bounded", "enclosed", "limited"],
+    future: ["will bound", "will enclose", "will limit"],
+    gerund: ["bounding", "enclosing", "limiting"],
+    imperative: ["bound!", "enclose!", "limit!"],
+    infinitive: ["to bound", "to enclose", "to limit"],
+    presentActiveParticiple: ["bounding", "enclosing", "limiting"],
+    pastActiveParticiple: ["having bounded", "having enclosed", "having limited"],
+    passivePastParticipleSingular: ["bounded", "enclosed", "limited"],
+    passivePastParticiplePlural: ["bounded", "enclosed", "limited"]
+  }
+},
+"glenna": {
+  definition: "*to travel, ⚠️go",
+  stem: "a-stem",
+  english: {
+    present: ["*travels", "⚠️goes"],
+    past: ["*traveled", "⚠️went"],
+    future: ["*will travel", "⚠️will go"],
+    gerund: ["*traveling", "⚠️going"],
+    imperative: ["*travel!", "⚠️go!"],
+    infinitive: ["*to travel", "⚠️to go"],
+    presentActiveParticiple: ["*traveling", "⚠️going"],
+    pastActiveParticiple: ["*having traveled", "⚠️having gone"],
+    passivePastParticipleSingular: ["*traveled", "⚠️gone"],
+    passivePastParticiplePlural: ["*traveled", "⚠️gone"]
+  }
+},
+"glintha": {
+  definition: "to glance (at)",
+  stem: "a-stem",
+  english: {
+    present: ["glances (at)"],
+    past: ["glanced (at)"],
+    future: ["will glance (at)"],
+    gerund: ["glancing (at)"],
+    imperative: ["glance (at)!"],
+    infinitive: ["to glance (at)"],
+    presentActiveParticiple: ["glancing (at)"],
+    pastActiveParticiple: ["having glanced (at)"],
+    passivePastParticipleSingular: ["glanced (at)"],
+    passivePastParticiplePlural: ["glanced (at)"]
+  }
+},
+"gohena": {
+  definition: "*to forgive",
+  stem: "a-stem",
+  english: {
+    present: ["*forgives"],
+    past: ["*forgave"],
+    future: ["*will forgive"],
+    gerund: ["*forgiving"],
+    imperative: ["*forgive!"],
+    infinitive: ["*to forgive"],
+    presentActiveParticiple: ["*forgiving"],
+    pastActiveParticiple: ["*having forgiven"],
+    passivePastParticipleSingular: ["*forgiven"],
+    passivePastParticiplePlural: ["*forgiven"]
+  }
+},
+"gor": {
+  definition: "to warn, urge",
+  stem: "i-stem",
+  english: {
+    present: ["warns", "urges"],
+    past: ["warned", "urged"],
+    future: ["will warn", "will urge"],
+    gerund: ["warning", "urging"],
+    imperative: ["warn!", "urge!"],
+    infinitive: ["to warn", "to urge"],
+    presentActiveParticiple: ["warning", "urging"],
+    pastActiveParticiple: ["having warned", "having urged"],
+    passivePastParticipleSingular: ["warned", "urged"],
+    passivePastParticiplePlural: ["warned", "urged"]
+  }
+},
+"groga": {
+  definition: "to feel terror",
+  stem: "a-stem",
+  english: {
+    present: ["feels terror"],
+    past: ["felt terror"],
+    future: ["will feel terror"],
+    gerund: ["feeling terror"],
+    imperative: ["feel terror!"],
+    infinitive: ["to feel terror"],
+    presentActiveParticiple: ["feeling terror"],
+    pastActiveParticiple: ["having felt terror"],
+    passivePastParticipleSingular: ["felt terror"],
+    passivePastParticiplePlural: ["felt terror"]
+  }
+},
+};
+
+
+function showDefinition(verbInput) {
+  const cleanedVerb = verbInput.replace(/-+$/, '');
+  const entry = verbDictionary[cleanedVerb];
+
+  const output = document.getElementById('definition-output');
+
+  if (!entry) {
+    output.textContent = "Definition not found.";
+    return;
+  }
+
+  let html = `
+    <strong>Definition:</strong> ${entry.definition}<br>
+    ${entry.stem ? `<strong>Stem:</strong> ${entry.stem}<br>` : ''}
+  `;
+
+  if (entry.english) {
+    html += `
+      <div style="margin-top: 0.75em;">
+        <strong>English Meanings:</strong><br>
+        <strong>Present:</strong> ${entry.english.present.join(", ")}<br>
+        <strong>Past:</strong> ${entry.english.past.join(", ")}<br>
+        <strong>Future:</strong> ${entry.english.future.join(", ")}<br>
+        <strong>Gerund:</strong> ${entry.english.gerund.join(", ")}<br>
+        <strong>Imperative:</strong> ${entry.english.imperative.join(", ")}<br>
+        <strong>Infinitive:</strong> ${entry.english.infinitive.join(", ")}<br>
+        <strong>Present Active Participle:</strong> ${entry.english.presentActiveParticiple.join(", ")}<br>
+        <strong>Past Active Participle:</strong> ${entry.english.pastActiveParticiple.join(", ")}<br>
+        <strong>Passive Past Participle Singular:</strong> ${entry.english.passivePastParticipleSingular.join(", ")}<br>
+        <strong>Passive Past Participle Plural:</strong> ${entry.english.passivePastParticiplePlural.join(", ")}
+      </div>
+    `;
+  }
+
+  output.innerHTML = html;
+}

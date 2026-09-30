@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentence Breakdown | Sindarin Crash Course</title>
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+   :root {
+  --blue-ink:   #4C668C;    /* main site blue, for borders/headings/nav */
+  --blue-soft:  #5F7AA0;    /* lighter blue, for gradients/backgrounds */
+  --parchment:  #F9F7F1;    /* page bg */
+  --card-bg:    #FFFFFF;    /* card and word tiles bg */
+  --gold-lite:  #FFEEAA;    /* gold hover accent */
+  --gold-deep:  #AA6539;    /* dark gold for strong accent/tags */
+  --text-body:  #2C2C2C;
+}
+
+html, body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'EB Garamond', serif;
+  font-size: 17px;
+  color: var(--text-body);
+  background: var(--parchment);
+  line-height: 1.65;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', 'EB Garamond', serif;
+  font-weight: 700;
+  color: var(--blue-ink);
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  letter-spacing: 0.02em;
+}
+h1 {
+  font-size: 2.2rem;
+  margin-top: 0.8em;
+}
+
+.main-center {
+  max-width: 1100px;
+  margin: 2.2em auto 0 auto;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px #0001;
+  padding: 2.2em 2em 2em 2em;
+}
+
+/* Sentence breakdown card */
+.sentence-block {
+  margin-bottom: 2.6em;
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: 0 4px 12px #0002;
+  border: 2px solid var(--blue-ink);
+  padding: 1.5em 1.6em 1.5em 1.6em;
+}
+
+/* Sindarin example and English translation */
+.sindarin-example {
+  font-size: 1.14em;
+  font-style: italic;
+  color: var(--blue-ink);
+  margin-bottom: 0.3em;
+  letter-spacing: 0.04em;
+}
+.sentence-translation {
+  color: var(--gold-deep);
+  margin-bottom: 1.2em;
+  font-size: 1em;
+}
+
+/* The morpheme breakdown row */
+.align-line {
+  display: flex;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, var(--blue-ink) 60%, var(--blue-soft) 100%);
+  color: var(--blue-ink);
+  padding: 0.5em 0.7em 0.3em 0.7em;
+  border-radius: 7px;
+  margin-bottom: 0.8em;
+  margin-top: 0.5em;
+  gap: 0.65em;
+}
+
+/* Each word/part tile */
+.align-word {
+  background: var(--card-bg);
+  color: var(--blue-ink);
+  border-radius: 7px;
+  border: 1px solid var(--blue-soft);
+  font-weight: 600;
+  padding: 0.45em 0.85em;
+  margin: 0.17em 0.12em;
+  min-width: 90px;
+  font-size: 1em;
+  box-shadow: 0 1px 3px #0001;
+  transition: background 0.2s, color 0.2s, transform 0.16s;
+  cursor: pointer;
+}
+.align-word:hover {
+  background: var(--gold-lite);
+  color: var(--blue-ink);
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Inner content of tiles */
+.align-word p {
+  margin: 0.19em 0;
+  font-size: 0.98em;
+}
+
+/* Tag labels in the tiles */
+.tag {
+  font-size: 0.94em;
+  color: var(--blue-ink);
+  background: #EEF4FF; /* soft neutral */
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-top: 1px;
+  margin-bottom: 2px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* The morpheme-gloss (i.e. original word form) */
+.morpheme-gloss {
+  color: var(--gold-deep);
+  font-size: 0.97em;
+  font-style: normal;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive: keep it mobile-friendly */
+@media (max-width: 800px) {
+  .main-center { padding: 1em 0.5em; }
+  .sentence-block { padding: 1.1em 0.8em 1.2em 0.8em; }
+  .align-line { gap: 0.3em; }
+  .align-word { min-width: 68px; font-size: 0.96em; }
+}
+sentence-header {
+  background: #fffbe4;              /* same as your callout */
+  border-left: 6px solid #AA6539;   /* callout gold accent */
+  border-radius: 10px;              /* rounded like cards */
+  margin-bottom: 1.8em;
+  margin-top: 0.8em;
+  padding: 1.2em 1.6em 1em 1.6em;
+  box-shadow: 0 2px 8px #0001;
+  border: 1.5px solid #4C668C;      /* optional: blue border to match rest */
+}
+.sindarin-example {
+  font-size: 1.13em;
+  font-style: italic;
+  color: var(--blue-ink);
+  margin-bottom: 0.2em;
+  letter-spacing: 0.04em;
+}
+.sentence-translation {
+  color: var(--gold-deep);
+  margin-bottom: 0.1em;
+  font-size: 1.05em;
+}
+.align-word[data-tooltip] {
+  position: relative;
+}
+.align-word[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: 110%;
+  transform: translateX(-50%);
+  background: #fffbe4;
+  color: #4C668C;
+  font-size: 12px;
+  padding: 6px 13px;
+  border-radius: 7px;
+  box-shadow: 0 2px 12px #0002;
+  white-space: pre-line;
+  z-index: 9;
+  pointer-events: none;
+  border: 1.5px solid #AA6539;
+  min-width: 120px;
+  text-align: center;
+}
+.align-word[data-tooltip]:hover::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 105%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top: 9px solid #fffbe4;
+  z-index: 10;
+}
+  </style>
+</head>
+<body>
+<nav class="navbar" role="navigation">
+  <a href="/" id="bardh-logo">
+    <img src="/Celebrinor.png" alt="Six-pointed star emblem" />
+  </a>
+
+  <input type="checkbox" id="menu-toggle">
+  <label for="menu-toggle" class="menu-icon">&#9776;</label>
+
+  <div class="nav-links">
+    <div class="dropdown">
+      <button>Emith<br>Nouns</button>
+      <div class="dropdown-content">
+        <a href="/1.2.1.html#1.2.1">1.2.1 Nouns</a>
+        <a href="/1.2.1.html#1.2.1.1">1.2.1.1 Noun Plurals</a>
+        <a href="/1.2.1.html#1.2.1.2">1.2.1.2 i-affection</a>
+        <a href="/1.2.1.html#1.2.1.3">1.2.1.3 Class Plural</a>
+        <a href="/1.2.1.html#1.2.1.4">1.2.1.4 Irregular Plurals</a>
+        <a href="/1.2.1.html#1.2.1.5">1.2.1.5 Definite Article “The”</a>
+        <a href="/1.2.1.html#1.2.1.6">1.2.1.6 Direct Objects</a>
+        <a href="/pluralizer">Noun Pluralizer</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Ceraith<br>Verbs</button>
+      <div class="dropdown-content">
+        <a href="/1.2.2.html#1.2.2">1.2.2 Verbs</a>
+        <a href="/1.2.2.html#1.2.2.1">1.2.2.1 Aorist Tense</a>
+        <a href="/1.2.2.html#1.2.2.2">1.2.2.2 Verb Suffixes</a>
+        <a href="/1.2.2.html#1.2.2.3">1.2.2.3 Present Continuous</a>
+        <a href="/1.2.2.html#1.2.2.4">1.2.2.4 Future, Past</a>
+        <a href="/1.2.2.html#1.2.2.5">1.2.2.5 Section Summary</a>
+        <a href="/VerbConjugator.html">Verb Conjugator</a>
+        <a href="/stress">Stress & IPA</a>
+        <a href="/1.2.2.html#1.1">Exercise 1.1</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Pemith<br>Pronouns</button>
+      <div class="dropdown-content">
+        <a href="/1.2.3.html#1.2.3">1.2.3 Pronouns</a>
+        <a href="/1.2.3.html#1.2.3.1">1.2.3.1 Object “Accusative” & Independent “Nominative”</a>
+        <a href="/1.2.3.html#1.2.3.2">1.2.3.2 Subject Suffixes</a>
+        <a href="/1.2.3.html#1.2.3.3">1.2.3.3 Possessive</a>
+        <a href="/1.2.3.html#1.2.3.4">1.2.3.4 Section Summary</a>
+        <a href="/1.2.3.html#1.2">Exercise 1.2</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Cephith a Mebith<br>Adjectives & Adverbs</button>
+      <div class="dropdown-content">
+        <a href="/1.2.4.html#1.2.4">1.2.4 Adjectives & Adverbs</a>
+        <a href="/1.2.4.html#1.2.4.1">1.2.4.1 Plural Adjectives</a>
+        <a href="/1.2.4.html#1.2.4.2">1.2.4.2 “To Be” Statements</a>
+        <a href="/1.2.4.html#1.2.4.3">1.2.4.3 Adverbs</a>
+        <a href="/1.2.4.html#1.2.4.4">1.2.4.4 Section Summary</a>
+        <a href="/1.2.4.html#1.3">Exercise 1.3</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Febith<br>Prepositions</button>
+      <div class="dropdown-content">
+        <a href="/1.2.5.html#1.2.5">1.2.5 Prepositions</a>
+        <a href="/1.2.5.html#1.2.5.1">1.2.5.1 Dative</a>
+        <a href="/1.2.5.html#1.2.5.2">1.2.5.2 Genitive</a>
+        <a href="/1.2.5.html#1.2.5.3">1.2.5.3 Directional and Location</a>
+        <a href="/1.2.5.html#1.2.5.4">1.2.5.4 Possessive Pronouns & Noun Cases</a>
+        <a href="/1.2.5.html#1.2.5.5">1.2.5.5 Section Summary</a>
+        <a href="/1.2.5.html#1.4">Exercise 1.4</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Limith<br>Conjunction</button>
+      <div class="dropdown-content">
+        <a href="/1.2.6.html#1.2.6">1.2.6 Conjunctions</a>
+        <a href="/1.2.6.html#1.2.6.1">1.2.6.1 Conjunctions</a>
+        <a href="/1.2.6.html#1.2.6.2">1.2.6.2 Subordinate Clauses</a>
+        <a href="/1.2.6.html#1.2.6.3">1.2.6.3 Distribution of Meaning Among Words</a>
+        <a href="/1.2.6.html#1.2.6.4">1.2.6.4 Section Summary</a>
+        <a href="/1.2.6.html#1.5">Exercise 1.5</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Prestennith a Gwimith<br>Mutations & Neologisms</button>
+      <div class="dropdown-content">
+        <a href="/mutations.html#chart">1.4 Mutation Tool</a>
+        <a href="/neologisms.html">1.5 Neologisms</a>
+        <a href="/compounds.html">1.6 Compounds</a>
+        <a href="/consonants.html">1.7 Consonant Chart</a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <button>Pennas Silevril<br>History of the Silmarils</button>
+      <div class="dropdown-content">
+        <a href="/chapter1.html">Chapter 1</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<main class="main-center" role="main">
+  <h1>Sentence Breakdown Examples</h1>
+  <p>Exercise 1.1</p>
+  <div class="sentence-block">
+  <div class="sentence-header">
+    <div class="sindarin-example">Celebrinor badrast belah i·felais na Forlond, i·felyth felechiasser boe ñguin a maew agóner viñ gwae.</div>
+    <div class="sentence-translation">Celebrinor walked along the shores of Forlond, the waves splashed on the stones and gulls cried out in the wind.</div>
+  </div>
+  <div class="align-line">
+      <div class="align-word" data-tooltip="Proper noun – Subject">
+        <p><span class="morpheme-gloss"><i>Celebrinor</i></span><br>Celebrinor
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Present 3rd plural
+      (rista- : to cut)">
+        <p><span class="morpheme-gloss"><i>ristar</i></span><br>cut
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Noun – plural
+      Direct object
+      (orch : orc)">
+        <p><span class="morpheme-gloss"><i>yrch</i></span><br>orcs
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sentence-block">
+  <div class="sentence-header">
+    <div class="sindarin-example">en·Edhel chîr garas.</div>
+    <div class="sentence-translation">The elf finds a city.</div>
+  </div>
+  <div class="align-line">
+     <div class="align-word" data-tooltip="Definite article
+      Noun – singular">
+        <p><span class="morpheme-gloss"><i>en·Edhel</i></span><br>The elf
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Present 3rd singular
+      (hir- : to find)
+      (soft mutation)">
+        <p><span class="morpheme-gloss"><i>chîr</i></span><br>finds
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Noun – plural
+      Direct object
+      (caras - city)
+      (soft mutation)">
+        <p><span class="morpheme-gloss"><i>garas</i></span><br>[a] city
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sentence-block">
+  <div class="sentence-header">
+    <div class="sindarin-example">Sílon.</div>
+    <div class="sentence-translation">I shine.</div>
+  </div>
+  <div class="align-line">
+     <div class="align-word" data-tooltip="Present 1st singular
+     (síla- : to shine)">
+        <p><span class="morpheme-gloss"><i>Sílon</i></span><br>Shine-I
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sentence-block">
+  <div class="sentence-header">
+    <div class="sindarin-example">en·Aran dîr aew.</div>
+    <div class="sentence-translation">The king watches birds.</div>
+  </div>
+  <div class="align-line">
+     <div class="align-word" data-tooltip="Definite article
+      Noun – singular">
+        <p><span class="morpheme-gloss"><i>en·Aran</i></span><br>The king
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Present 3rd singular
+      (tir- : to watch)
+      (soft mutation)">
+        <p><span class="morpheme-gloss"><i>dîr</i></span><br>watches
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Noun – plural
+      Direct object
+      (caras - city)
+      (aew is both sg/pl)">
+        <p><span class="morpheme-gloss"><i>aew</i></span><br>[a bird] birds
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="sentence-block">
+  <div class="sentence-header">
+    <div class="sindarin-example">Ab oer neledh glennad, odúler na nan, ias hîr loethast n' e·‘aear.</div>
+    <div class="sentence-translation">After three days of traveling, they came to a valley where a river bends toward the sea.</div>
+  </div>
+  <div class="align-line">
+      <div class="align-word" data-tooltip="Preposition (temporal)">
+        <p><span class="morpheme-gloss"><i>Ab</i></span><br>After
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Noun – plural
+      (aur day)">
+        <p><span class="morpheme-gloss"><i>oer</i></span><br>days
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Numeral adjective">
+        <p><span class="morpheme-gloss"><i>neledh</i></span><br>three
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Verbal noun / gerund
+      (glenna- *to travel)">
+        <p><span class="morpheme-gloss"><i>glennad</i></span><br>[of] traveling
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Past 3rd plural
+      (tol- come)">
+        <p><span class="morpheme-gloss"><i>odúler</i></span><br>came-they
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Preposition (directional)">
+        <p><span class="morpheme-gloss"><i>n’</i></span><br>to
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Noun – singular">
+        <p><span class="morpheme-gloss"><i>nan</i></span><br>[a] valley
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Relative adverb
+restrictive clause
+(soft mutation)">
+  <p><span class="morpheme-gloss"><i>ias</i></span><br>where</p>
+</div>
+      <div class="align-word" data-tooltip="Noun – singular">
+        <p><span class="morpheme-gloss"><i>hîr</i></span><br>
+          [a] river
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Past 3rd singular
+      intransitive
+      (loetha- bend)">
+        <p><span class="morpheme-gloss"><i>loethast</i></span><br>bends
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Preposition (directional)">
+        <p><span class="morpheme-gloss"><i>n’</i></span><br>towards
+        </p>
+      </div>
+      <div class="align-word" data-tooltip="Definite article
+      Noun – singular
+      (soft mutation)">
+        <p><span class="morpheme-gloss"><i>e·‘aear</i></span><br>the sea
+        </p>
+      </div>
+    </div>
+  </div>
+  <!-- Repeat .sentence-block for each new sentence breakdown -->
+</main>
+  <button onclick="topFunction()" id="myBtn" title="Go to top">Am</button>
+
+<script>
+  // Back to Top button logic
+  var mybutton = document.getElementById("myBtn");
+  window.onscroll = function() { scrollFunction(); };
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.style.display = "block";
+    } else {
+      mybutton.style.display = "none";
+    }
+  }
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+  // Responsive navbar dropdowns
+  var dropdownButtons = document.querySelectorAll('.dropdown button');
+  dropdownButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      this.classList.toggle('active');
+      var dropdownContent = this.nextElementSibling;
+      if (dropdownContent.style.display === "block") {
+        dropdownContent.style.display = "none";
+      } else {
+        dropdownContent.style.display = "block";
+      }
+      dropdownButtons.forEach(function(otherButton) {
+        if (otherButton !== button) {
+          otherButton.classList.remove('active');
+          var otherDropdownContent = otherButton.nextElementSibling;
+          if (otherDropdownContent) {
+            otherDropdownContent.style.display = "none";
+          }
+        }
+      });
+    });
+  });
+  // Toggle answer visibility for exercises
+  function toggleAnswer(element) {
+    var answer = element.nextElementSibling;
+    if (answer.style.display === "inline") {
+      answer.style.display = "none";
+    } else {
+      answer.style.display = "inline";
+    }
+  }
+</script>
+</body>
+</html>
